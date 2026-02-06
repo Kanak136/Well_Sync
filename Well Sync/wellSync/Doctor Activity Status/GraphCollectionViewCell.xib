@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="fhM-Hb-UYj" customClass="GraphCollectionViewCell" customModule="wellSync" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="354" height="97"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="354" height="97"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paintpalette" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7XY-E1-Nta">
+                        <rect key="frame" x="20" y="22.666666666666664" width="24" height="19"/>
+                        <color key="tintColor" systemColor="systemOrangeColor"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="24" id="veF-5R-qjq"/>
+                            <constraint firstAttribute="height" constant="24" id="xCZ-8V-HZX"/>
+                        </constraints>
+                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2xQ-Z0-EWc">
+                        <rect key="frame" x="319" y="26.666666666666671" width="15" height="11.333333333333329"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="TQs-YC-RXS"/>
+                            <constraint firstAttribute="width" constant="15" id="rob-NF-NZd"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Breathing Excercise" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J5g-Ym-eOl">
+                        <rect key="frame" x="48" y="20" width="178" height="24"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                        <color key="textColor" systemColor="systemOrangeColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Itw-Ep-4P0">
+                        <rect key="frame" x="255.66666666666666" y="23.666666666666671" width="59.333333333333343" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vt3-hi-ad9">
+                        <rect key="frame" x="22" y="49.666666666666657" width="18" height="38.333333333333343"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="upload" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NUm-68-csv">
+                        <rect key="frame" x="44" y="65.666666666666671" width="51" height="19.333333333333329"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0C-of-WwV" customClass="BarChartView" customModule="DGCharts">
+                        <rect key="frame" x="244" y="56.666666666666664" width="90" height="28.333333333333336"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="90" id="nVj-yu-bMO"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="pYY-2S-vyW"/>
+            <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="A0C-of-WwV" secondAttribute="bottom" constant="12" id="7qn-k6-2cN"/>
+                <constraint firstItem="NUm-68-csv" firstAttribute="leading" secondItem="Vt3-hi-ad9" secondAttribute="trailing" constant="4" id="Eq4-Cx-k3W"/>
+                <constraint firstAttribute="bottom" secondItem="Vt3-hi-ad9" secondAttribute="bottom" constant="9" id="F5X-R4-4zc"/>
+                <constraint firstItem="A0C-of-WwV" firstAttribute="trailing" secondItem="2xQ-Z0-EWc" secondAttribute="trailing" id="Kiy-5Y-WYF"/>
+                <constraint firstAttribute="trailing" secondItem="2xQ-Z0-EWc" secondAttribute="trailing" constant="20" id="Lm4-P2-Kfb"/>
+                <constraint firstItem="Itw-Ep-4P0" firstAttribute="centerY" secondItem="J5g-Ym-eOl" secondAttribute="centerY" id="NdH-zN-7St"/>
+                <constraint firstAttribute="bottom" secondItem="NUm-68-csv" secondAttribute="bottom" constant="12" id="S10-XL-P26"/>
+                <constraint firstItem="J5g-Ym-eOl" firstAttribute="leading" secondItem="7XY-E1-Nta" secondAttribute="trailing" constant="4" id="WrI-i4-KAF"/>
+                <constraint firstItem="2xQ-Z0-EWc" firstAttribute="centerY" secondItem="Itw-Ep-4P0" secondAttribute="centerY" id="Zlt-R0-Idp"/>
+                <constraint firstItem="Vt3-hi-ad9" firstAttribute="leading" secondItem="fhM-Hb-UYj" secondAttribute="leading" constant="22" id="a6Q-z7-zle"/>
+                <constraint firstItem="2xQ-Z0-EWc" firstAttribute="leading" secondItem="Itw-Ep-4P0" secondAttribute="trailing" constant="4" id="dzp-8s-OgN"/>
+                <constraint firstItem="7XY-E1-Nta" firstAttribute="top" secondItem="fhM-Hb-UYj" secondAttribute="top" constant="20" id="ksp-6N-VIC"/>
+                <constraint firstItem="7XY-E1-Nta" firstAttribute="leading" secondItem="fhM-Hb-UYj" secondAttribute="leading" constant="20" id="lEn-x0-e9D"/>
+                <constraint firstItem="A0C-of-WwV" firstAttribute="top" secondItem="Itw-Ep-4P0" secondAttribute="bottom" constant="16" id="rrP-79-5m4"/>
+                <constraint firstItem="7XY-E1-Nta" firstAttribute="centerY" secondItem="J5g-Ym-eOl" secondAttribute="centerY" id="zqv-Sq-qFh"/>
+            </constraints>
+            <size key="customSize" width="354" height="97"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="20"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="barChart" destination="A0C-of-WwV" id="nb2-Ts-kAf"/>
+            </connections>
+            <point key="canvasLocation" x="360.30534351145036" y="161.61971830985917"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="chevron.right" catalog="system" width="97" height="128"/>
+        <image name="paintpalette" catalog="system" width="128" height="105"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
