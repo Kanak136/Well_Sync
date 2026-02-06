@@ -22,7 +22,7 @@ class ProfileCollectionViewCell: UICollectionViewCell {
     
     func configureCell(){
         profileImageView.image = UIImage(named: "profile")
-        nameLabel.text = "Vidit"
+        nameLabel.text = "Vidit Agarwal"
         AgeLabel.text = "Age: "
         AgeNumberLabel.text = "26"
         disorderLabel.text = "Depression"
