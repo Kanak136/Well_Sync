@@ -13,6 +13,9 @@ class SummaryNoteTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 150).isActive = true
+        noteLabel.contentMode = .topLeft
+        noteLabel.setContentHuggingPriority(.required, for: .vertical)
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

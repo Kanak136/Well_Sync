@@ -24,6 +24,7 @@ class SummarisedReportTableViewController: UITableViewController {
         tableView.sectionHeaderTopPadding = 8
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 250
+        
 
     }
 
@@ -48,6 +49,7 @@ class SummarisedReportTableViewController: UITableViewController {
         if indexPath.section == 0{
             let cell = tableView.dequeueReusableCell(withIdentifier: "sMoodCell", for: indexPath)
             return cell
+            
         }
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "sActivityCell", for: indexPath) as! SummaryActivityTableViewCell
@@ -84,6 +86,16 @@ class SummarisedReportTableViewController: UITableViewController {
         ])
         
         return headerView
+    }
+
+    override func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        if indexPath.section == 0 && indexPath.row == 0 {
+            return 300
+        }
+        
+        return UITableView.automaticDimension
     }
 
     override func tableView(_ tableView: UITableView,
