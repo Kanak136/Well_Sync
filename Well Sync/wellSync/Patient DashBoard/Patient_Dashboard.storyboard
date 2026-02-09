@@ -467,7 +467,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="msg-7v-QzF">
             <objects>
-                <tabBarController restorationIdentifier="Patient" storyboardIdentifier="Patient" automaticallyAdjustsScrollViewInsets="NO" id="5Qd-0T-OJx" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="Patient" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5Qd-0T-OJx" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="U98-az-Th1"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VaA-Rb-39a">
@@ -673,21 +673,24 @@
                                     <rect key="frame" x="0.0" y="0.0" width="384" height="128"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVr-Gd-7Ul">
-                                            <rect key="frame" x="171" y="54" width="42" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVr-Gd-7Ul">
+                                            <rect key="frame" x="16" y="8" width="352" height="112"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="dVr-Gd-7Ul" secondAttribute="trailing" id="2kG-0I-uia"/>
-                                        <constraint firstItem="dVr-Gd-7Ul" firstAttribute="leading" secondItem="djw-fc-gMV" secondAttribute="leading" id="EjG-zc-1zI"/>
-                                        <constraint firstItem="dVr-Gd-7Ul" firstAttribute="top" secondItem="djw-fc-gMV" secondAttribute="top" id="J8f-J8-w6Y"/>
-                                        <constraint firstAttribute="bottom" secondItem="dVr-Gd-7Ul" secondAttribute="bottom" id="RIS-8n-Eem"/>
+                                        <constraint firstItem="dVr-Gd-7Ul" firstAttribute="top" secondItem="djw-fc-gMV" secondAttribute="top" constant="8" id="9lH-Aj-AHi"/>
+                                        <constraint firstItem="dVr-Gd-7Ul" firstAttribute="leading" secondItem="djw-fc-gMV" secondAttribute="leading" constant="16" id="biW-TA-ixF"/>
+                                        <constraint firstAttribute="bottom" secondItem="dVr-Gd-7Ul" secondAttribute="bottom" constant="8" id="o0w-07-voN"/>
+                                        <constraint firstAttribute="trailing" secondItem="dVr-Gd-7Ul" secondAttribute="trailing" constant="16" id="tr9-pM-hTH"/>
                                     </constraints>
                                 </collectionViewCellContentView>
                                 <size key="customSize" width="384" height="128"/>
+                                <connections>
+                                    <outlet property="titleLabel" destination="dVr-Gd-7Ul" id="hsM-wb-jS3"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
