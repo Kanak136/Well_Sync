@@ -35,7 +35,6 @@ class MoodLogCollectionViewController:
             layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
             layout.minimumInteritemSpacing = 8
             layout.minimumLineSpacing = 8
-
         }
         
 
@@ -114,9 +113,11 @@ class MoodLogCollectionViewController:
         }
         let moodIndex = selectedView.tag
         selectedMood = moodIndex
-        collectionView.reloadSections(IndexSet(integer: 0))
+//        collectionView.reloadSections(IndexSet(integer: 0))
+//
+//        collectionView.reloadSections(IndexSet(integer: 1))
+        collectionView.reloadData()
 
-        collectionView.reloadSections(IndexSet(integer: 1))
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -130,6 +131,8 @@ class MoodLogCollectionViewController:
         return CGSize(width: collectionView.frame.width, height: 240)
 
     }
+    
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
