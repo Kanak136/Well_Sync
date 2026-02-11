@@ -1,19 +1,26 @@
 //
-//  AddPatientTableViewController.swift
+//  BasicDetailsTableViewController.swift
 //  wellSync
 //
-//  Created by GEU on 31/01/26.
+//  Created by GEU on 11/02/26.
 //
 
 import UIKit
 
-class AddPatientTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class BasicDetailsTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    
+    @IBOutlet weak var DoctorImageView: UIImageView!
+    @IBOutlet weak var addPhotoButton: UIButton!
 
-    @IBOutlet var patientImageView: UIImageView!
-    @IBOutlet var addPhotoButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPhotoMenu()
+
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -82,7 +89,10 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+   
+    
+    
     func setupPhotoMenu() {
            
            let camera = UIAction(title: "Camera",
@@ -113,9 +123,9 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
             if let editedImage = info[.editedImage] as? UIImage {
-                patientImageView.image = editedImage
+                DoctorImageView.image = editedImage
             } else if let originalImage = info[.originalImage] as? UIImage {
-                patientImageView.image = originalImage
+                DoctorImageView.image = originalImage
             }
 
             dismiss(animated: true)
@@ -124,4 +134,6 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true)
         }
+    
+
 }

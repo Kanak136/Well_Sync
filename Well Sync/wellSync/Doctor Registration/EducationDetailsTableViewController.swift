@@ -1,19 +1,41 @@
 //
-//  AddPatientTableViewController.swift
+//  EducationDetailsTableViewController.swift
 //  wellSync
 //
-//  Created by GEU on 31/01/26.
+//  Created by GEU on 11/02/26.
 //
 
 import UIKit
+import UniformTypeIdentifiers
 
-class AddPatientTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
-    @IBOutlet var patientImageView: UIImageView!
-    @IBOutlet var addPhotoButton: UIButton!
+class EducationDetailsTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate {
+    
+    @IBOutlet weak var educationImageView: UIImageView!
+    @IBOutlet weak var educationCertificateLabel: UILabel!
+    @IBOutlet weak var educationAttachment: UIButton!
+    @IBOutlet weak var registrationImageView: UIImageView!
+    @IBOutlet weak var registrationDocumentLabel: UILabel!
+    @IBOutlet weak var registrationAttachment: UIButton!
+    @IBOutlet weak var identityImageView: UIImageView!
+    @IBOutlet weak var identityDocumentLabel: UILabel!
+    @IBOutlet weak var identityAttachment: UIButton!
+    var selectedFileName: String?
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupPhotoMenu()
+        setupMenu()
+        
+        educationCertificateLabel.text = "Add Certificate"
+        educationCertificateLabel.textColor = .secondaryLabel
+        registrationDocumentLabel.text = "Add Registration proof"
+        registrationDocumentLabel.textColor = .secondaryLabel
+        identityDocumentLabel.text = "Add ID Document"
+        identityDocumentLabel.textColor = .secondaryLabel
+
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     // MARK: - Table view data source
@@ -82,8 +104,8 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
         // Pass the selected object to the new view controller.
     }
     */
-
-    func setupPhotoMenu() {
+    
+    func setupMenu() {
            
            let camera = UIAction(title: "Camera",
                                  image: UIImage(systemName: "camera")) { _ in
@@ -94,13 +116,14 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
                                        image: UIImage(systemName: "photo")) { _ in
                self.openImagePicker(sourceType: .photoLibrary)
            }
+        let attachFile = UIAction(title: "Attach File", image: UIImage(systemName: "doc")){ _ in self.openDocumentPicker()}
            
-           let menu = UIMenu(title: "", children: [camera, photoLibrary])
+           let menu = UIMenu(title: "", children: [camera, photoLibrary, attachFile])
            
-           addPhotoButton.menu = menu
-           addPhotoButton.showsMenuAsPrimaryAction = true
+        educationAttachment.menu = menu
+        educationAttachment.showsMenuAsPrimaryAction = true
+        
        }
-    
     func openImagePicker(sourceType: UIImagePickerController.SourceType) {
            let picker = UIImagePickerController()
            picker.delegate = self
@@ -113,10 +136,13 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
             if let editedImage = info[.editedImage] as? UIImage {
-                patientImageView.image = editedImage
+                educationImageView.image = editedImage
             } else if let originalImage = info[.originalImage] as? UIImage {
-                patientImageView.image = originalImage
+                educationImageView.image = originalImage
             }
+                selectedFileName = "Document Added"
+                educationCertificateLabel.text = selectedFileName
+                educationCertificateLabel.textColor = .blue
 
             dismiss(animated: true)
         }
@@ -124,4 +150,29 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             dismiss(animated: true)
         }
+    
+    func openDocumentPicker() {
+           
+           let types: [UTType] = [.pdf, .image]
+           
+           let picker = UIDocumentPickerViewController(forOpeningContentTypes: types)
+           picker.delegate = self
+           picker.allowsMultipleSelection = false
+           present(picker, animated: true)
+       }
+       
+       func documentPicker(_ controller: UIDocumentPickerViewController,
+                           didPickDocumentsAt urls: [URL]) {
+           
+           guard let url = urls.first else { return }
+           
+           selectedFileName = url.lastPathComponent
+           educationCertificateLabel.text = selectedFileName
+           educationCertificateLabel.textColor = .label
+           
+//           print("Selected file: \(url)")
+           controller.dismiss(animated: true)
+       }
+
 }
+
