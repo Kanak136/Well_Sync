@@ -41,9 +41,6 @@
                                                     <rect key="frame" x="124.66666666666669" y="160" width="104" height="35"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="gray" title="Add Photo"/>
-                                                    <connections>
-                                                        <action selector="addPhotoTapped:" destination="Z6Q-nF-oS1" eventType="touchUpInside" id="tp6-MP-11J"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -236,7 +233,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add more Information" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yEi-zv-m7O">
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add more Information" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yEi-zv-m7O">
                                                     <rect key="frame" x="16" y="0.0" width="321" height="45"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -269,6 +266,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addPhotoButton" destination="aqM-HZ-PUG" id="TME-Ks-BNv"/>
                         <outlet property="patientImageView" destination="Csm-tj-G5Q" id="JJa-Bq-1VS"/>
                     </connections>
                 </tableViewController>
