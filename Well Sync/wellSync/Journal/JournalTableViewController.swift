@@ -132,11 +132,11 @@ class JournalTableViewController: UITableViewController {
                             titleForHeaderInSection section: Int) -> String? {
 
         if section == 0 && !thisWeek.isEmpty {
-            return "THIS WEEK"
+            return "This Week"
         }
 
         if section == 1 && !previous.isEmpty {
-            return "PREVIOUS"
+            return "Previous Week"
         }
 
         return nil

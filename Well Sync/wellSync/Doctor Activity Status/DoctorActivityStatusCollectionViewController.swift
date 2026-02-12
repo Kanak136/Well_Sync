@@ -83,13 +83,15 @@ class ActivityStatusRingView: UIView {
 
 class DoctorActivityStatusCollectionViewController: UICollectionViewController {
 
-    var activities = ["Art","Breathing Exercise","Journal","Walking"]
+    var activities = ["Breathing Exercise","Journal","Walking"]
+    var previousActivity = ["Art","Meditation"]
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Register cell classes
         self.collectionView!.register(UINib(nibName: "UploadCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "uploadCell")
         self.collectionView!.register(UINib(nibName: "GraphCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "graphCell")
+        self.collectionView.register(UINib(nibName: "HeaderCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: "header", withReuseIdentifier: "headerCell")
         
         self.collectionView!.collectionViewLayout = generateLayout()
         // Do any additional setup after loading the view.
@@ -99,7 +101,7 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 3
     }
 
 
@@ -108,7 +110,10 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         if section == 0{
             return 1
         }
-        return activities.count
+        else if section == 1{
+            return activities.count
+        }
+        return previousActivity.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -117,9 +122,16 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
             cell.configure(progress: 3.0/7.0)
             return cell
         }
-        
-        if activities[indexPath.row] == "Art" || activities[indexPath.row] == "Journal" {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "uploadCell", for: indexPath) as! UploadCollectionViewCell
+        if indexPath.section == 1
+        {
+            if activities[indexPath.row] == "Art" || activities[indexPath.row] == "Journal" {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "uploadCell", for: indexPath) as! UploadCollectionViewCell
+                if let label = cell.viewWithTag(2) as? UILabel {
+                    label.text = activities[indexPath.row]
+                }
+                return cell
+            }
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "graphCell", for: indexPath) as! GraphCollectionViewCell
             if let label = cell.viewWithTag(2) as? UILabel {
                 label.text = activities[indexPath.row]
             }
@@ -127,17 +139,22 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "graphCell", for: indexPath) as! GraphCollectionViewCell
         if let label = cell.viewWithTag(2) as? UILabel {
-            label.text = activities[indexPath.row]
+            label.text = previousActivity[indexPath.row]
         }
         return cell
     }
     
     func generateLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment in
+            let headeSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(35.0))
+            let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headeSize, elementKind: "header", alignment: .topLeading)
+            
             if sectionIndex == 0 {
                 return self.generateLayoutForS1()
             } else {
-                return self.generateLayoutForS2()
+                let section = self.generateLayoutForS2()
+                section.boundarySupplementaryItems = [headerItem]
+                return section
             }
         }
         return layout
@@ -185,5 +202,29 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
             section.interGroupSpacing = 10
 
             return section
+    }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 1{
+            if indexPath.row == 1 {
+                performSegue(withIdentifier: "Journal", sender: nil)
+            }
+        }
+    }
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        var headerView:HeaderCollectionReusableView!
+        if kind == "header"{
+            headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerCell", for: indexPath) as? HeaderCollectionReusableView
+            
+            if indexPath.section == 0{
+                
+            }
+            else if indexPath.section == 1{
+                headerView.configure(withTitle: "Current")
+            }
+            else if indexPath.section == 2{
+                headerView.configure(withTitle: "Previous")
+            }
+        }
+        return headerView
     }
 }

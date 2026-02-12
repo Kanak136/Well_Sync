@@ -112,6 +112,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <segue destination="qed-Oc-DzP" kind="show" identifier="Journal" id="Qop-3O-WiT"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qs0-nV-9Xa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -142,6 +145,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cTx-9p-wvL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2806.8702290076335" y="-335.21126760563379"/>
+        </scene>
+        <!--Journal-->
+        <scene sceneID="mZ6-Jg-P29">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Jouranl" referencedIdentifier="Journal" id="qed-Oc-DzP" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="CVq-le-vog"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Wb-bs-Scz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4308" y="-202"/>
         </scene>
     </scenes>
     <resources>
