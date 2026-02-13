@@ -13,6 +13,7 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
 
+//    var doctor = Doctor()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,7 +43,11 @@ class RegisterViewController: UIViewController {
         showAlert(message: "Passwords do not match.")
         return
     }
-    performSegue(withIdentifier: "register_to_basic", sender: self)
+//    doctor.username = username
+//    doctor.email = email
+//    doctor.password = password
+    
+//    performSegue(withIdentifier: "register_to_basic", sender: self)
 }
     
     private func showAlert(message: String) {
