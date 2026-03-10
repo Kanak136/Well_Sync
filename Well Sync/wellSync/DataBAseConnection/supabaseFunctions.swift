@@ -9,19 +9,20 @@ import Supabase
 import UIKit
 
 class AccessSupabase{
-    func fetchDoctors() {
+    func fetchDoctors() async {
         Task {
             do {
                 let response = try await SupabaseManager.shared.client
                     .database
-                    .from("Doctor")
+                    .from("doctor")
                     .select()
                     .execute()
 
                 let doctors = try JSONDecoder().decode([Doctor].self, from: response.data)
 
-                print(doctors)
-
+                for i in doctors{
+                    print(i,"\n")
+                }
             } catch {
                 print("Error:", error)
             }
@@ -29,23 +30,22 @@ class AccessSupabase{
     }
 
 
-    func fetchPatients(for doctorId: UUID) {
-        Task {
-            do {
-                let response = try await SupabaseManager.shared.client
-                    .database
-                    .from("Patients")
-                    .select()
-                    .eq("doc_id", value: doctorId.uuidString)
-                    .execute()
+    func fetchPatients(for doctorId: UUID) async {
+        do {
+            let response = try await SupabaseManager.shared.client
+                .database
+                .from("patients")
+                .select()
+                .eq("doc_id", value: doctorId.uuidString)
+                .execute()
 
-                let patients = try JSONDecoder().decode([Patient].self, from: response.data)
+            print(String(data: response.data, encoding: .utf8)!)
 
-                print(patients)
+            let patients = try JSONDecoder().decode([Patient].self, from: response.data)
+            print(patients)
 
-            } catch {
-                print(error)
-            }
+        } catch {
+            print("Supabase Error:", error)
         }
     }
 
