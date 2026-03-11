@@ -150,7 +150,6 @@ struct Doctor: Codable {
 //        try container.encodeIfPresent(identityImageData, forKey: .identityImageData)
 //    }
 }
-
 struct Patient: Codable {
     var patientID: UUID
     var docID: UUID
@@ -164,8 +163,82 @@ struct Patient: Codable {
     var nextSessionDate: Date
     var imageURL: String?
     var address: String
+    var condition: String
+    var sessionStatus: Bool?
+    var mood: Int?
+    var previousSessionDate: Date?
 
     enum CodingKeys: String, CodingKey {
-        case patientID, docID, name, email, password, contact, dob, nextSessionDate, imageURL, address
+        case patientID = "patient_id"
+        case docID = "doc_id"
+        case name
+        case email
+        case password
+        case contact
+        case dob
+        case nextSessionDate = "next_session"
+        case imageURL = "image"
+        case address
+        case condition
+        case sessionStatus = "session_status"
     }
 }
+
+extension Patient {
+
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        patientID = try container.decode(UUID.self, forKey: .patientID)
+        docID = try container.decode(UUID.self, forKey: .docID)
+
+        name = try container.decode(String.self, forKey: .name)
+        email = try container.decode(String.self, forKey: .email)
+        password = try container.decode(String.self, forKey: .password)
+
+        contact = try container.decode(String.self, forKey: .contact)
+        address = try container.decode(String.self, forKey: .address)
+
+        imageURL = try container.decodeIfPresent(String.self, forKey: .imageURL)
+        condition = try container.decodeIfPresent(String.self, forKey: .condition)!
+        sessionStatus = try container.decodeIfPresent(Bool.self, forKey: .sessionStatus)
+
+        // Decode dob (yyyy-MM-dd)
+        let dobString = try container.decode(String.self, forKey: .dob)
+        let dobFormatter = DateFormatter()
+        dobFormatter.dateFormat = "yyyy-MM-dd"
+        dob = dobFormatter.date(from: dobString) ?? Date()
+
+        // Decode next_session (ISO8601)
+        let sessionString = try container.decode(String.self, forKey: .nextSessionDate)
+        let sessionFormatter = ISO8601DateFormatter()
+        nextSessionDate = sessionFormatter.date(from: sessionString) ?? Date()
+
+        // Not coming from API
+        mood = 3
+        previousSessionDate = Date()
+    }
+}
+//struct Patient: Codable {
+//    var patientID: UUID
+//    var docID: UUID
+//
+//    var name: String
+//    var email: String
+//    var password: String
+//
+//    var contact: String
+//    var dob: Date
+//    var nextSessionDate: Date
+//    var imageURL: String?
+//    var address: String
+//    var condition: String?
+//    var sessionStatus: Bool?
+//    var mood: MoodLevel?
+//    var previousSessionDate: Date?
+//    
+//    enum CodingKeys: String, CodingKey {
+//        case patientID, docID, name, email, password, contact, dob, nextSessionDate, imageURL, address
+//    }
+//}
