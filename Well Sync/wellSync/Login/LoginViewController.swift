@@ -13,6 +13,7 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var userName: UITextField!
     @IBOutlet weak var passWord: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        if let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") {
@@ -71,6 +72,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginButton(_ sender: UIButton) {
 //        if userName.text == "admin" && passWord.text == "admin"
+        getCurrentDoctor(userName.text!)
         if userName.text == "admin"
         {
             performSegue(withIdentifier: "doctorScreen", sender: nil)

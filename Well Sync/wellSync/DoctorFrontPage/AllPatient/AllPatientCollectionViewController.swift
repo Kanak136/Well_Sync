@@ -35,9 +35,10 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
         guard let doctorId = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") else { return }
 
-        let fetched = await viewModel?.fetchPatients(for: doctorId)
+//        let fetched = await viewModel?.fetc hPatients(for: doctorId)
 
-        patients = fetched ?? []
+//        patients = fetched ?? []
+        patients = globalPatient
         filteredPatients = patients
 
         collectionView.reloadSections(IndexSet(integer: 1))

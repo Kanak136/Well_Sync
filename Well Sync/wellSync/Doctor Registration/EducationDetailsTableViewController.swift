@@ -249,22 +249,23 @@ class EducationDetailsTableViewController: UITableViewController, UIImagePickerC
     let registrationImage = registrationImageView.image
     let registrationImagePath = ""
     
-    let doctor = Doctor(
-        username: username,
-        email: email,
-        password: password,
-        name: name,
-        dob: dob,
-        address: address,
-        experience: experience,
-        doctorImage: "",
-        qualification:"",
-        registrationNumber: registrationNumber,
-        identityNumber: identityNumber,
-        educationImageData: educationImagePath,
-        registrationImageData: registrationImagePath,
-        identityImageData: identityImageDataPath
-    )
+//    let doctor = Doctor(
+//        username: username,
+//        email: email,
+//        password: password,
+//        name: name,
+//        dob: dob,
+//        address: address,
+//        experience: experience,
+//        doctorImage: "",
+//        qualification:"",
+//        registrationNumber: registrationNumber,
+//        identityNumber: identityNumber,
+//        educationImageData: educationImagePath,
+//        registrationImageData: registrationImagePath,
+//        identityImageData: identityImageDataPath
+//    )
+    let doctor = currentDoctor!
     print("Doctor object created")
     print(doctor)
     UserDoctors.append(doctor)

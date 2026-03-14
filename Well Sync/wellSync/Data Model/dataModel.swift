@@ -43,9 +43,9 @@ struct Doctor: Codable {
     let password: String?
 
     let name: String?
-    let dob: String?
+    let dob: Date
     let address: String?
-    let experience: Int?
+    let experience: Int
 
     // Avoid UIKit types in Codable models; store base64 strings or URLs/paths instead
     let doctorImage: String?

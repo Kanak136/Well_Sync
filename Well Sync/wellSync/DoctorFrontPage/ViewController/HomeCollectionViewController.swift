@@ -27,9 +27,11 @@ class HomeCollectionViewController: UICollectionViewController {
     func loadPatients() async {
         guard let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") else { return }
 
-        let fetched = await viewModel?.fetchPatients(for: id)
+//        let fetched = await viewModel?.fetchPatients(for: id)
+        
 //        print("fetched:", fetched ?? [])
-        patient = fetched ?? []
+//        patient = fetched ?? []
+        patient = globalPatient
 
         categorizePatients()
         collectionView.reloadData()
@@ -218,7 +220,7 @@ extension HomeCollectionViewController {
             if indexPath.row == 0 {
                     cell.configure(title: "Active Patients", subtitle: "\(patient.count)")
             } else {
-                    cell.configure(title: "Today's Session", subtitle: "\(upcoming.count)")
+                cell.configure(title: "Today's Session", subtitle: "\(upcoming.count+done.count+missed.count)")
             }
 
             applyShadow(cell: cell)
