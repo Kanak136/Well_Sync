@@ -12,6 +12,7 @@ import FSCalendar
 class CalendarCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var calendar: FSCalendar!
+    var selectedDate: Date = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,17 +34,25 @@ class CalendarCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
+
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "c",
+                    for: indexPath
+                ) as! CalendarCell
+
+                cell.delegate = self
+
+                return cell
+            }
+
             let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "c",
-            for: indexPath
-        ) as! CalendarCell
+                withReuseIdentifier: "table",
+                for: indexPath
+            ) as! deatilsCollectionViewCell
+
+            cell.updateDate(selectedDate)
+
             return cell
-        }
-            
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "table", for: indexPath)
-        // Configure the cell
-    
-        return cell
     }
     func generateLayout() -> UICollectionViewLayout {
 
@@ -66,16 +75,16 @@ class CalendarCollectionViewController: UICollectionViewController {
             subitems: [item]
         )
 
-        group.interItemSpacing = .fixed(8)
+        group.interItemSpacing = .fixed(12)
 
         // Section
         let section = NSCollectionLayoutSection(group: group)
 
-        section.interGroupSpacing = 8
+        section.interGroupSpacing = 12
         section.contentInsets = NSDirectionalEdgeInsets(
             top: 16,
             leading: 16,
-            bottom: 16,
+            bottom: 0,
             trailing: 16
         )
 
@@ -84,39 +93,18 @@ class CalendarCollectionViewController: UICollectionViewController {
 
         return layout
     }
-    
-
-    
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-
 }
 
+extension CalendarCollectionViewController: CalendarCellDelegate {
+
+    func didSelect(date: Date) {
+
+        selectedDate = date
+
+        let index = IndexPath(item: 0, section: 1)
+
+        if let cell = collectionView.cellForItem(at: index) as? deatilsCollectionViewCell {
+            cell.updateDate(date)
+        }
+    }
+}
