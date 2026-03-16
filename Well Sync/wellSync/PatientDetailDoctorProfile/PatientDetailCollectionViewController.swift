@@ -180,5 +180,10 @@ extension PatientDetailCollectionViewController{
             
         }
     }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Summarised" {
+            let destination     = segue.destination as! SummarisedReportTableViewController
+            destination.patient = patient
+        }
+    }
 }
