@@ -19,7 +19,8 @@ class VitalsBarCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var chartRangeLabel: UILabel!
-    @IBOutlet weak var ValueLabel: UILabel!
+    @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var unitLabel: UILabel!
     
     private var hasAnimated = false
 
@@ -65,6 +66,8 @@ class VitalsBarCollectionViewCell: UICollectionViewCell {
             self.windowOffset = offset
 
             let visual = metric == .sleep ? item[0] : item[1]
+            unitLabel.text = metric == .sleep ? "hrs" : "steps"
+            valueLabel.text = metric == .sleep ? "8" : "6000"
             iconImageView.image = UIImage(systemName: visual.icon)
             iconImageView.tintColor = visual.color
 

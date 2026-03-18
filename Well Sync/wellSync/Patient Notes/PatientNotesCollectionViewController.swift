@@ -134,7 +134,6 @@ class PatientNotesCollectionViewController: UICollectionViewController {
             return
         }
 
-        // ← fix the guard
         guard let text = textField.text, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             print("text is empty")
             return

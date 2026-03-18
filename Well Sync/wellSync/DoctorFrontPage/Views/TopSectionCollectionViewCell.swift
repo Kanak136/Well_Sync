@@ -14,9 +14,7 @@ class TopSectionCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-//        contentView.backgroundColor = .secondarySystemBackground
-        
+        // Initialization code        
     }
     func configure(title: String, subtitle: String) {
         titleLabel.text = title

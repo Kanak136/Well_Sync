@@ -7,7 +7,6 @@
 
 import UIKit
 
-// Enum to represent which log type is selected
 enum LogType {
     case heartRate
     case sleep
@@ -15,11 +14,9 @@ enum LogType {
 
 class VitalLogTableViewController: UITableViewController {
     
-    // Outlet to connect your segmented control from Interface Builder
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var heartText1: UITextField!
     @IBOutlet weak var textField2: UITextField!
-    //    @IBOutlet weak var section1: UITableViewSection!
     @IBOutlet weak var label1: UILabel!
     @IBOutlet weak var label2: UILabel!
     @IBOutlet weak var label3: UILabel!
@@ -33,7 +30,6 @@ class VitalLogTableViewController: UITableViewController {
     var isTextFieldVisible1: Bool = false
     var isTextFieldVisible2: Bool = false
     
-    // Track which segment is selected
     var selectedLogType: LogType = .heartRate
 
     func setTextFieldVisibility(isVisible1: Bool, isVisible2: Bool) {
@@ -76,22 +72,18 @@ class VitalLogTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Optionally set default selected segment
         updateLabels()
     }
         
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // For section 2 (textfield1)
         if section == 2 {
-            return isTextFieldVisible1 ? 2 : 1  // Hide the row if not visible
+            return isTextFieldVisible1 ? 2 : 1
         }
         
-        // For section 4 (textfield2)
         if section == 3 {
-            return isTextFieldVisible2 ? 2 : 1  // Hide the row if not visible
+            return isTextFieldVisible2 ? 2 : 1
         }
         
-        // Default row count for other sections
         return super.tableView(tableView, numberOfRowsInSection: section)
     }
     
@@ -118,7 +110,6 @@ class VitalLogTableViewController: UITableViewController {
         }
     }
 
-    // IBAction for the segmented control, connect this in Interface Builder
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         selectedLogType = sender.selectedSegmentIndex == 0 ? .heartRate : .sleep
         updateLabels()

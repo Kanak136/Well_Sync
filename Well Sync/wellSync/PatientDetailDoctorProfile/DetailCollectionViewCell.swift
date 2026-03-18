@@ -10,7 +10,6 @@ import UIKit
 class DetailCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var icon: UIImageView!
     @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var describe: UILabel!
     let separator = UIView()
     
     override func awakeFromNib() {
@@ -65,7 +64,7 @@ class DetailCollectionViewCell: UICollectionViewCell {
         icon.image = icons[index]
         icon.tintColor = iconsColor[index]
         title.text = titles[index]
-        describe.text = describes[index]
+//        describe.text = describes[index]
         
     }
 }

@@ -16,12 +16,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        if let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") {
-//            Task {
-//                await db.fetchDoctors()
-//                await db.fetchPatients(for: id)
-//            }
-//        }
         gradient.frame = view.bounds
         gradient.colors = [
             UIColor.systemCyan.withAlphaComponent(0.6).cgColor,
@@ -35,11 +29,10 @@ class LoginViewController: UIViewController {
 
         view.layer.insertSublayer(gradient, at: 0)
     }
-    @IBOutlet weak var glassView: UIView!   // your card view
+    @IBOutlet weak var glassView: UIView!
     let db = AccessSupabase()
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
 //        glassView.clipsToBounds = true
 
         glassView.layer.cornerRadius = 50
@@ -54,19 +47,6 @@ class LoginViewController: UIViewController {
 
         gradient.frame = view.bounds
     }
-
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     
     @IBAction func loginButton(_ sender: UIButton) {
 //        if userName.text == "admin" && passWord.text == "admin"

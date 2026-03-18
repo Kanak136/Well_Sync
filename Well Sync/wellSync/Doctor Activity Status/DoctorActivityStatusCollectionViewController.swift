@@ -24,7 +24,6 @@ class ActivityStatusRingView: UIView {
         }
     }
 
-    
     private func setupLayers() {
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let radius = min(bounds.width, bounds.height) / 2 - 8
@@ -88,8 +87,6 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
     var activities: [TodayActivityItem] = []
     var previousActivity: [LogSummaryItem] = []
     
-//    var activities = ["Breathing Exercise","Journal","Walking"]
-//    var previousActivity = ["Art","Meditation"]
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let patientID = patient?.patientID else {
@@ -104,19 +101,15 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         self.collectionView.register(UINib(nibName: "HeaderCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: "header", withReuseIdentifier: "headerCell")
         
         self.collectionView!.collectionViewLayout = generateLayout()
-        // Do any additional setup after loading the view.
     }
 
-    // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 3
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         if section == 0{
             return 1
         }
@@ -234,8 +227,8 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
             return section
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 1{
-            if indexPath.row == 1 {
+        if indexPath.section == 2{
+            if indexPath.row == 0 {
                 performSegue(withIdentifier: "Journal", sender: nil)
             }
         }
@@ -260,7 +253,7 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        guard let patientID = patient?.patientID else { print("nhbgvfrced");return }
+        guard let patientID = patient?.patientID else { return }
         
         activities       = buildTodayItems(for: patientID)
         previousActivity = buildLogSummaries(for: patientID)
@@ -269,13 +262,13 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "showAddActivity",
        let nav = segue.destination as? UINavigationController,
-       let addVC = nav.topViewController as? AddActivityTableViewController {
+           let addVC = nav.topViewController as? AddActivityTableViewController {
 
-        addVC.patient = self.patient
-        addVC.onSave = { [weak self] newAssignment in
-            self?.activities = buildTodayItems(for: self!.patient!.patientID)
-            self?.collectionView.reloadData()
-        }
+            addVC.patient = self.patient
+            addVC.onSave = { [weak self] newAssignment in
+                self?.activities = buildTodayItems(for: self!.patient!.patientID)
+                self?.collectionView.reloadData()
+            }
         }
     }
     

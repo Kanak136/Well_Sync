@@ -205,9 +205,6 @@ class MoodLogCollectionViewController:
         )
         weeklyMoodLog.append(newLog)
 
-        print("✅ Mood logged: \(moodLevel) | Feelings: \(selectedFeelings) | Date: \(newLog.date!) | \(cell.note.text ?? "")")
-        print("📋 Total logs: \(weeklyMoodLog.count)")
-
         dismiss(animated: true) {
             self.onCheck?()
             self.onDismiss?()

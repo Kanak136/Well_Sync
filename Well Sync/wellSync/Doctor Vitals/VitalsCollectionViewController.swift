@@ -35,7 +35,6 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsRangeNav
     ]
 
     
-    // Independent bar ranges and offsets per bar index (0: Sleep, 1: Steps)
     private var barRanges: [DisplayRange] = [.weekly, .weekly]
     private var barOffsets: [Int] = [0, 0]
 
@@ -131,7 +130,6 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsRangeNav
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Register cell classes
         self.collectionView!.register(UINib(nibName: "VitalsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "vitalCell")
         self.collectionView!.register(UINib(nibName: "VitalsBarCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "vitalBarCell")
         collectionView.collectionViewLayout = generateLayout()
@@ -140,13 +138,11 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsRangeNav
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         if section == 0{
             return 1
         }
@@ -274,7 +270,6 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsRangeNav
     }
     
     
-    // MARK: - VitalsRangeNavigating
     func didTapPrevRange() {
         lineOffset = max(lineOffset - 1, -2)
         reloadLineSection()
@@ -285,7 +280,6 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsRangeNav
         reloadLineSection()
     }
     
-    // MARK: - VitalsBarRangeNavigating
     func didTapPrevBarRange(for index: Int) {
         barOffsets[index] = max(barOffsets[index] - 1, -2)
         reloadBar(at: index)

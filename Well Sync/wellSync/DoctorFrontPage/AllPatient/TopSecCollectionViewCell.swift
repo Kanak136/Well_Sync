@@ -17,11 +17,7 @@ class TopSecCollectionViewCell: UICollectionViewCell, UISearchBarDelegate {
         super.awakeFromNib()
 
         searchBar.delegate = self
-        searchBar.searchBarStyle = .minimal
         searchBar.placeholder = "Search patients..."
-
-        searchBar.backgroundImage = UIImage()
-        searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

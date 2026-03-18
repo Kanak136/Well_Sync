@@ -17,13 +17,11 @@ class DetailSessionCollectionViewController: UICollectionViewController {
 
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 3
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         if section == 1 || section == 0{
             return 4
         }
@@ -47,8 +45,6 @@ class DetailSessionCollectionViewController: UICollectionViewController {
             return cell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recording", for: indexPath)
-    
-        // Configure the cell
     
         return cell
     }
@@ -112,23 +108,21 @@ class DetailSessionCollectionViewController: UICollectionViewController {
                 return section
             }
             if sectionIndex == 2{
-                //createthe itemSize
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension:
                         .estimated(0))
-                
-                //certe the item
+         
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
-                //create teh siz eof the group
+           
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                        heightDimension:
                         .estimated(0))
-                //create the group
+    
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 //                group.interItemSpacing = .flexible(10)
                 
-                //create the section
+            
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 10, bottom: 16, trailing: 10)
                 section.interGroupSpacing = 4
@@ -138,17 +132,16 @@ class DetailSessionCollectionViewController: UICollectionViewController {
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                   heightDimension: .absolute(150))
             
-            //certe the item
+       
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
-            //create teh siz eof the group
+         
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .absolute(150))
-            //create the group
+        
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             group.interItemSpacing = .flexible(10)
             
-            //create the section
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 10, bottom: 16, trailing: 10)
             section.interGroupSpacing = 4

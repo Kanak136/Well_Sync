@@ -37,7 +37,7 @@ class PatientCell: UICollectionViewCell {
 
             // session status
             if let status = patient.sessionStatus {
-                sessionLabel.text = "7  Sessions"//status ? "Active" : "Inactive"
+                sessionLabel.text = "7  Sessions"
             } else {
                 sessionLabel.text = "Unknown"
             }
