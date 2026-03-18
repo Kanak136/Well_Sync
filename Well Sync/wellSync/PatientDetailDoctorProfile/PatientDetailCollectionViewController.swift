@@ -53,6 +53,14 @@ class PatientDetailCollectionViewController: UICollectionViewController {
             let destination     = segue.destination as! SummarisedReportTableViewController
             destination.patient = patient
         }
+        if segue.identifier == "activity" {
+            let destination     = segue.destination as! DoctorActivityStatusCollectionViewController
+            destination.patient = patient
+        }
+        if segue.identifier == "sessionNotes",
+               let vc = segue.destination as? SessionNoteCollectionViewController {
+                vc.patient = self.patient   
+            }
     }
     
 }

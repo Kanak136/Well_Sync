@@ -18,7 +18,7 @@ class SessionNoteCollectionViewCell: UICollectionViewCell {
 //        layer.masksToBounds = false
         sessionNumberLabel.text = "Session \(indexPath.row + 1)"
         sessionDateLabel.text = session?.date.formatted(date: .numeric, time: .omitted) ?? ""
-        sessionTitleLabel.text = /*session.title*/ "Person is suffring from BPD"
-        sessionSummaryLabel.text = "DATA NOT AVAILABLE"
+        sessionTitleLabel.text = session?.title ?? "No Title"
+        sessionSummaryLabel.text = session?.notes ?? "No Notes"
     }
 }

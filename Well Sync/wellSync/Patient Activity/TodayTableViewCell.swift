@@ -20,19 +20,11 @@ class TodayTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupCard()
-        // Border color must be set in code — storyboard can't handle dynamic colors
-
-        selectionStyle              = .none
-        backgroundColor             = .clear
-        contentView.backgroundColor = .clear
     }
 
     private func setupCard() {
         selectionStyle              = .none
-        backgroundColor             = .clear
-        contentView.backgroundColor = .clear
 
-        cardView.backgroundColor    = .systemBackground
         cardView.layer.borderColor  = UIColor.systemGray4.cgColor
         cardView.layer.cornerRadius = 16
         cardView.layer.borderWidth  = 0          // remove harsh border
@@ -58,8 +50,8 @@ class TodayTableViewCell: UITableViewCell {
         let done                 = item.isCompletedToday
 //        checkmarkView.isHidden   = !done
         cardView.backgroundColor = done
-            ? UIColor.systemGray6
-            : UIColor.systemBackground
+        ? UIColor.systemGray4
+        : UIColor.secondarySystemBackground
         contentView.alpha = done ? 0.7 : 1.0
     }
 
@@ -71,7 +63,6 @@ class TodayTableViewCell: UITableViewCell {
         iconImageView.image      = UIImage(systemName: iconName)
 //        checkmarkView.isHidden   = true
         subtitleBottomConstraint.constant = 8
-        cardView.backgroundColor = .systemBackground
     }
 }
 

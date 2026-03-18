@@ -30,26 +30,26 @@
                                     <rect key="frame" x="0.0" y="0.0" width="388" height="215"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What would you like to discuss?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0p-nV-4B6">
-                                            <rect key="frame" x="16" y="16" width="242" height="28"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="What would you like to discuss?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0p-nV-4B6">
+                                            <rect key="frame" x="16" y="16" width="295" height="28"/>
                                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="0.1747634243" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="28" id="1EX-ft-Qci"/>
-                                                <constraint firstAttribute="width" constant="242" id="dvI-fi-Nas"/>
+                                                <constraint firstAttribute="width" constant="300" id="dvI-fi-Nas"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="14"/>
+                                                    <integer key="value" value="12"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Something in your mind?" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kJi-np-yH1">
-                                            <rect key="frame" x="16" y="52.000000000000007" width="356" height="108.66666666666669"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Something in your mind?" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kJi-np-yH1">
+                                            <rect key="frame" x="16" y="52" width="356" height="151"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <textInputTraits key="textInputTraits"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -58,19 +58,21 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                         </textField>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKt-Eu-s1i">
-                                            <rect key="frame" x="16" y="168.66666666666666" width="356" height="34.333333333333343"/>
-                                            <buttonConfiguration key="configuration" style="tinted" title="Save"/>
+                                        <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKt-Eu-s1i">
+                                            <rect key="frame" x="333" y="12" width="47" height="35"/>
+                                            <buttonConfiguration key="configuration" style="tinted" image="plus" catalog="system">
+                                                <color key="baseBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </buttonConfiguration>
                                         </button>
                                     </subviews>
+                                    <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                     <constraints>
-                                        <constraint firstItem="QKt-Eu-s1i" firstAttribute="top" secondItem="kJi-np-yH1" secondAttribute="bottom" constant="8" id="42M-QA-Q5T"/>
                                         <constraint firstItem="d0p-nV-4B6" firstAttribute="leading" secondItem="8Nh-4d-auu" secondAttribute="leading" constant="16" id="88L-6H-2PA"/>
-                                        <constraint firstAttribute="trailing" secondItem="QKt-Eu-s1i" secondAttribute="trailing" constant="16" id="FLL-co-B2p"/>
+                                        <constraint firstItem="QKt-Eu-s1i" firstAttribute="top" secondItem="8Nh-4d-auu" secondAttribute="top" constant="12" id="8io-Pa-xlS"/>
+                                        <constraint firstAttribute="trailing" secondItem="QKt-Eu-s1i" secondAttribute="trailing" constant="8" id="FLL-co-B2p"/>
                                         <constraint firstItem="kJi-np-yH1" firstAttribute="top" secondItem="d0p-nV-4B6" secondAttribute="bottom" constant="8" id="TJ6-hZ-fcZ"/>
-                                        <constraint firstAttribute="bottom" secondItem="QKt-Eu-s1i" secondAttribute="bottom" constant="12" id="eX1-ku-RuC"/>
+                                        <constraint firstAttribute="bottom" secondItem="kJi-np-yH1" secondAttribute="bottom" constant="12" id="gLN-dM-Gu2"/>
                                         <constraint firstItem="kJi-np-yH1" firstAttribute="leading" secondItem="8Nh-4d-auu" secondAttribute="leading" constant="16" id="hX7-X8-fFe"/>
-                                        <constraint firstItem="QKt-Eu-s1i" firstAttribute="leading" secondItem="8Nh-4d-auu" secondAttribute="leading" constant="16" id="nAw-T2-UPX"/>
                                         <constraint firstItem="d0p-nV-4B6" firstAttribute="top" secondItem="8Nh-4d-auu" secondAttribute="top" constant="16" id="suB-rA-Dj6"/>
                                         <constraint firstAttribute="trailing" secondItem="kJi-np-yH1" secondAttribute="trailing" constant="16" id="t4G-nT-ubx"/>
                                     </constraints>
@@ -84,10 +86,10 @@
                                 </userDefinedRuntimeAttributes>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="patientNotesCell" id="6dq-eq-MGG" customClass="PatientNoteCollectionViewCell" customModule="wellSync" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="225" width="393" height="183"/>
+                                <rect key="frame" x="0.0" y="225" width="393" height="160"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5Um-Lu-imc">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="183"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="160"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note 0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bb6-5P-iAH">
@@ -110,13 +112,13 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/02/2005" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oGC-MD-rEP">
                                             <rect key="frame" x="285.33333333333331" y="15.999999999999998" width="83.666666666666686" height="19.333333333333329"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                            <color key="textColor" systemColor="quaternaryLabelColor"/>
+                                            <color key="textColor" systemColor="secondaryLabelColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cZl-qf-0ZC">
-                                            <rect key="frame" x="16" y="76" width="353" height="99"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                            <color key="textColor" systemColor="systemGray3Color"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cZl-qf-0ZC">
+                                            <rect key="frame" x="16" y="76" width="353" height="76"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="svN-2S-CnK">
@@ -124,11 +126,12 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="24" id="NA9-8h-XFa"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                            <color key="textColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                            <color key="textColor" systemColor="systemBlueColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstItem="svN-2S-CnK" firstAttribute="leading" secondItem="5Um-Lu-imc" secondAttribute="leading" constant="16" id="1Pt-61-6Ce"/>
                                         <constraint firstItem="oGC-MD-rEP" firstAttribute="top" secondItem="5Um-Lu-imc" secondAttribute="top" constant="16" id="7pA-P2-4ZX"/>
@@ -144,7 +147,7 @@
                                     </constraints>
                                 </collectionViewCellContentView>
                                 <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
-                                <size key="customSize" width="393" height="183"/>
+                                <size key="customSize" width="393" height="160"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="20"/>
@@ -191,17 +194,15 @@
     </scenes>
     <resources>
         <image name="pencil.and.scribble" catalog="system" width="128" height="86"/>
-        <systemColor name="quaternaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.17647058823529413" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemGray3Color">
-            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

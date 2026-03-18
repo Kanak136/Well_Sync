@@ -51,13 +51,12 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/02/2005" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oUf-sh-2Jw">
                                             <rect key="frame" x="285.33333333333331" y="15.999999999999998" width="83.666666666666686" height="19.333333333333329"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                            <color key="textColor" systemColor="tertiaryLabelColor"/>
+                                            <color key="textColor" systemColor="secondaryLabelColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Xi-KP-JcE">
-                                            <rect key="frame" x="16" y="76" width="353" height="99"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                            <color key="textColor" systemColor="systemGray3Color"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Xi-KP-JcE">
+                                            <rect key="frame" x="16" y="76" width="353" height="91"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1sF-CA-cYl">
@@ -70,8 +69,9 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="6Xi-KP-JcE" secondAttribute="bottom" constant="8" id="8JY-xK-U24"/>
+                                        <constraint firstAttribute="bottom" secondItem="6Xi-KP-JcE" secondAttribute="bottom" constant="16" id="8JY-xK-U24"/>
                                         <constraint firstItem="oUf-sh-2Jw" firstAttribute="top" secondItem="rod-6v-j5b" secondAttribute="top" constant="16" id="8Vc-wD-5FS"/>
                                         <constraint firstAttribute="trailing" secondItem="6Xi-KP-JcE" secondAttribute="trailing" constant="24" id="8dh-LM-VGc"/>
                                         <constraint firstItem="1sF-CA-cYl" firstAttribute="leading" secondItem="rod-6v-j5b" secondAttribute="leading" constant="16" id="Fgd-Ix-EfZ"/>
@@ -289,7 +289,7 @@
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="43H-KG-fgf">
                                             <rect key="frame" x="16" y="16" width="361" height="184"/>
-                                            <mutableString key="text">The client reported feeling increased stress related to workload and upcoming deadlines at work. They stated they have been experiencing difficulty sleeping and occasional irritability over the past week. The client mentioned feeling overwhelmed by expectations from both their employer and family. They expressed concern about maintaining productivity while managing personal responsibilities.The client reported feeling increased stress related to workload and upcoming deadlines at work. They stated they have been experiencing difficulty sleeping and occasional irritability over the past week. The client mentioned feeling overwhelmed by expectations from both their employer and family. They expressed concern about maintaining productivity while managing personal responsibilities.The client reported feeling increased stress related to workload and upcoming deadlines at work. They stated they have been experiencing difficulty sleeping and occasional irritability over the past week. The client mentioned feeling overwhelmed by expectations from both their employer and family. They expressed concern about maintaining productivity while managing personal responsibilities.</mutableString>
+                                            <string key="text">The client reported feeling increased stress related to workload and upcoming deadlines at work. They stated they have been experiencing difficulty sleeping and occasional irritability over the past week. The client mentioned feeling overwhelmed by expectations from both their employer and family. They expressed concern about maintaining productivity while managing personal responsibilities.The client reported feeling increased stress related to workload and upcoming deadlines at work. They stated they have been experiencing difficulty sleeping and occasional irritability over the past week. The client mentioned feeling overwhelmed by expectations from both their employer and family. They expressed concern about maintaining productivity while managing personal responsibilities.The client reported feeling increased stress related to workload and upcoming deadlines at work. They stated they have been experiencing difficulty sleeping and occasional irritability over the past week. The client mentioned feeling overwhelmed by expectations from both their employer and family. They expressed concern about maintaining productivity while managing personal responsibilities.</string>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -347,19 +347,13 @@
         <image name="play.fill" catalog="system" width="120" height="128"/>
         <image name="profile" width="736" height="1472"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray3Color">
-            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

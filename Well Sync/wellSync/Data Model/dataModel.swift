@@ -37,7 +37,7 @@ var UserDoctors: [Doctor] = [] // education table view controller
 
 struct Doctor: Codable {
     // Persisted/decoded properties
-    var docID: UUID? // generate if missing during decode
+    var docID: UUID // generate if missing during decode
     let username: String?
     let email: String?
     let password: String?

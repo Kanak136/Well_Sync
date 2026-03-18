@@ -11,8 +11,9 @@ import Foundation
 private let reuseIdentifier = "Cell"
 
 class PatientNotesCollectionViewController: UICollectionViewController {
-
-    var notes: [PatientNote] = [PatientNote(patientId: UUID(), date: Date(), note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),PatientNote(patientId: UUID(), date: Date(), note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),PatientNote(patientId: UUID(), date: Date(), note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),PatientNote(patientId: UUID(), date: Date(), note: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")]
+    
+    var onAdd: (() -> Void)?
+    var notes: [PatientNote] = patientSampleNotes
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +44,13 @@ class PatientNotesCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "currentNotes", for: indexPath)
+            if let button = cell.viewWithTag(2) as? UIButton {
+                button.addTarget(self, action: #selector(addNoteTapped), for: .touchUpInside)
+                
+                // ← bring button to front so nothing blocks it
+                button.superview?.bringSubviewToFront(button)
+                button.isUserInteractionEnabled = true
+            }
             return cell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "patientNotesCell", for: indexPath) as! PatientNoteCollectionViewCell
@@ -60,7 +68,7 @@ class PatientNotesCollectionViewController: UICollectionViewController {
             ) as! PatientNotesCollectionReusableView
 
             if indexPath.section == 0 {
-                header.configure(with: "Quick notes to remember for your next session")
+                header.configure(with: "Quick note to remember for your next session")
             } else if indexPath.section == 1 {
                 header.configure(with: "Previous Notes")
             }
@@ -103,7 +111,7 @@ class PatientNotesCollectionViewController: UICollectionViewController {
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(250)
+            heightDimension: .absolute(200)
         )
 
         let group = NSCollectionLayoutGroup.vertical(
@@ -117,5 +125,30 @@ class PatientNotesCollectionViewController: UICollectionViewController {
         section.interGroupSpacing = 8
 
         return section
+    }
+    
+    @objc func addNoteTapped() {
+        guard let cell = collectionView.cellForItem(at: IndexPath(row: 0, section: 0)),
+              let textField = cell.viewWithTag(1) as? UITextField else {
+            print("cell or textField not found")
+            return
+        }
+
+        // ← fix the guard
+        guard let text = textField.text, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            print("text is empty")
+            return
+        }
+
+        let newNote = PatientNote(
+            patientId: patientP3,
+            date: Date(),
+            note: text
+        )
+
+        notes.insert(newNote, at: 0)
+        textField.text = ""
+        textField.resignFirstResponder()
+        collectionView.reloadData()
     }
 }

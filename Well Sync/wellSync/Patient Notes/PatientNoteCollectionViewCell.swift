@@ -15,11 +15,12 @@ class PatientNoteCollectionViewCell: UICollectionViewCell {
     func configure(with patient: PatientNote,index:Int)
     {
         noteNumber.text = "Note \(index+1)"
+        // sumarise logic will come
         var title:String{
             let temp = patient.note.split(separator: " ")
             var s = ""
-            if temp.count > 4{
-                for i in 0..<4{
+            if temp.count > 2{
+                for i in 0..<2{
                     s += temp[i] + " "
                 }
             }

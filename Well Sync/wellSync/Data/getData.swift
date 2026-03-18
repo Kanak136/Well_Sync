@@ -359,7 +359,7 @@ var globalPatient: [Patient] = [
         name: "Aarav Sharma", email: "aarav.sharma@email.com", password: "Pass@1234",
         contact: "+91-9876543210",
         dob: makeDate(1990, 3, 15),
-        nextSessionDate: makeDate(2026, 3, 17, hour: 10, minute: 0),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 10, minute: 0),
         imageURL: "https://picsum.photos/200.jpg", address: "12, MG Road, Bengaluru, Karnataka",
         condition: "Generalized Anxiety Disorder", sessionStatus: true, mood: 6,
         previousSessionDate: makeDate(2025, 3, 15, hour: 10, minute: 0)
@@ -369,7 +369,7 @@ var globalPatient: [Patient] = [
         name: "Priya Mehta", email: "priya.mehta@email.com", password: "Pass@1234",
         contact: "+91-9823456789",
         dob: makeDate(1995, 7, 22),
-        nextSessionDate: makeDate(2026, 3, 17, hour: 11, minute: 30),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 11, minute: 30),
         imageURL: "https://picsum.photos/200.jpg", address: "45, Linking Road, Mumbai, Maharashtra",
         condition: "Major Depressive Disorder", sessionStatus: false, mood: 3,
         previousSessionDate: makeDate(2025, 3, 20, hour: 11, minute: 30)
@@ -379,7 +379,7 @@ var globalPatient: [Patient] = [
         name: "Rohan Verma", email: "rohan.verma@email.com", password: "Pass@1234",
         contact: "+91-9845671234",
         dob: makeDate(1988, 11, 5),
-        nextSessionDate: makeDate(2026, 3, 17, hour: 9, minute: 0),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 9, minute: 0),
         imageURL: "https://picsum.photos/200.jpg", address: "7, Sector 18, Noida, Uttar Pradesh",
         condition: "PTSD", sessionStatus: true, mood: 5,
         previousSessionDate: makeDate(2025, 3, 22, hour: 9, minute: 0)
@@ -389,7 +389,7 @@ var globalPatient: [Patient] = [
         name: "Sneha Iyer", email: "sneha.iyer@email.com", password: "Pass@1234",
         contact: "+91-9901234567",
         dob: makeDate(1993, 1, 30),
-        nextSessionDate: makeDate(2026, 3, 17, hour: 14, minute: 15),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 14, minute: 15),
         imageURL: "https://picsum.photos/200.jpg", address: "23, Anna Nagar, Chennai, Tamil Nadu",
         condition: "Bipolar Disorder", sessionStatus: nil, mood: 7,
         previousSessionDate: makeDate(2025, 3, 24, hour: 14, minute: 15)
@@ -399,7 +399,7 @@ var globalPatient: [Patient] = [
         name: "Kabir Nair", email: "kabir.nair@email.com", password: "Pass@1234",
         contact: "+91-9812345678",
         dob: makeDate(1985, 6, 18),
-        nextSessionDate: makeDate(2026, 3, 17, hour: 16, minute: 0),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 16, minute: 0),
         imageURL: "https://picsum.photos/200.jpg", address: "8, Indiranagar, Bengaluru, Karnataka",
         condition: "OCD", sessionStatus: true, mood: 4,
         previousSessionDate: makeDate(2025, 3, 25, hour: 16, minute: 0)
@@ -409,7 +409,7 @@ var globalPatient: [Patient] = [
         name: "Ananya Gupta", email: "ananya.gupta@email.com", password: "Pass@1234",
         contact: "+91-9867345612",
         dob: makeDate(1997, 9, 12),
-        nextSessionDate: makeDate(2026, 3, 16, hour: 10, minute: 30),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 10, minute: 30),
         imageURL: "https://picsum.photos/200.jpg", address: "56, Civil Lines, Delhi",
         condition: "Social Anxiety Disorder", sessionStatus: false, mood: 5,
         previousSessionDate: makeDate(2025, 3, 27, hour: 10, minute: 30)
@@ -419,9 +419,9 @@ var globalPatient: [Patient] = [
         name: "Vikram Singh", email: "vikram.singh@email.com", password: "Pass@1234",
         contact: "+91-9754321098",
         dob: makeDate(1982, 4, 25),
-        nextSessionDate: makeDate(2026, 3, 16, hour: 13, minute: 0),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 8, minute: 0),
         imageURL: "https://picsum.photos/200.jpg", address: "34, Banjara Hills, Hyderabad, Telangana",
-        condition: "Schizophrenia", sessionStatus: true, mood: 2,
+        condition: "Schizophrenia", sessionStatus: false, mood: 2,
         previousSessionDate: makeDate(2025, 3, 28, hour: 13, minute: 0)
     ),
     Patient(
@@ -429,7 +429,7 @@ var globalPatient: [Patient] = [
         name: "Meera Pillai", email: "meera.pillai@email.com", password: "Pass@1234",
         contact: "+91-9934567821",
         dob: makeDate(1991, 12, 8),
-        nextSessionDate: makeDate(2026, 3, 16, hour: 15, minute: 45),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 9, minute: 45),
         imageURL: "https://picsum.photos/200.jpg", address: "19, Thrissur Road, Kochi, Kerala",
         condition: "Panic Disorder", sessionStatus: nil, mood: 6,
         previousSessionDate: makeDate(2025, 3, 29, hour: 15, minute: 45)
@@ -439,7 +439,7 @@ var globalPatient: [Patient] = [
         name: "Arjun Desai", email: "arjun.desai@email.com", password: "Pass@1234",
         contact: "+91-9878901234",
         dob: makeDate(1994, 2, 14),
-        nextSessionDate: makeDate(2026, 3, 16   , hour: 11, minute: 0),
+        nextSessionDate: makeDate(2026, 3, 18   , hour: 11, minute: 0),
         imageURL: "https://picsum.photos/200.jpg", address: "88, CG Road, Ahmedabad, Gujarat",
         condition: "ADHD", sessionStatus: true, mood: 8,
         previousSessionDate: makeDate(2025, 3, 31, hour: 11, minute: 0)
@@ -1469,7 +1469,7 @@ let patientP1 = UUID(uuidString: "00000000-0000-0000-0000-000000000008")!
 let patientP2 = UUID(uuidString: "00000000-0000-0000-0000-000000000004")!
 let patientP3 = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
 
-let activityCatalog: [Activity] = [
+var activityCatalog: [Activity] = [
 
     Activity(
         activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
@@ -1494,7 +1494,7 @@ let activityCatalog: [Activity] = [
         doctorID: docID,
         name: "Journaling",
         type: .upload,
-        iconName: "camera.fill",
+        iconName: "book.pages",
         description: "Upload handwritten journals."
     ),
 
@@ -1503,50 +1503,41 @@ let activityCatalog: [Activity] = [
         doctorID: docID,
         name: "Art",
         type: .upload,
-        iconName: "heart.text.square.fill",
+        iconName: "paintpalette",
         description: "Create mandala art with your imagination."
     ),
 
     Activity(
         activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000005")!,
         doctorID: docID,
-        name: "Physiotherapy Stretches",
+        name: "Yoga",
         type: .timer,
-        iconName: "figure.cooldown",
-        description: "Perform the prescribed lower back stretching routine. Hold each stretch for 30 seconds, 3 repetitions."
+        iconName: "figure.yoga",
+        description: "Perform a guided yoga session to improve flexibility, balance, and mental clarity."
     ),
 
     Activity(
         activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000006")!,
         doctorID: docID,
-        name: "Medication Photo Confirmation",
-        type: .upload,
-        iconName: "pills.fill",
-        description: "Upload a photo of your medication blister pack after taking your evening dose for adherence tracking."
+        name: "Meditation",
+        type: .timer,
+        iconName: "brain.head.profile",
+        description: "Focused mindfulness meditation session to reduce stress and improve mental wellbeing."
     ),
 
     Activity(
         activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000007")!,
         doctorID: docID,
-        name: "Balance Training",
+        name: "Exercise",
         type: .timer,
-        iconName: "figure.stand",
-        description: "Stand on one foot with eyes open for 30 seconds each side. Repeat 3 times to improve proprioception."
-    ),
-
-    Activity(
-        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000008")!,
-        doctorID: docID,
-        name: "Rash / Skin Photo Upload",
-        type: .upload,
-        iconName: "eye.fill",
-        description: "Upload a daily photo of the affected skin area under natural light for dermatology remote review."
+        iconName: "figure.strengthtraining.traditional",
+        description: "Perform the prescribed exercise routine as advised by your doctor."
     ),
 ]
 
 // MARK: - Assigned Activities (doctor → patient assignments)
 
-let assignedActivities: [AssignedActivity] = [
+var assignedActivities: [AssignedActivity] = [
 
     // ── Patient P1: Lower back rehab ───────────────────────────
 
@@ -1588,6 +1579,31 @@ let assignedActivities: [AssignedActivity] = [
     ),
 
     // ── Patient P2: Anxiety & cardiac recovery ─────────────────
+    AssignedActivity(
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000009")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!, // Journaling
+        patientID: patientP2,
+        doctorID: docID,
+        frequency: 1,
+        startDate: makeDate(2026, 2, 10, hour: 0, minute: 0),
+        endDate:   makeDate(2026, 3, 10, hour: 0, minute: 0),
+        doctorNote: "Write at least one page per day. Focus on mood and anxiety levels.",
+        status: .active
+    ),
+
+    // ── Patient P2: Walking (completed) ───────────────────────
+
+    AssignedActivity(
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000010")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!, // Morning Walk
+        patientID: patientP2,
+        doctorID: docID,
+        frequency: 1,
+        startDate: makeDate(2026, 1, 15, hour: 0, minute: 0),
+        endDate:   makeDate(2026, 2, 15, hour: 0, minute: 0),
+        doctorNote: "Light 15-minute walk daily. Avoid steep inclines during cardiac recovery.",
+        status: .completed
+    ),
 
     AssignedActivity(
         assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000004")!,
@@ -1614,6 +1630,32 @@ let assignedActivities: [AssignedActivity] = [
     ),
 
     // ── Patient P3: Parkinson's balance ────────────────────────
+    AssignedActivity(
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000011")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000002")!, // Breathing Exercise
+        patientID: patientP3,
+        doctorID: docID,
+        frequency: 2,
+        startDate: makeDate(2026, 2, 19, hour: 0, minute: 0),
+        endDate:   makeDate(2026, 3, 19, hour: 0, minute: 0),
+        doctorNote: "Use 4-4-6 pattern. Helps manage Parkinson's-related respiratory stiffness.",
+        status: .active
+    ),
+
+    // ── Patient P3: Journaling (completed) ────────────────────
+
+    AssignedActivity(
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000012")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!, // Journaling
+        patientID: patientP3,
+        doctorID: docID,
+        frequency: 1,
+        startDate: makeDate(2026, 1, 20, hour: 0, minute: 0),
+        endDate:   makeDate(2026, 2, 20, hour: 0, minute: 0),
+        doctorNote: "Track motor symptom patterns daily — morning stiffness, tremor timing, and falls.",
+        status: .completed
+    ),
+
 
     AssignedActivity(
         assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000006")!,
@@ -1655,7 +1697,7 @@ let assignedActivities: [AssignedActivity] = [
 
 // MARK: - Activity Logs (patient completion records)
 
-let activityLogs: [ActivityLog] = [
+var activityLogs: [ActivityLog] = [
 
     // ── P1 logs – Morning Walk ─────────────────────────────────
 
@@ -1714,6 +1756,107 @@ let activityLogs: [ActivityLog] = [
         time: "09:00 PM",
         duration: 600,
         uploadPath: nil
+    ),
+    // ── P2 logs – Walking (completed assignment) ───────────────
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000010")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP2,
+        date: makeDate(2026, 1, 17, hour: 8, minute: 0),
+        time: "08:00 AM",
+        duration: 900,   // 15 minutes
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000010")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP2,
+        date: makeDate(2026, 1, 19, hour: 8, minute: 30),
+        time: "08:30 AM",
+        duration: 900,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000010")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP2,
+        date: makeDate(2026, 1, 22, hour: 7, minute: 45),
+        time: "07:45 AM",
+        duration: 1080,  // 18 minutes
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000010")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP2,
+        date: makeDate(2026, 2, 1, hour: 8, minute: 0),
+        time: "08:00 AM",
+        duration: 900,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000010")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP2,
+        date: makeDate(2026, 2, 10, hour: 8, minute: 15),
+        time: "08:15 AM",
+        duration: 960,
+        uploadPath: nil
+    ),
+    // ── P2 logs – Journaling ───────────────────────────────────
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000009")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP2,
+        date: makeDate(2026, 2, 11, hour: 21, minute: 0),
+        time: "09:00 PM",
+        duration: nil,
+        uploadPath: "uploads/p2/journal_20260211.jpg"
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000009")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP2,
+        date: makeDate(2026, 2, 12, hour: 20, minute: 30),
+        time: "08:30 PM",
+        duration: nil,
+        uploadPath: "uploads/p2/journal_20260212.jpg"
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000009")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP2,
+        date: makeDate(2026, 2, 14, hour: 22, minute: 0),
+        time: "10:00 PM",
+        duration: nil,
+        uploadPath: "uploads/p2/journal_20260214.jpg"
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000009")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP2,
+        date: makeDate(2026, 2, 16, hour: 21, minute: 15),
+        time: "09:15 PM",
+        duration: nil,
+        uploadPath: "uploads/p2/journal_20260216.jpg"
     ),
 
     // Only 1 out of 2 done on Feb 18 (partially completed day)
@@ -1846,6 +1989,129 @@ let activityLogs: [ActivityLog] = [
         uploadPath: nil
     ),
 
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000011")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000002")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 20, hour: 9, minute: 0),
+        time: "09:00 AM",
+        duration: 300,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000011")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000002")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 20, hour: 20, minute: 0),
+        time: "08:00 PM",
+        duration: 300,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000011")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000002")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 22, hour: 9, minute: 30),
+        time: "09:30 AM",
+        duration: 300,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000011")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000002")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 23, hour: 8, minute: 0),
+        time: "08:00 AM",
+        duration: 300,
+        uploadPath: nil
+    ),
+
+    // ── P3 logs – Journaling (completed assignment) ────────────
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000012")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP3,
+        date: makeDate(2026, 1, 21, hour: 20, minute: 0),
+        time: "08:00 PM",
+        duration: nil,
+        uploadPath: "uploads/p3/journal_20260121.jpg"
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000012")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP3,
+        date: makeDate(2026, 1, 24, hour: 21, minute: 0),
+        time: "09:00 PM",
+        duration: nil,
+        uploadPath: "uploads/p3/journal_20260124.jpg"
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000012")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 5, hour: 20, minute: 30),
+        time: "08:30 PM",
+        duration: nil,
+        uploadPath: "uploads/p3/journal_20260205.jpg"
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000012")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000003")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 15, hour: 21, minute: 30),
+        time: "09:30 PM",
+        duration: nil,
+        uploadPath: "uploads/p3/journal_20260215.jpg"
+    ),
+
+    // ── P3 logs – Morning Walk (extra logs for existing bbbb...007) ──
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000007")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP3,
+        date: makeDate(2026, 3, 18, hour: 8, minute: 0),
+        time: "08:00 AM",
+        duration: 900,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000007")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 24, hour: 9, minute: 0),
+        time: "09:00 AM",
+        duration: 960,
+        uploadPath: nil
+    ),
+
+    ActivityLog(
+        logID: UUID(),
+        assignedID: UUID(uuidString: "bbbb0000-0000-0000-0000-000000000007")!,
+        activityID: UUID(uuidString: "aaaa0000-0000-0000-0000-000000000001")!,
+        patientID: patientP3,
+        date: makeDate(2026, 2, 26, hour: 9, minute: 30),
+        time: "09:30 AM",
+        duration: 1020,
+        uploadPath: nil
+    ),
     // ── P3 logs – Morning Walk ─────────────────────────────────
 
     ActivityLog(
@@ -1871,6 +2137,34 @@ let activityLogs: [ActivityLog] = [
     ),
 ]
 
+let patientSampleNotes: [PatientNote] = [
+    PatientNote(
+        patientId: patientP3,
+        date: makeDate(2026, 3, 10, hour: 10, minute: 0),
+        note: "Tremors were noticeably worse in the morning before medication. Need to discuss whether timing of dose should be adjusted with the neurologist."
+    ),
+    PatientNote(
+        patientId: patientP3,
+        date: makeDate(2026, 3, 5, hour: 14, minute: 30),
+        note: "Felt very stiff after waking up today. The physiotherapy stretches helped after about 20 minutes. Ask doctor if this morning rigidity is expected to improve over time."
+    ),
+    PatientNote(
+        patientId: patientP3,
+        date: makeDate(2026, 2, 28, hour: 9, minute: 0),
+        note: "Had a fall near the bathroom last night. Wife was not present. Need to discuss installing grab rails and whether the walking aid needs to be upgraded."
+    ),
+    PatientNote(
+        patientId: patientP3,
+        date: makeDate(2026, 2, 21, hour: 11, minute: 0),
+        note: "Sleep has been very disturbed this week. Waking up 3 to 4 times at night. Feeling exhausted during the day and struggling to complete the balance training."
+    ),
+    PatientNote(
+        patientId: patientP3,
+        date: makeDate(2026, 2, 15, hour: 16, minute: 0),
+        note: "Mood has been low for the past few days. Not feeling motivated to do the morning walk. Wife mentioned I seem more withdrawn than usual. Want to talk about this."
+    )
+]
+
 func getCurrentDoctor(_ username:String){
     currentDoctor = globalDoctor.first { $0.username == username }
 }
@@ -1890,6 +2184,7 @@ struct TodayActivityItem {
     let activity: Activity
     let assignment: AssignedActivity
     let completedToday: Int
+    let type: ActivityType
     let logs: [ActivityLog]
 
     var remaining: Int {
@@ -1919,7 +2214,7 @@ struct TodayActivityItem {
 
 // MARK: - Build Today Items
 func buildTodayItems(for patientID: UUID) -> [TodayActivityItem] {
-    let today = Date()
+//    let today = Date()
 
     let todayAssignments = assignedActivities.filter {
         $0.patientID == patientID && $0.isActiveToday
@@ -1931,14 +2226,16 @@ func buildTodayItems(for patientID: UUID) -> [TodayActivityItem] {
         }) else { return nil }
 
         let todayLogs = activityLogs.filter {
-            $0.assignedID == assignment.assignedID &&
-            Calendar.current.isDate($0.date, inSameDayAs: today)
+//            $0.assignedID == assignment.assignedID &&
+//            Calendar.current.isDate($0.date, inSameDayAs: today)
+            $0.assignedID == assignment.assignedID
         }
 
         return TodayActivityItem(
             activity: activity,
             assignment: assignment,
             completedToday: todayLogs.count,
+            type: activity.type,
             logs: todayLogs
         )
     }
@@ -1951,14 +2248,23 @@ struct LogSummaryItem {
 // MARK: - Build Log Summaries
 func buildLogSummaries(for patientID: UUID) -> [LogSummaryItem] {
 
-    let patientLogs = activityLogs.filter { $0.patientID == patientID }
+    // Step 1: Get all inactive assigned activities for this patient
+    let inactiveAssignments = assignedActivities.filter {
+        $0.patientID == patientID && !$0.isActiveToday
+    }
 
-    let grouped = Dictionary(grouping: patientLogs, by: { $0.activityID })
+    // Step 2: For each inactive assignment, find its Activity + its logs
+    return inactiveAssignments.compactMap { assignment in
 
-    return grouped.compactMap { (activityID, logs) in
+        // Step 3: Look up the Activity from the catalog
         guard let activity = activityCatalog.first(where: {
-            $0.activityID == activityID
+            $0.activityID == assignment.activityID
         }) else { return nil }
+
+        // Step 4: Find all logs that belong to this specific assignment
+        let logs = activityLogs.filter {
+            $0.assignedID == assignment.assignedID
+        }
 
         return LogSummaryItem(activity: activity, totalLogs: logs.count)
     }

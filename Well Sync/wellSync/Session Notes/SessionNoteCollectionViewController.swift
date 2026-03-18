@@ -14,7 +14,7 @@ class SessionNoteCollectionViewController: UICollectionViewController {
     var sessions:[SessionNote]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        sessions = [SessionNote(sessionId: UUID(), patientId: UUID(), date: Date(), notes: "HElloeee how are you brdr", images: nil, voice: nil, title: "dhd"),SessionNote(sessionId: UUID(), patientId: UUID(), date: Date(), notes: "HElloeee how are you brdr", images: nil, voice: nil, title: "dhd"),SessionNote(sessionId: UUID(), patientId: UUID(), date: Date(), notes: "HElloeee how are you brdr", images: nil, voice: nil, title: "dhd"),SessionNote(sessionId: UUID(), patientId: UUID(), date: Date(), notes: "HElloeee how are you brdr", images: nil, voice: nil, title: "dhd"),SessionNote(sessionId: UUID(), patientId: UUID(), date: Date(), notes: "HElloeee how are you brdr", images: nil, voice: nil, title: "dhd")]
+        sessions = globalSession.filter { $0.patientId == patient?.patientID }
         self.collectionView.collectionViewLayout = generateLayout()
     }
 
@@ -32,9 +32,13 @@ class SessionNoteCollectionViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sessionCell", for: indexPath) as! SessionNoteCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sessionCell", for: indexPath) as! SessionNoteCollectionViewCell
+            
+            // ← ADD this
+        print("session title: \(sessions?[indexPath.row].title ?? "nil")")
+        print("session notes: \(sessions?[indexPath.row].notes ?? "nil")")
+            
         cell.configur(with: sessions?[indexPath.row], indexPath: indexPath)
-        // Configure the cell
         return cell
     }
     func generateLayout() -> UICollectionViewLayout {
@@ -50,12 +54,12 @@ class SessionNoteCollectionViewController: UICollectionViewController {
                                                heightDimension: .absolute(200.0))
         //create the group
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .flexible(10)
+        group.interItemSpacing = .flexible(16)
         
         //create the section
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-        section.interGroupSpacing = 10
+        section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 12, bottom: 16, trailing: 12)
+        section.interGroupSpacing = 16
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout

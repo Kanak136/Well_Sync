@@ -79,6 +79,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         UIImage(systemName: "paintpalette")
     ]
     @IBOutlet var moodCount: UILabel!
+    var toDoItems: [TodayActivityItem] = []
     
     
     private func makeDashboardMenu() -> UIMenu {
@@ -106,6 +107,26 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         let menu = makeDashboardMenu()
         let more = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: menu)
         navigationItem.rightBarButtonItem = more
+        load()
+    }
+    func load() {
+        let today = Date()
+        let currentPatientID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
+
+        let allToday = buildTodayItems(for: currentPatientID).map { item in
+            let todayLogs = item.logs.filter {
+                Calendar.current.isDate($0.date, inSameDayAs: today)
+            }
+            return TodayActivityItem(
+                activity: item.activity,
+                assignment: item.assignment,
+                completedToday: todayLogs.count,
+                type: item.type,
+                logs: todayLogs
+            )
+        }
+
+        toDoItems = allToday.filter { !$0.isCompletedToday }
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -114,7 +135,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
 
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        items.count
+        return 6 + toDoItems.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -165,19 +186,21 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         else if indexPath.row == 5{
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "section", for: indexPath)
         }
-        else{
+        else {
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BasicCell", for: indexPath)
-        }
-        if let label = cell.viewWithTag(1) as? UILabel {
-            label.text = items[indexPath.row]
-        }
-        if let image = cell.viewWithTag(2) as? UIImageView {
-            image.image = images[indexPath.row-6]
             
-        }
-        cell.layer.cornerRadius = 16
-        cell.layer.masksToBounds = true
-        if indexPath.row != 5{
+            let toDoIndex = indexPath.row - 6
+            let item = toDoItems[toDoIndex]
+            
+            if let label = cell.viewWithTag(1) as? UILabel {
+                label.text = item.activity.name
+            }
+            if let image = cell.viewWithTag(2) as? UIImageView {
+                image.image = UIImage(systemName: item.activity.iconName)
+            }
+            
+            cell.layer.cornerRadius = 16
+            cell.layer.masksToBounds = true
             cell.backgroundColor = .secondarySystemBackground
         }
         return cell
@@ -265,6 +288,9 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        load()
+        
+        collectionView.reloadData()
         resetMoodViews()
     }
     

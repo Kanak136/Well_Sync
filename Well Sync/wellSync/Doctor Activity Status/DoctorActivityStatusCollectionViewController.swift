@@ -82,12 +82,22 @@ class ActivityStatusRingView: UIView {
 
 
 class DoctorActivityStatusCollectionViewController: UICollectionViewController {
+    
+    var patient: Patient?
 
-    var activities = ["Breathing Exercise","Journal","Walking"]
-    var previousActivity = ["Art","Meditation"]
+    var activities: [TodayActivityItem] = []
+    var previousActivity: [LogSummaryItem] = []
+    
+//    var activities = ["Breathing Exercise","Journal","Walking"]
+//    var previousActivity = ["Art","Meditation"]
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        guard let patientID = patient?.patientID else {
+            print("SummaryViewController: no patient passed")
+            return
+        }
+        activities   = buildTodayItems(for: patient!.patientID)
+        previousActivity = buildLogSummaries(for: patient!.patientID)
         // Register cell classes
         self.collectionView!.register(UINib(nibName: "UploadCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "uploadCell")
         self.collectionView!.register(UINib(nibName: "GraphCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "graphCell")
@@ -124,24 +134,44 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         }
         if indexPath.section == 1
         {
-            if activities[indexPath.row] == "Art" || activities[indexPath.row] == "Journal" {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "uploadCell", for: indexPath) as! UploadCollectionViewCell
-                if let label = cell.viewWithTag(2) as? UILabel {
-                    label.text = activities[indexPath.row]
-                }
-                return cell
+            let cell: UICollectionViewCell
+            if activities[indexPath.row].type == .upload {
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "uploadCell", for: indexPath) as! UploadCollectionViewCell
             }
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "graphCell", for: indexPath) as! GraphCollectionViewCell
+            else {
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "graphCell", for: indexPath) as! GraphCollectionViewCell
+            }
             if let label = cell.viewWithTag(2) as? UILabel {
-                label.text = activities[indexPath.row]
+                label.text = activities[indexPath.row].activity.name
+            }
+            if let logLabel = cell.viewWithTag(3) as? UILabel {
+                logLabel.text = String(activities[indexPath.row].logs.count)
+            }
+            if let iconView = cell.viewWithTag(4) as? UIImageView {
+                iconView.image = UIImage(systemName: activities[indexPath.row].activity.iconName)
+            }
+            
+            return cell
+        }
+        else{
+            let cell: UICollectionViewCell
+            if previousActivity[indexPath.row].activity.type == .upload {
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "uploadCell", for: indexPath) as! UploadCollectionViewCell
+            }
+            else {
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "graphCell", for: indexPath) as! GraphCollectionViewCell
+            }
+            if let label = cell.viewWithTag(2) as? UILabel {
+                label.text = previousActivity[indexPath.row].activity.name
+            }
+            if let logLabel = cell.viewWithTag(3) as? UILabel {
+                logLabel.text = String(previousActivity[indexPath.row].totalLogs)
+            }
+            if let iconView = cell.viewWithTag(4) as? UIImageView {
+                iconView.image = UIImage(systemName: previousActivity[indexPath.row].activity.iconName)
             }
             return cell
         }
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "graphCell", for: indexPath) as! GraphCollectionViewCell
-        if let label = cell.viewWithTag(2) as? UILabel {
-            label.text = previousActivity[indexPath.row]
-        }
-        return cell
     }
     
     func generateLayout() -> UICollectionViewLayout {
@@ -227,4 +257,26 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         }
         return headerView
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let patientID = patient?.patientID else { print("nhbgvfrced");return }
+        
+        activities       = buildTodayItems(for: patientID)
+        previousActivity = buildLogSummaries(for: patientID)
+        collectionView.reloadData()
+    }
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "showAddActivity",
+       let nav = segue.destination as? UINavigationController,
+       let addVC = nav.topViewController as? AddActivityTableViewController {
+
+        addVC.patient = self.patient
+        addVC.onSave = { [weak self] newAssignment in
+            self?.activities = buildTodayItems(for: self!.patient!.patientID)
+            self?.collectionView.reloadData()
+        }
+        }
+    }
+    
 }
