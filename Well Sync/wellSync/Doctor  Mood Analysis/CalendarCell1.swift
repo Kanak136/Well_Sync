@@ -16,7 +16,6 @@ class CalendarCell1: UICollectionViewCell,
     @IBOutlet weak var calendar: FSCalendar!
     var onHeightChange: ((CGFloat) -> Void)?
 
-    // ✅ Feed mood logs from outside — VC or ViewModel sets this
     var moodLogs: [MoodLog] = [] {
         didSet {
             buildAverageMoodMap()
@@ -24,18 +23,12 @@ class CalendarCell1: UICollectionViewCell,
         }
     }
 
-    // ✅ Stores date string → average mood (1–5) for O(1) lookup
-    // Key format: "yyyy-MM-dd"
     private var averageMoodByDay: [String: Double] = [:]
-
-    // MARK: - Lifecycle
 
     override func awakeFromNib() {
         super.awakeFromNib()
         setupCalendar()
     }
-
-    // MARK: - Calendar Setup
 
     private func setupCalendar() {
         calendar.dataSource = self
@@ -45,41 +38,29 @@ class CalendarCell1: UICollectionViewCell,
         calendar.firstWeekday = 1
         calendar.scope = .week
 
-        // ── Header ──────────────────────────────────────────
         calendar.appearance.headerMinimumDissolvedAlpha = 0
         calendar.appearance.headerTitleFont = .systemFont(ofSize: 15, weight: .bold)
         calendar.appearance.headerTitleColor = UIColor.label
         calendar.appearance.headerDateFormat = "MMMM yyyy"
 
-        // ── Weekday row ──────────────────────────────────────
         calendar.appearance.weekdayFont = .systemFont(ofSize: 12, weight: .semibold)
         calendar.appearance.weekdayTextColor = UIColor.secondaryLabel
 
-        // ── Day numbers ──────────────────────────────────────
         calendar.appearance.titleFont = .systemFont(ofSize: 15, weight: .medium)
         calendar.appearance.titleDefaultColor = UIColor.label
         calendar.appearance.titleWeekendColor = UIColor.label
 
-        // ── Selection ────────────────────────────────────────
-        // Capsule-style selection circle
         calendar.appearance.selectionColor = UIColor.systemIndigo
         calendar.appearance.titleSelectionColor = .white
 
-        // ── Today ────────────────────────────────────────────
         calendar.appearance.todayColor = UIColor.systemIndigo.withAlphaComponent(0.2)
         calendar.appearance.titleTodayColor = UIColor.systemIndigo
 
-        // ── Event dots ───────────────────────────────────────
-        // These are the mood color indicators shown below each date
         calendar.appearance.eventOffset = CGPoint(x: 0, y: 2)
 
-        // ── Border radius ─────────────────────────────────────
-        calendar.appearance.borderRadius = 1.0 // full circle selection
+        calendar.appearance.borderRadius = 1.0
     }
 
-    // MARK: - Mood Map Builder
-
-    /// Groups logs by day, computes average mood per day
     private func buildAverageMoodMap() {
         var grouped: [String: [Int]] = [:]
         let formatter = DateFormatter()
@@ -96,9 +77,6 @@ class CalendarCell1: UICollectionViewCell,
         }
     }
 
-    // MARK: - Mood Color Helper
-
-    /// Maps average mood (1–5) → UIColor
     private func moodColor(for average: Double) -> UIColor {
         switch average {
         case ..<1.5: return UIColor.systemRed                              // 1 — Bad
@@ -109,9 +87,7 @@ class CalendarCell1: UICollectionViewCell,
         }
     }
 
-    // MARK: - FSCalendarDataSource
 
-    /// Returns number of event dots — 1 per day that has mood logs
     func calendar(_ calendar: FSCalendar,
                   numberOfEventsFor date: Date) -> Int {
         let formatter = DateFormatter()
@@ -120,9 +96,7 @@ class CalendarCell1: UICollectionViewCell,
         return averageMoodByDay[key] != nil ? 1 : 0
     }
 
-    // MARK: - FSCalendarDelegateAppearance
 
-    /// Returns the mood-based color for the event dot
     func calendar(_ calendar: FSCalendar,
                   appearance: FSCalendarAppearance,
                   eventDefaultColorsFor date: Date) -> [UIColor]? {
@@ -141,8 +115,6 @@ class CalendarCell1: UICollectionViewCell,
                              eventDefaultColorsFor: date)
     }
 
-    // MARK: - Scope Switch
-
     func setupForWeek() {
         if calendar.scope != .week {
             calendar.setScope(.week, animated: true)
@@ -160,8 +132,6 @@ class CalendarCell1: UICollectionViewCell,
     func configure(segment: Int) {
         if segment == 0 { setupForWeek() } else { setupForMonth() }
     }
-
-    // MARK: - Height Change
 
     func calendar(_ calendar: FSCalendar,
                   boundingRectWillChange bounds: CGRect,

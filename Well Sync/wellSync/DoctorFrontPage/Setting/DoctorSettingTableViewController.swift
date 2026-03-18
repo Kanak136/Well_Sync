@@ -23,14 +23,7 @@ class DoctorSettingTableViewController: UITableViewController {
             let loginVC = storyboard.instantiateViewController(withIdentifier: "login")
             
             if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-                
-                // 🔥 Disable animation (important)
-//                UIView.transition(with: sceneDelegate.window!,
-//                                  duration: 0.3,
-//                                  options: .transitionCrossDissolve,
-//                                  animations: {
                     sceneDelegate.window?.rootViewController = loginVC
-//                })
             }
         }
     }

@@ -121,10 +121,11 @@
             </collectionViewCellContentView>
             <size key="customSize" width="393" height="322"/>
             <connections>
-                <outlet property="ValueLabel" destination="8Gd-EW-3fQ" id="gno-RL-MWo"/>
                 <outlet property="barChartView" destination="NHa-iI-Fcm" id="PZW-Qd-knh"/>
                 <outlet property="chartRangeLabel" destination="b20-Ly-UZJ" id="zl6-kH-S28"/>
                 <outlet property="iconImageView" destination="2Re-PX-1VC" id="4iZ-09-dFk"/>
+                <outlet property="unitLabel" destination="PjY-KB-uPn" id="Pge-3E-tBc"/>
+                <outlet property="valueLabel" destination="8Gd-EW-3fQ" id="gno-RL-MWo"/>
             </connections>
             <point key="canvasLocation" x="-515" y="171"/>
         </collectionViewCell>

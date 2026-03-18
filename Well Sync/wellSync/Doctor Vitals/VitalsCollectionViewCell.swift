@@ -26,12 +26,10 @@ class VitalsCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
         layer.cornerRadius = 16
-        // chart will be configured by controller via configure(rangeText:xLabels:points:)
     }
 
     func configure(rangeText: String, xLabels: [String], points: [Double]) {
         rangeLabel.text = rangeText
-        // Build line chart from provided points and labels
         var entries: [ChartDataEntry] = []
         for (index, rate) in points.enumerated() {
             entries.append(ChartDataEntry(x: Double(index), y: rate))

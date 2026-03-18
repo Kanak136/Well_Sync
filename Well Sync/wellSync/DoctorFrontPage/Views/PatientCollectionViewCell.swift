@@ -21,7 +21,6 @@ class PatientCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        //        ontentView.backgroundColor = .secondarySystemBackground
         setupTag(conditionLabel)
         setupTag(sessionLabel)
     }
@@ -48,14 +47,7 @@ class PatientCollectionViewCell: UICollectionViewCell {
             default:
                 color = .systemYellow
             }
-    //        profileImage.image = UIImage(named: URL(string: with.imageURL ?? ""))
-//            if let urlString = with.imageURL,
-//               let url = URL(string: urlString),
-//               let data = try? Data(contentsOf: url) {
-//    
-//                profileImage.image = UIImage(data: data)
-//            }
-            profileImage.image = UIImage(systemName: "person.circle") // placeholder while loading
+            profileImage.image = UIImage(systemName: "person.circle")
 
             if let urlString = with.imageURL, let url = URL(string: urlString) {
                 URLSession.shared.dataTask(with: url) { data, _, error in
@@ -80,11 +72,7 @@ class PatientCollectionViewCell: UICollectionViewCell {
             time.text = timeFormatter.string(from: sessionDate)
     
     
-    //        formatter.dateFormat = "HH:mm:ss"
-    
-    
-            print("---->>>>",sessionDate.formatted(date: .omitted, time: .standard))
-            print("---->>>>",time.text)
+//            formatter.dateFormat = "HH:mm:ss"
     
             var formatter = DateFormatter()
             guard let date = with.previousSessionDate else { return}
@@ -93,8 +81,8 @@ class PatientCollectionViewCell: UICollectionViewCell {
             formatter.dateStyle = .medium
     
             let dateString = formatter.string(from: date)
-            lastDate.text = dateString
-    //        lastDate.text = "\(with.previousSessionDate?.formatted(date: .numeric, time: .omitted))"
+            lastDate.text = "Last session: \(dateString)"
+//            lastDate.text = "\(with.previousSessionDate?.formatted(date: .numeric, time: .omitted))"
             contentView.layer.borderColor = color.cgColor
         }
 

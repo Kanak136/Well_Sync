@@ -13,7 +13,6 @@ class MoodCountCollectionViewCell: UICollectionViewCell, ChartViewDelegate {
 
     @IBOutlet weak var moodChart: PieChartView!
 
-    // ✅ Set this from outside — same as CalendarCell1
     var moodLogs: [MoodLog] = [] {
         didSet { setupMoodChart() }
     }
@@ -37,7 +36,6 @@ class MoodCountCollectionViewCell: UICollectionViewCell, ChartViewDelegate {
         moodChart.delegate = self
     }
 
-    // MARK: - Mood Color (same scale as CalendarCell1)
 
     private func moodColor(for mood: Double) -> UIColor {
         switch mood {
@@ -48,69 +46,6 @@ class MoodCountCollectionViewCell: UICollectionViewCell, ChartViewDelegate {
         default:         return .systemGreen
         }
     }
-
-    // MARK: - Chart Setup
-
-//    func setupMoodChart() {
-//        if total == 0 {
-//            moodChart.data = nil
-//            moodChart.noDataText = "NO DATA AVAILABLE"
-//            moodChart.noDataTextColor = .secondaryLabel
-//            moodChart.noDataFont = .systemFont(ofSize: 18, weight: .semibold)
-//            moodChart.backgroundColor = .clear
-//            moodChart.legend.enabled = false
-//            moodChart.drawEntryLabelsEnabled = false
-//            moodChart.chartDescription.enabled = false
-//            moodChart.drawHoleEnabled = false
-//            return
-//        }
-//
-//        // ✅ Build entries AND colors together, keyed by mood value
-//        var entries: [PieChartDataEntry] = []
-//        var colors: [UIColor] = []
-//
-//        for v in values {
-//            entries.append(PieChartDataEntry(value: v))
-//            // ✅ Each slice gets the color that matches its mood score
-//            colors.append(moodColor(for: v))
-//        }
-//
-//        let dataSet = PieChartDataSet(entries: entries)
-//
-//        // ✅ Assign per-entry colors instead of a fixed palette
-//        dataSet.colors = colors
-//
-//        dataSet.drawValuesEnabled = false
-//        dataSet.sliceSpace = 4
-//        dataSet.selectionShift = 8
-//
-//        moodChart.data = PieChartData(dataSet: dataSet)
-//
-//        // Donut look
-//        moodChart.drawHoleEnabled = true
-//        moodChart.holeRadiusPercent = 0.70
-//        moodChart.transparentCircleRadiusPercent = 0
-//        moodChart.holeColor = .secondarySystemBackground
-//
-//        // Half circle
-//        moodChart.maxAngle = 180
-//        moodChart.rotationAngle = 180
-//        moodChart.rotationEnabled = false
-//
-//        // Clean UI
-//        moodChart.legend.enabled = false
-//        moodChart.drawEntryLabelsEnabled = false
-//        moodChart.chartDescription.enabled = false
-//        moodChart.backgroundColor = .clear
-//
-//        // Center text
-//        setCenterText("\(Int(total))")
-//        moodChart.centerTextOffset = CGPoint(x: 0, y: -25)
-//        moodChart.extraTopOffset = 10
-//        moodChart.extraBottomOffset = 6
-//
-//        moodChart.animate(xAxisDuration: 0.8)
-//    }
 
     func setupMoodChart() {
         if total == 0 {
@@ -126,15 +61,11 @@ class MoodCountCollectionViewCell: UICollectionViewCell, ChartViewDelegate {
             return
         }
 
-        // ✅ Step 1: Group logs by mood level → count per level
-        // Result example: [1:1, 2:1, 3:1, 4:1, 5:2]
         var moodCounts: [Int: Int] = [:]
         for log in moodLogs {
             moodCounts[log.mood, default: 0] += 1
         }
 
-        // ✅ Step 2: Sort by mood level ascending (1→2→3→4→5)
-        // So colors always appear left→right: red orange yellow lightgreen green
         let sortedMoodLevels = moodCounts.keys.sorted()
 
         var entries: [PieChartDataEntry] = []
@@ -143,8 +74,6 @@ class MoodCountCollectionViewCell: UICollectionViewCell, ChartViewDelegate {
         for level in sortedMoodLevels {
             let count = moodCounts[level]!
 
-            // ✅ Step 3: value = count of logs at this level (not the mood score)
-            // mood 5 logged 2x → value = 2.0 → double slice area
             entries.append(PieChartDataEntry(value: Double(count)))
             colors.append(moodColor(for: Double(level)))
         }

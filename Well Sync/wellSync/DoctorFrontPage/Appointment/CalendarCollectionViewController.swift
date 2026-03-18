@@ -8,7 +8,6 @@
 import UIKit
 import FSCalendar
 
-// Note: Removed invalid IBOutlet to a UITableView that was connected to repeating content (e.g., inside a cell).
 class CalendarCollectionViewController: UICollectionViewController {
     
     @IBOutlet weak var calendar: FSCalendar!
@@ -19,16 +18,12 @@ class CalendarCollectionViewController: UICollectionViewController {
         self.collectionView.collectionViewLayout = generateLayout()
     }
 
-    // MARK: UICollectionViewDataSource
-
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         return 1
     }
 

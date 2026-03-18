@@ -52,7 +52,7 @@ class AddActivityTableViewController: UITableViewController {
         let activityActions = activityList.map { option in
             UIAction(title: option) { [weak self] _ in
                 guard let self = self else { return }
-
+                
                 self.activityListButton.setTitle(option, for: .normal)
                 self.toggleCustomRows(show: false)
             }
@@ -72,20 +72,16 @@ class AddActivityTableViewController: UITableViewController {
         activityListButton.menu = UIMenu(children: [mainGroup, customGroup])
         activityListButton.showsMenuAsPrimaryAction = true
 
-
-            // Frequency
         let frequencyActions = frequencyList.map { option in
             UIAction(title: option) { [weak self] _ in
                 self?.frequencyButton.setTitle(option, for: .normal)
             }
         }
 
-
         frequencyButton.menu = UIMenu(children: frequencyActions)
         frequencyButton.showsMenuAsPrimaryAction = true
 
-
-            // Timing
+        
         let timingActions = timingList.map { option in
             UIAction(title: option) { [weak self] _ in
                 self?.activityTimingButton.setTitle(option, for: .normal)
@@ -96,7 +92,6 @@ class AddActivityTableViewController: UITableViewController {
         activityTimingButton.menu = UIMenu(children: timingActions)
         activityTimingButton.showsMenuAsPrimaryAction = true
         
-            // Type
         let typeActions = typeList.map { option in
             UIAction(title: option) { [weak self] _ in
                 self?.typeButton.setTitle(option, for: .normal)
@@ -167,32 +162,26 @@ class AddActivityTableViewController: UITableViewController {
             return
         }
 
-            // 1. Get selected activity name from button
             let selectedName = activityListButton.title(for: .normal) ?? ""
             guard !selectedName.isEmpty, selectedName != "Select" else {
                 showAlert("Please select an activity."); return
             }
 
-            // 2. Find activity in catalog by name
             guard let activity = activityCatalog.first(where: {
                 $0.name.lowercased() == selectedName.lowercased()
             }) else {
                 showAlert("Activity not found in catalog."); return
             }
-
-            // 3. Get frequency
             guard let frequency = resolveFrequency() else {
                 showAlert("Please select a frequency."); return
             }
 
-            // 4. Validate dates
             let start = startDatePicker.date
             let end   = endDatePicker.date
             guard end >= start else {
                 showAlert("End date must be after start date."); return
             }
 
-            // 5. Create the AssignedActivity
             let newAssignment = AssignedActivity(
                 assignedID: UUID(),
                 activityID: activity.activityID,
@@ -206,10 +195,9 @@ class AddActivityTableViewController: UITableViewController {
             )
         
         print("total assignedActivities count: \(assignedActivities.count)")
-            // 6. Append directly to the global array
             assignedActivities.append(newAssignment)
 
-            // 7. Fire closure so the list VC can reload
+        
             onSave?(newAssignment)
             
         // ADD temporarily before dismiss(animated: true)
@@ -218,13 +206,11 @@ class AddActivityTableViewController: UITableViewController {
         print("total assignedActivities count: \(assignedActivities.count)")
             dismiss(animated: true)
         }
-
-        // ← ADD
+ 
         @IBAction func cancelTapped(_ sender: UIBarButtonItem) {
             dismiss(animated: true)
         }
 
-        // ← ADD
     private func resolveFrequency() -> Int? {
         switch frequencyButton.title(for: .normal) {
         case "Once a day":          return 1
@@ -235,12 +221,11 @@ class AddActivityTableViewController: UITableViewController {
         }
     }
 
-        // ← ADD
-        private func showAlert(_ message: String) {
-            let alert = UIAlertController(title: "Missing Info",
-                                          message: message,
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
-        }
+    private func showAlert(_ message: String) {
+        let alert = UIAlertController(title: "Missing Info",
+                                    message: message,
+                                    preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
+}

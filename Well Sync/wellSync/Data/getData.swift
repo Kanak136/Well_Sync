@@ -369,7 +369,7 @@ var globalPatient: [Patient] = [
         name: "Priya Mehta", email: "priya.mehta@email.com", password: "Pass@1234",
         contact: "+91-9823456789",
         dob: makeDate(1995, 7, 22),
-        nextSessionDate: makeDate(2026, 3, 18, hour: 11, minute: 30),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 20, minute: 30),
         imageURL: "https://picsum.photos/200.jpg", address: "45, Linking Road, Mumbai, Maharashtra",
         condition: "Major Depressive Disorder", sessionStatus: false, mood: 3,
         previousSessionDate: makeDate(2025, 3, 20, hour: 11, minute: 30)
@@ -389,7 +389,7 @@ var globalPatient: [Patient] = [
         name: "Sneha Iyer", email: "sneha.iyer@email.com", password: "Pass@1234",
         contact: "+91-9901234567",
         dob: makeDate(1993, 1, 30),
-        nextSessionDate: makeDate(2026, 3, 18, hour: 14, minute: 15),
+        nextSessionDate: makeDate(2026, 3, 18, hour: 18, minute: 15),
         imageURL: "https://picsum.photos/200.jpg", address: "23, Anna Nagar, Chennai, Tamil Nadu",
         condition: "Bipolar Disorder", sessionStatus: nil, mood: 7,
         previousSessionDate: makeDate(2025, 3, 24, hour: 14, minute: 15)

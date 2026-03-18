@@ -11,7 +11,6 @@ import Foundation
 class AddPatientTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var patient: Patient?
-//    var doctor: Doctor -> this would be passsed from screen to screen
     
     @IBOutlet weak var fullName: UITextField!
     @IBOutlet weak var dateOfBirth: UITextField!
@@ -66,7 +65,7 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
            picker.sourceType = sourceType
            picker.allowsEditing = true
            present(picker, animated: true)
-       }
+    }
     
     func imagePickerController(_ picker: UIImagePickerController,
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {

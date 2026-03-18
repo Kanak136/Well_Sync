@@ -5,8 +5,7 @@ class HomeCollectionViewController: UICollectionViewController {
     var viewModel: AccessSupabase?
    
     @IBOutlet weak var ellipsisButtonTapped: UIBarButtonItem!
-    
-//     adding selected patient
+
     var selectedPatient: Patient?
     
     
@@ -22,7 +21,6 @@ class HomeCollectionViewController: UICollectionViewController {
         self.collectionView.collectionViewLayout = createLayout()
         setupMenu()
     }
-    // calling the screen again
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         patient = globalPatient
@@ -31,12 +29,8 @@ class HomeCollectionViewController: UICollectionViewController {
     }
     @MainActor
     func loadPatients() async {
-        guard let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") else { return }
+//        guard let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") else { return }
 
-//        let fetched = await viewModel?.fetchPatients(for: id)
-        
-//        print("fetched:", fetched ?? [])
-//        patient = fetched ?? []
         patient = globalPatient
 
         categorizePatients()
@@ -117,7 +111,7 @@ class HomeCollectionViewController: UICollectionViewController {
         }
 
         let allPatients = UIAction(title: "All Patients",
-                                    image: UIImage(systemName: "person")) { _ in
+                                    image: UIImage(systemName: "person.3")) { _ in
             self.openAllPatients()
         }
 
@@ -226,7 +220,6 @@ extension HomeCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-// for top section
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "TopCell",
@@ -243,7 +236,6 @@ extension HomeCollectionViewController {
             return cell
         }
 
-// for patient cells upcomig done missed
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "PatientCell",
             for: indexPath
@@ -263,8 +255,6 @@ extension HomeCollectionViewController {
         cell.contentView.layer.masksToBounds = true
         cell.layer.cornerRadius = 20
         cell.layer.shadowColor = UIColor.black.cgColor
-//        cell.layer.shadowOpacity = 0.15
-        //cell.layer.shadowOffset = CGSize(width: 0, height: 6)
         cell.layer.shadowRadius = 10
         cell.layer.masksToBounds = false
     }

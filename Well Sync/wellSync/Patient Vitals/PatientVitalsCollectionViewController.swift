@@ -32,7 +32,6 @@ class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRa
     
     private var displayRange: DisplayRange = .weekly {
         didSet {
-            // Sync bar ranges with main segment selection while keeping offsets independent
             barRanges = Array(repeating: displayRange, count: allVitals.count)
             reloadAllCharts()
         }
@@ -46,7 +45,6 @@ class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRa
     ]
 
     
-    // Independent bar ranges and offsets per bar index (0: Sleep, 1: Steps)
     private var barRanges: [DisplayRange] = [.weekly, .weekly]
     private var barOffsets: [Int] = [0, 0]
 
@@ -58,7 +56,6 @@ class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRa
         switch displayRange {
 
         case .weekly:
-            // 3 week window
             let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: today)!.start
             let targetStart = calendar.date(byAdding: .weekOfYear, value: lineOffset, to: startOfWeek)!
 
@@ -147,13 +144,11 @@ class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRa
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 2
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         if section == 0{
             return 1
         }
@@ -281,7 +276,6 @@ class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRa
     }
     
     
-    // MARK: - VitalsRangeNavigating
     func didTapPrevRange() {
         lineOffset = max(lineOffset - 1, -2)
         reloadLineSection()
@@ -292,7 +286,6 @@ class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRa
         reloadLineSection()
     }
     
-    // MARK: - VitalsBarRangeNavigating
     func didTapPrevBarRange(for index: Int) {
         barOffsets[index] = max(barOffsets[index] - 1, -2)
         reloadBar(at: index)

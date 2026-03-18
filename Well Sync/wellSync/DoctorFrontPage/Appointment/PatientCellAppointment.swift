@@ -37,7 +37,6 @@ class PatientCellAppointment: UICollectionViewCell {
         nameLabel.text = patient.name
         conditionLabel.text = patient.condition
 
-        // If you want to show previous session
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMM yy"
 
@@ -47,7 +46,6 @@ class PatientCellAppointment: UICollectionViewCell {
             lastDate.text = "No previous session"
         }
 
-        // Next appointment time
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "hh:mm a"
 

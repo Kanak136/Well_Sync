@@ -206,7 +206,6 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         return cell
     }
     
-    // MARK: - Layout
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -221,7 +220,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             case 0:       return CGSize(width: fullWidth, height: 116)
             case 1, 2:    return CGSize(width: halfWidth, height: 150)
             case 3:       return CGSize(width: fullWidth, height: 110)
-            case 4:       return CGSize(width: fullWidth, height: 180)
+            case 4:       return CGSize(width: fullWidth, height: 200)
             case 5:       return CGSize(width: fullWidth, height: 30)
             default:      return CGSize(width: fullWidth, height: 70)
             }
@@ -234,11 +233,9 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         return layout
     }
     
-    // what to done after mood view is tapped
     @objc func moodTapped(_ sender: UITapGestureRecognizer) {
         guard let selectedView = sender.view else { return }
         let selectedIndex = selectedView.tag
-        // scale animation
         UIView.animate(withDuration: 0.15,
                        delay: 0,
                        usingSpringWithDamping: 0.6,
@@ -273,7 +270,6 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         }
     }
     
-    // resting back the scale of mood view
     func resetMoodViews() {
         for cell in collectionView.visibleCells {
             if let moodCell = cell as? MoodLogCollectionViewCell {

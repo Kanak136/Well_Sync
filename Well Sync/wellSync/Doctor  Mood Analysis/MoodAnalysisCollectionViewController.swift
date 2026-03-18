@@ -80,11 +80,6 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     func style(_ cell: UICollectionViewCell) {
         cell.layer.cornerRadius = 16
         cell.layer.masksToBounds = true
-//        cell.layer.shadowColor = UIColor.black.cgColor
-//        cell.layer.shadowOpacity = 0.2
-//        cell.layer.shadowOffset = CGSize(width: 0, height: 4)
-//        cell.layer.shadowRadius = 8
-//        cell.layer.masksToBounds = false
     }
 
     func generateLayout() -> UICollectionViewCompositionalLayout {
@@ -119,13 +114,13 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
 
                 return section
             case 1:
-                height = .absolute(self.calendarCellHeight) // Calendar
+                height = .absolute(self.calendarCellHeight)
             case 2:
-                height = .estimated(250) // Mood Count
+                height = .estimated(250)
             case 3:
-                height = .estimated(240) // Chart
+                height = .estimated(240)
             default:
-                height = .estimated(160) // Insights
+                height = .estimated(160)
             }
 
             let itemSize = NSCollectionLayoutSize(
@@ -157,7 +152,6 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     @IBAction func sectionChanged(_ sender: UISegmentedControl) {
         selectedSegmentIndex = sender.selectedSegmentIndex
 
-            // ── Update calendar cell ──────────────────────────────────────
             if let calCell = collectionView.cellForItem(
                 at: IndexPath(item: 0, section: 1)
             ) as? CalendarCell1 {

@@ -36,7 +36,6 @@ class GraphCollectionViewCell: UICollectionViewCell {
 
         barChart.data = data
 
-        // 🔥 Remove EVERYTHING
         barChart.legend.enabled = false
         barChart.chartDescription.enabled = false
 
@@ -52,7 +51,6 @@ class GraphCollectionViewCell: UICollectionViewCell {
         barChart.pinchZoomEnabled = false
         barChart.highlightPerTapEnabled = false
 
-        // 🔥 remove extra padding
         barChart.minOffset = 0
         barChart.extraTopOffset = 0
         barChart.extraBottomOffset = 0

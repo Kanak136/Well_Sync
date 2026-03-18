@@ -36,7 +36,7 @@
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9 Feb - 15 Feb 2026" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="oOY-18-BuO">
                                 <rect key="frame" x="88" y="0.0" width="383" height="15"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -75,7 +75,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BPM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8u2-HM-rSa">
-                        <rect key="frame" x="45" y="114.33333333333333" width="26" height="14.333333333333329"/>
+                        <rect key="frame" x="44.666666666666664" y="115.33333333333333" width="25.999999999999993" height="14.333333333333329"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
@@ -87,13 +87,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="72" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oQa-oB-4A8">
-                        <rect key="frame" x="16" y="103.33333333333333" width="25" height="25.333333333333329"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
+                        <rect key="frame" x="16" y="103.33333333333333" width="24.666666666666671" height="26.333333333333329"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vnT-3Y-vbd" customClass="LineChartView" customModule="DGCharts">
-                        <rect key="frame" x="16" y="136.66666666666666" width="559" height="259.33333333333337"/>
+                        <rect key="frame" x="16" y="137.66666666666666" width="559" height="258.33333333333337"/>
                         <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                     </view>
                 </subviews>

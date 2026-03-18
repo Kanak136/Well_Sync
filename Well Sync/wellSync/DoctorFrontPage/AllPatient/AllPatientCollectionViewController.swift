@@ -28,8 +28,6 @@ class AllPatientCollectionViewController: UICollectionViewController {
         }
     }
 
-    // MARK: Load Patients
-
     @MainActor
     func loadPatients() async {
 
@@ -44,8 +42,6 @@ class AllPatientCollectionViewController: UICollectionViewController {
         collectionView.reloadSections(IndexSet(integer: 1))
     }
 
-    // MARK: Register Cells
-
     func setupCollectionView() {
 
         collectionView.register(
@@ -59,8 +55,6 @@ class AllPatientCollectionViewController: UICollectionViewController {
         )
     }
 
-    // MARK: Sections
-
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
@@ -73,7 +67,6 @@ class AllPatientCollectionViewController: UICollectionViewController {
         return filteredPatients.count
     }
 
-    // MARK: Cells
 
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -102,8 +95,23 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
         return cell
     }
+        
+    override func collectionView(_ collectionView: UICollectionView,
+                                    didSelectItemAt indexPath: IndexPath) {
 
-    // MARK: Search
+        if indexPath.section == 1 {
+            let selectedPatient = filteredPatients[indexPath.row]
+            let storyboard = UIStoryboard(name: "PatientDetail", bundle: nil)
+
+            let vc = storyboard.instantiateViewController(
+                withIdentifier: "PatientDetail"
+            ) as! PatientDetailCollectionViewController
+
+            vc.patient = selectedPatient
+
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 
     func filterPatients(searchText: String) {
 
@@ -120,8 +128,6 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
         collectionView.reloadSections(IndexSet(integer: 1))
     }
-
-    // MARK: Layout
 
     func createLayout() -> UICollectionViewCompositionalLayout {
 
@@ -156,7 +162,7 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .absolute(120)
+            heightDimension: .estimated(80)
         )
 
         let group = NSCollectionLayoutGroup.vertical(

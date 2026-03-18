@@ -20,7 +20,6 @@ class FeelingCollectionViewCell: UICollectionViewCell, UICollectionViewDataSourc
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        // Card styling
         cardView.layer.cornerRadius = 20
         
 //        
@@ -31,7 +30,6 @@ class FeelingCollectionViewCell: UICollectionViewCell, UICollectionViewDataSourc
         
         cardView.layer.masksToBounds = true
         
-        // Inner collection
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.isScrollEnabled = false
@@ -42,8 +40,7 @@ class FeelingCollectionViewCell: UICollectionViewCell, UICollectionViewDataSourc
             layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         }
         
-        collectionView.register(
-            FeelingChipCell.self,
+        collectionView.register(FeelingChipCell.self,
             forCellWithReuseIdentifier: "FeelingChipCell"
         )
     }

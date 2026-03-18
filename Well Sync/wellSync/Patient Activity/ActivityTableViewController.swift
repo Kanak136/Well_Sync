@@ -6,19 +6,16 @@
 ////
 //
 
-// ActivityTableViewController.swift
 import UIKit
 
 class ActivityTableViewController: UITableViewController {
 
-    // MARK: - Data
     var todayItems:   [TodayActivityItem] = []
-    var logSummaries: [LogSummaryItem]    = []        // ← was missing, caused the error
+    var logSummaries: [LogSummaryItem]    = []
 
     let currentPatientID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
     let sectionTitles    = ["Today", "Logs"]
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.separatorStyle     = .none
@@ -28,7 +25,6 @@ class ActivityTableViewController: UITableViewController {
         loadData()
     }
 
-    // MARK: - Data Loading
     private func loadData() {
         let today = Date()
 
@@ -48,7 +44,6 @@ class ActivityTableViewController: UITableViewController {
         tableView.reloadData()
     }
 
-    // MARK: - Sections
     override func numberOfSections(in tableView: UITableView) -> Int {
         return sectionTitles.count
     }
@@ -57,12 +52,11 @@ class ActivityTableViewController: UITableViewController {
                             numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:  return todayItems.count
-        case 1:  return logSummaries.count    // ← was logItems.count
+        case 1:  return logSummaries.count
         default: return 0
         }
     }
 
-    // MARK: - Cell
     override func tableView(_ tableView: UITableView,
                             cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -74,7 +68,7 @@ class ActivityTableViewController: UITableViewController {
         if indexPath.section == 0 {
             cell.configure(with: todayItems[indexPath.row])
         } else {
-            let summary = logSummaries[indexPath.row]   // ← now works
+            let summary = logSummaries[indexPath.row]
             cell.configureAsLog(
                 activityName: summary.activity.name,
                 iconName:     summary.activity.iconName,
@@ -85,7 +79,6 @@ class ActivityTableViewController: UITableViewController {
         return cell
     }
 
-    // MARK: - Section Headers
     override func tableView(_ tableView: UITableView,
                             viewForHeaderInSection section: Int) -> UIView? {
 

@@ -8,7 +8,8 @@
 import UIKit
 
 class deatilsCollectionViewCell: UICollectionViewCell, UITableViewDelegate, UITableViewDataSource {
-    var session:[SessionNote] = [SessionNote(
+    var session:[SessionNote] = [
+        SessionNote(
         sessionId: UUID(),
         patientId: UUID(),
         date: Date(),

@@ -96,7 +96,7 @@ class deatilCollectionViewCell: UICollectionViewCell,AVAudioPlayerDelegate {
     
     func startTimer() {
 
-        stopTimer()   // prevent multiple timers
+        stopTimer()   
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
             guard let self = self,
