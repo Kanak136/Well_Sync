@@ -41,7 +41,7 @@ class ProfileCollectionViewCell: UICollectionViewCell {
         let age = Calendar.current.dateComponents([.year], from: patient.dob, to: Date())
         AgeNumberLabel.text = "\(age.year ?? 0)"
         disorderLabel.text = patient.condition
-        var nextDate = patient.nextSessionDate
+        guard let nextDate = patient.nextSessionDate else { return }
             let formatter = DateFormatter()
             formatter.dateFormat = "MMM dd"
             let dateString = formatter.string(from: nextDate)

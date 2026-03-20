@@ -78,11 +78,11 @@ class CalendarCell1: UICollectionViewCell,
 
     private func moodColor(for average: Double) -> UIColor {
         switch average {
-        case ..<1.5: return UIColor.systemRed                              // 1 — Bad
-        case 1.5..<2.5: return UIColor.systemOrange                       // 2 — Poor
-        case 2.5..<3.5: return UIColor.systemYellow                       // 3 — Neutral
-        case 3.5..<4.5: return UIColor(red: 0.6, green: 0.9, blue: 0.4, alpha: 1) // 4 — Good (light green)
-        default:         return UIColor.systemGreen                        // 5 — Great
+        case ..<1.5: return UIColor.systemRed
+        case 1.5..<2.5: return UIColor.systemOrange
+        case 2.5..<3.5: return UIColor.systemYellow
+        case 3.5..<4.5: return UIColor(red: 0.6, green: 0.9, blue: 0.4, alpha: 1)
+        default:         return UIColor.systemGreen
         }
     }
 

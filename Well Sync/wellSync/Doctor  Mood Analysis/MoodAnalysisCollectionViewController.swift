@@ -16,6 +16,37 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     private var selectedSegmentIndex: Int = 0
     private var calendarCellHeight: CGFloat = 250
     private var moodLogs: [MoodLog] = []
+    // MARK: - Computed Filters
+
+    var weeklyMoodLog: [MoodLog] {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        guard let startOfWeek = calendar.date(byAdding: .day, value: -6, to: now) else {
+            return []
+        }
+        
+        return moodLogs.filter {
+            $0.date >= calendar.startOfDay(for: startOfWeek) &&
+            $0.date <= now
+        }
+        .sorted { $0.date < $1.date }
+    }
+    var monthlyMoodLogs: [MoodLog] {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        guard let startOfMonth = calendar.date(byAdding: .day, value: -29, to: now) else {
+            return []
+        }
+        
+        return moodLogs.filter {
+            $0.date >= calendar.startOfDay(for: startOfMonth) &&
+            $0.date <= now
+        }
+        .sorted { $0.date < $1.date }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,6 +56,21 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         self.collectionView.register(UINib(nibName: "MoodCountCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "count_cell")
         self.collectionView.register(UINib(nibName: "insightsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "insights_cell")
         collectionView.collectionViewLayout = generateLayout()
+        Task {
+            do {
+                let logs = try await AccessSupabase.shared.fetchMoodLogs(
+                    patientID: UUID(uuidString: "d207cf78-d29e-4bf1-91d2-66a5c26fd895")!
+                )
+                
+                await MainActor.run {
+                    self.moodLogs = logs
+                    self.collectionView.reloadData()
+                }
+                
+            } catch {
+                print("Error in mood Fetch", error)
+            }
+        }
         // Do any additional setup after loading the view.
     }
 
