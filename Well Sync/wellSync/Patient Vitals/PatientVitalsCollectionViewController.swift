@@ -9,6 +9,7 @@ import UIKit
 
 class PatientVitalsCollectionViewController: UICollectionViewController,VitalsRangeNavigating, VitalsBarRangeNavigating1 {
     
+    var patient: Patient?
     enum DisplayRange: Int {
         case weekly = 0
         case monthly = 1

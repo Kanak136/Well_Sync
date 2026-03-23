@@ -80,7 +80,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
     ]
     @IBOutlet var moodCount: UILabel!
     var toDoItems: [TodayActivityItem] = []
-    
+    var patient: Patient?
     
     private func makeDashboardMenu() -> UIMenu {
         let profile = UIAction(title: "Profile", image: UIImage(systemName: "person")) { _ in
@@ -259,7 +259,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
 
             vc.selectedMood = data
 
-            vc.patientId = UUID(uuidString: "d207cf78-d29e-4bf1-91d2-66a5c26fd895")!
+            vc.patientId = self.patient?.patientID
 
             vc.onDismiss = { [weak self] in
                 self?.resetMoodViews()

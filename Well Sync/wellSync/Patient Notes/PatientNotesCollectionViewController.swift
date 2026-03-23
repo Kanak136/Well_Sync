@@ -14,18 +14,29 @@ class PatientNotesCollectionViewController: UICollectionViewController {
     
     var onAdd: (() -> Void)?
     var notes: [PatientNote]?
+    var patient: Patient?
     var patientID: UUID?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard let patientID = patient?.patientID else {
+            print("Patient not set yet ❌")
+            return
+        }
+
+        Task {
+            do {
+                notes = try await AccessSupabase.shared.fetchPatientNotes(patientID: patientID)
+                collectionView.reloadData()
+            } catch {
+                print("Error:", error)
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Task{
-            do{
-                notes = try await AccessSupabase.shared.fetchPatientNotes(patientID: patientID!)
-            }
-            catch{
-                print("Error: ",error)
-            }
-        }
         collectionView.register(
             UINib(nibName: "PatientNotesCollectionReusableView", bundle: nil),
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -136,6 +147,41 @@ class PatientNotesCollectionViewController: UICollectionViewController {
         return section
     }
     
+//    @objc func addNoteTapped() {
+//        guard let cell = collectionView.cellForItem(at: IndexPath(row: 0, section: 0)),
+//              let textField = cell.viewWithTag(1) as? UITextField else {
+//            print("cell or textField not found")
+//            return
+//        }
+//
+//        guard let text = textField.text, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+//            print("text is empty")
+//            return
+//        }
+//
+//        let newNote = PatientNote(
+//            noteId: UUID(),
+//            patientId: patient?.patientID ?? UUID(),
+//            date: Date(),
+//            note: text
+//        )
+//
+//        Task{
+//            do{
+//                try await AccessSupabase.shared.savePatientNote(newNote)
+//                notes = try await AccessSupabase.shared.fetchPatientNotes(patientID: patientID ?? UUID())
+//            }
+//            catch{
+//                print("Error: ",error)
+//            }
+//            self.collectionView.reloadData()
+////            self.collectionView.reloadSections(IndexSet(integer: 1))
+//        }
+////        notes.insert(newNote, at: 0)
+//        textField.text = ""
+//        textField.resignFirstResponder()
+//        collectionView.reloadData()
+//    }
     @objc func addNoteTapped() {
         guard let cell = collectionView.cellForItem(at: IndexPath(row: 0, section: 0)),
               let textField = cell.viewWithTag(1) as? UITextField else {
@@ -143,29 +189,39 @@ class PatientNotesCollectionViewController: UICollectionViewController {
             return
         }
 
-        guard let text = textField.text, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+        guard let text = textField.text,
+              !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             print("text is empty")
             return
         }
 
+        // Clear the text field immediately (this is fine — it's on main thread)
+        textField.text = ""
+        textField.resignFirstResponder()
+
         let newNote = PatientNote(
             noteId: UUID(),
-            patientId: patientID!,
+            patientId: patient?.patientID ?? UUID(),
             date: Date(),
             note: text
         )
 
-        Task{
-            do{
+        Task {
+            do {
+                // Step 1: Save the note
                 try await AccessSupabase.shared.savePatientNote(newNote)
-            }
-            catch{
-                print("Error: ",error)
+
+                // Step 2: Fetch updated notes (use patient?.patientID, not the separate patientID property)
+                let updatedNotes = try await AccessSupabase.shared.fetchPatientNotes(patientID: patient?.patientID ?? UUID())
+
+                // Step 3: Update UI on the MAIN thread
+                await MainActor.run {
+                    self.notes = updatedNotes
+                    self.collectionView.reloadData()
+                }
+            } catch {
+                print("Error saving/fetching note:", error)
             }
         }
-//        notes.insert(newNote, at: 0)
-        textField.text = ""
-        textField.resignFirstResponder()
-        collectionView.reloadData()
     }
 }

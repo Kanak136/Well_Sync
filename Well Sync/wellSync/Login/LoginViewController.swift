@@ -28,25 +28,6 @@ class LoginViewController: UIViewController {
         gradient.endPoint = CGPoint(x: 1, y: 1)
 
         view.layer.insertSublayer(gradient, at: 0)
-        
-        var note = SessionNote(
-            sessionId: UUID(),
-            patientId: UUID(uuidString: "274e95bc-10c2-4c16-bb22-950b680d7315"),
-            date: Date(),
-            notes: "MOMOMOOMOMOMOOMOOOM",
-            images: nil,
-            voice: nil,
-            title: "MOMO"
-        )
-        Task{
-            do{
-                try await AccessSupabase.shared.saveSessionNote(note)
-            }
-            catch{
-                print("Error ::  ",error)
-            }
-        }
-
     }
     @IBOutlet weak var glassView: UIView!
     let db = AccessSupabase.shared
@@ -68,6 +49,7 @@ class LoginViewController: UIViewController {
         
     }
     
+    
     @IBAction func loginButton(_ sender: UIButton) {
 //        if userName.text == "admin" && passWord.text == "admin"
         if userName.text == "admin" {
@@ -83,12 +65,25 @@ class LoginViewController: UIViewController {
         else if userName.text == "admin1" {
             
             let storyboard = UIStoryboard(name: "Patient_Dashboard", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "Patient")
+            let vc = storyboard.instantiateViewController(withIdentifier: "Patient") as! TabBar
             
+            let patient = Patient(
+                patientID: UUID(uuidString: "0849bb2f-cd51-4a64-8fed-f9b0ec25025a")!,
+                docID: UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d")!,
+                name: "Priya Verma",
+                dob: Date()
+            )
+
+            vc.patient = patient
+
             if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
                 sceneDelegate.window?.rootViewController = vc
                 sceneDelegate.window?.makeKeyAndVisible()
             }
         }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "Patient")
+        print(type(of: vc))
     }
 }

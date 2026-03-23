@@ -12,6 +12,7 @@ class ActivityTableViewController: UITableViewController {
 
     var todayItems:   [TodayActivityItem] = []
     var logSummaries: [LogSummaryItem]    = []
+    var patient:      Patient?
 
     let currentPatientID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
     let sectionTitles    = ["Today", "Logs"]
