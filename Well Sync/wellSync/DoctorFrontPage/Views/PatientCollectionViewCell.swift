@@ -36,55 +36,70 @@ class PatientCollectionViewCell: UICollectionViewCell {
     }
     
     
-        func configureCell(with: Patient) {
-//            switch with.mood{
-//            case 4:
-//                color = .systemGreen
-//            case 3:
-//                color = .systemOrange
-//            case 2:
-//                color = .systemRed
-//            default:
-//                color = .systemYellow
-//            }
-            profileImage.image = UIImage(systemName: "person.circle")
-
-            if let urlString = with.imageURL, let url = URL(string: urlString) {
-                URLSession.shared.dataTask(with: url) { data, _, error in
-                    guard let data = data, let image = UIImage(data: data) else { return }
+    func configureCell(with: Patient) {
+        
+        // Default image
+        profileImage.image = UIImage(systemName: "person.circle")
+        
+        // ✅ IMAGE LOADING
+        if let imageString = with.imageURL, !imageString.isEmpty {
+            
+            let currentTag = UUID().uuidString
+            self.profileImage.accessibilityIdentifier = currentTag
+            
+            var finalURL: URL?
+            
+            // Case 1: already full URL
+            if imageString.starts(with: "http") {
+                finalURL = URL(string: imageString)
+            }
+            // Case 2: Supabase path
+            else {
+                do {
+                    finalURL = try AccessSupabase.shared.getPublicImageURL(path: imageString)
+                } catch {
+                    print("Image URL error:", error)
+                }
+            }
+            
+            if let url = finalURL {
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data = data,
+                          let image = UIImage(data: data) else { return }
+                    
                     DispatchQueue.main.async {
-                        self.profileImage.image = image
+                        // Prevent wrong image due to reuse
+                        if self.profileImage.accessibilityIdentifier == currentTag {
+                            self.profileImage.image = image
+                        }
                     }
                 }.resume()
             }
+        }
         
-            nameLabel.text = with.name
-            conditionLabel.text = with.condition
-            sessionLabel.text = "7 Sessions"
-            let sessionDate = with.nextSessionDate
-            print(sessionDate)
-    
+        // UI DATA
+        nameLabel.text = with.name
+        conditionLabel.text = with.condition
+        sessionLabel.text = "7 Sessions"
+        
+        // Time
+        if let sessionDate = with.nextSessionDate {
             let timeFormatter = DateFormatter()
             timeFormatter.locale = Locale(identifier: "en_US_POSIX")
-//            timeFormatter.timeZone = TimeZone(secondsFromGMT: 0)   // keeps time as 10:00:00
             timeFormatter.dateFormat = "HH:mm"
-    
-            time.text = timeFormatter.string(from: sessionDate!)
-    
-    
-//            formatter.dateFormat = "HH:mm:ss"
-    
-            var formatter = DateFormatter()
-            guard let date = with.previousSessionDate else { return}
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
+            time.text = timeFormatter.string(from: sessionDate)
+        }
+        
+        // Last session date
+        if let date = with.previousSessionDate {
+            let formatter = DateFormatter()
             formatter.dateStyle = .medium
-    
             let dateString = formatter.string(from: date)
             lastDate.text = "Last session: \(dateString)"
-//            lastDate.text = "\(with.previousSessionDate?.formatted(date: .numeric, time: .omitted))"
-            contentView.layer.borderColor = color.cgColor
         }
+        
+        contentView.layer.borderColor = color.cgColor
+    }
 
 }
 

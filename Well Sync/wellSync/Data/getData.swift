@@ -1210,7 +1210,7 @@ var globalPatient: [Patient] = []
 let patientP1 = UUID(uuidString: "00000000-0000-0000-0000-000000000008")!
 let patientP2 = UUID(uuidString: "00000000-0000-0000-0000-000000000004")!
 let patientP3 = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
-
+var activityCatalog: [Activity] = []
 //var activityCatalog: [Activity] = [
 //
 //    Activity(

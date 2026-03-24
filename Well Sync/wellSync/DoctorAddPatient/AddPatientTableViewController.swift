@@ -11,6 +11,7 @@ import Foundation
 class AddPatientTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var patient: Patient?
+    var onDismiss: (() -> Void)?
     
     @IBOutlet weak var fullName: UITextField!
     @IBOutlet weak var dateOfBirth: UITextField!
@@ -114,39 +115,53 @@ class AddPatientTableViewController: UITableViewController, UIImagePickerControl
         else {
             return
         }
+        
+        
 
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         let dobDate = formatter.date(from: dateOfBirth.text ?? "") ?? Date()
         
         let generatedPass = generateSecurePassword()
-        patient = Patient(
-            patientID: UUID(),
-//            docID: doctor.docID, //this would be passsed from screen to screen
-            docID: UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d")!,
-            name: name,
-            email: emailText,
-            password: generatedPass,
-            contact: contactText,
-            dob: dobDate,
-            address: addressText,
-            condition: nil,
-            sessionStatus: false,
-            nextSessionDate: Calendar.current.date(byAdding: .day, value: 0, to: Date())!,
-            imageURL: nil,
-            previousSessionDate: Calendar.current.date(byAdding: .day, value: -6, to: Date())!,
-        )
         Task{
+            var imagePath: String? = nil
+            
+            // ✅ Upload image if exists
+            if let image = patientImageView.image {
+                imagePath = try await AccessSupabase.shared.uploadProfileImage(image)
+            }
+            patient = Patient(
+                patientID: UUID(),
+                //            docID: doctor.docID, //this would be passsed from screen to screen
+                docID: UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d")!,
+                name: name,
+                email: emailText,
+                password: generatedPass,
+                contact: contactText,
+                dob: dobDate,
+                address: addressText,
+                condition: patientCase.text,
+                sessionStatus: false,
+                nextSessionDate: Calendar.current.date(byAdding: .day, value: 0, to: Date())!,
+                imageURL: imagePath,
+                previousSessionDate: Calendar.current.date(byAdding: .day, value: -6, to: Date())!,
+            )
+            
             do{
                 try await AccessSupabase.shared.savePatient(patient!)
-                try await AccessSupabase.shared
-                            .saveCaseHistory(patient!.patientID)
+                try await AccessSupabase.shared.saveCaseHistory(patient!.patientID)
             }
             catch{
                 print("Error", error)
+                let alert = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                present(alert, animated: true)
+                return
             }
+            
+            onDismiss?()
+            dismiss(animated: true)
         }
-        dismiss(animated: true)
     }
     
 }
