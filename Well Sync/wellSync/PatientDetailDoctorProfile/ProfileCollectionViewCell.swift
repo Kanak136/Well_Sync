@@ -27,19 +27,75 @@ class ProfileCollectionViewCell: UICollectionViewCell {
         // Initialization code
     }
     
+//    func configureCell(with patient: Patient){
+//        if let urlStr = patient.imageURL, let url=URL(string: urlStr) {
+//            URLSession.shared.dataTask(with: url) { (data, _, _) in
+//                guard let data = data, let image = UIImage(data: data) else { return }
+//                DispatchQueue.main.async {
+//                    self.profileImageView.image = image
+//                }
+//            }.resume()
+//        }
+//        nameLabel.text = patient.name
+//        AgeLabel.text = "Age: "
+//        let age = Calendar.current.dateComponents([.year], from: patient.dob, to: Date())
+//        AgeNumberLabel.text = "\(age.year ?? 0)"
+//        disorderLabel.text = patient.condition
+//        guard let nextDate = patient.nextSessionDate else { return }
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "MMM dd"
+//            let dateString = formatter.string(from: nextDate)
+//            calendarButton.setTitle("   \(dateString)", for: .normal)
+//            calendarButton.tintColor = .systemGray
+////        }else{
+////            calendarButton.setTitle("", for: .normal)
+////        }
+//    }
     func configureCell(with patient: Patient){
-        if let urlStr = patient.imageURL, let url=URL(string: urlStr) {
-            URLSession.shared.dataTask(with: url) { (data, _, _) in
-                guard let data = data, let image = UIImage(data: data) else { return }
-                DispatchQueue.main.async {
-                    self.profileImageView.image = image
+        
+        profileImageView.image = UIImage(systemName: "person.circle")
+        if let imageString = patient.imageURL, !imageString.isEmpty {
+            
+            let currentTag = UUID().uuidString
+            self.profileImageView.accessibilityIdentifier = currentTag
+            
+            var finalURL: URL?
+            
+            // Case 1: already full URL
+            if imageString.starts(with: "http") {
+                finalURL = URL(string: imageString)
+            }
+            // Case 2: Supabase path
+            else {
+                do {
+                    finalURL = try AccessSupabase.shared.getPublicImageURL(path: imageString)
+                } catch {
+                    print("Image URL error:", error)
                 }
-            }.resume()
+            }
+            
+            if let url = finalURL {
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    guard let data = data,
+                          let image = UIImage(data: data) else { return }
+                    
+                    DispatchQueue.main.async {
+                        // ✅ Prevent reuse issue
+                        if self.profileImageView.accessibilityIdentifier == currentTag {
+                            self.profileImageView.image = image
+                        }
+                    }
+                }.resume()
+            }
         }
+        
+        // बाकी UI
         nameLabel.text = patient.name
         AgeLabel.text = "Age: "
+        
         let age = Calendar.current.dateComponents([.year], from: patient.dob, to: Date())
         AgeNumberLabel.text = "\(age.year ?? 0)"
+        
         disorderLabel.text = patient.condition
         guard let nextDate = patient.nextSessionDate else {
             calendarButton.setTitle("Schedule", for: .normal)

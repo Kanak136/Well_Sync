@@ -6,14 +6,13 @@
 //
 import Foundation
 import Supabase
+import UIKit
 
 final class AccessSupabase {
     static let shared = AccessSupabase()
     private let supabase = SupabaseManager.shared.client
 
     private init() {}
-
-    // MARK: - DOCTORS
 
     func saveDoctor(doctor: Doctor) async throws {
         let saved: Doctor = try await supabase
@@ -71,8 +70,6 @@ final class AccessSupabase {
 //            .value
 //        return updated
 //    }
-
-    // MARK: - PATIENTS
 
     func savePatient(_ patients:Patient) async throws {
         let saved: Patient = try await supabase
@@ -153,6 +150,17 @@ final class AccessSupabase {
             .value
         return data
     }
+    func fetchActivity(byName name: String, doctorID: UUID) async throws -> Activity? {
+        let results: [Activity] = try await supabase
+            .from("activities")
+            .select()
+            .eq("doctor_id", value: doctorID.uuidString)
+            .ilike("name", value: name)   // case-insensitive match
+            .limit(1)
+            .execute()
+            .value
+        return results.first
+    }
     func fetchLogs(for patientID: UUID) async throws -> [ActivityLog] {
         let data: [ActivityLog] = try await supabase
             .from("activity_logs")
@@ -166,7 +174,6 @@ final class AccessSupabase {
     
     func saveMoodLog(_ log: MoodLog) async throws {
 
-        // 1️⃣ Save mood log first
         let savedLog: MoodLog = try await supabase
             .from("mood_logs")
             .insert(log)
@@ -178,8 +185,7 @@ final class AccessSupabase {
         guard let logID = savedLog.logId else {
             throw NSError(domain: "Missing logID", code: 0)
         }
-
-        // 2️⃣ Save feelings (join table)
+        
         if let feelings = log.selectedFeeling {
 
             let mappings: [MoodLogFeeling] = feelings.map {
@@ -397,36 +403,35 @@ final class AccessSupabase {
             return saved
         }
 
-        func saveTimeline(_ timeline: Timeline) async throws -> Timeline {
-            let saved: Timeline = try await supabase
-                .from("timelines")
-                .insert(timeline)
-                .select("*")
-                .single()
-                .execute()
-                .value
-            return saved
-        }
+    func saveTimeline(_ timeline: Timeline) async throws -> Timeline {
+        let saved: Timeline = try await supabase
+            .from("timelines")
+            .insert(timeline)
+            .select("*")
+            .single()
+            .execute()
+            .value
+        return saved
+    }
 
-        func saveReport(_ report: Report) async throws -> Report {
-            let saved: Report = try await supabase
-                .from("reports")
-                .insert(report)
-                .select("*")
-                .single()
-                .execute()
-                .value
-            return saved
-        }
+    func saveReport(_ report: Report) async throws -> Report {
+        let saved: Report = try await supabase
+            .from("reports")
+            .insert(report)
+            .select("*")
+            .single()
+            .execute()
+            .value
+        return saved
+    }
 
-        func saveCompleteCaseHistory(
-            patientId: UUID,
-            timelines: [Timeline],
-            reports: [Report]
-        ) async throws {
-            let caseHistory = try await saveCaseHistory(patientId)
-            let caseID = caseHistory.caseId
-
+    func saveCompleteCaseHistory(
+        patientId: UUID,
+        timelines: [Timeline],
+        reports: [Report]
+    ) async throws {
+        let caseHistory = try await saveCaseHistory(patientId)
+        let caseID = caseHistory.caseId
             if !timelines.isEmpty {
                 let items = timelines.map {
                     Timeline(
@@ -585,4 +590,50 @@ final class AccessSupabase {
 
         return updated
     }
+    private let bucketName = "Patient_profile"
+    func uploadProfileImage(_ image: UIImage, folder: String = "patients") async throws -> String {
+            guard let data = image.jpegData(compressionQuality: 0.8) else {
+                throw NSError(domain: "ImageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not convert image to JPEG data"])
+            }
+
+            let fileName = "\(UUID().uuidString).jpg"
+            let path = "\(folder)/\(fileName)"
+
+            try await supabase.storage
+                .from(bucketName)
+                .upload(
+                    path: path,
+                    file: data,
+                    options: FileOptions(
+                        cacheControl: "3600",
+                        contentType: "image/jpeg",
+                        upsert: false
+                    )
+                )
+
+            return path
+        }
+
+        func getPublicImageURL(path: String) throws -> URL {
+            try supabase.storage
+                .from(bucketName)
+                .getPublicURL(path: path)
+        }
+
+        func getSignedImageURL(path: String, expiresIn: Int = 3600) async throws -> URL {
+            try await supabase.storage
+                .from(bucketName)
+                .createSignedURL(path: path, expiresIn: expiresIn)
+        }
+
+        func downloadImage(path: String) async throws -> UIImage {
+            let data = try await supabase.storage
+                .from(bucketName)
+                .download(path: path)
+
+            guard let image = UIImage(data: data) else {
+                throw NSError(domain: "ImageError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Could not decode image data"])
+            }
+            return image
+        }
 }

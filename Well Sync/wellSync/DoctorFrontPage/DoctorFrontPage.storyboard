@@ -369,7 +369,7 @@
                             <barButtonItem title="Item" image="ellipsis" catalog="system" id="X7o-e5-G7o"/>
                             <barButtonItem title="Item" image="person.fill.badge.plus" catalog="system" id="zeb-yx-KgB">
                                 <connections>
-                                    <segue destination="m9h-qV-ep5" kind="show" id="E5I-K8-r2K"/>
+                                    <segue destination="m9h-qV-ep5" kind="show" identifier="AddPatientSegue" id="E5I-K8-r2K"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>

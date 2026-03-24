@@ -8,42 +8,50 @@ class HomeCollectionViewController: UICollectionViewController {
 
     var selectedPatient: Patient?
     
-    
+    let spinner = UIActivityIndicatorView(style: .large)
+
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
-
+        spinner.center = view.center
+        view.addSubview(spinner)
         viewModel = AccessSupabase.shared
         setupCollectionView()
-        Task {
-            await loadPatients()
-        }
+        loadPatients()
         self.collectionView.collectionViewLayout = createLayout()
         setupMenu()
     }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Task{
-            await loadPatients()
-            collectionView.reloadData()
-        }
-    }
-    @MainActor
-    func loadPatients() async {
-        guard let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") else { return }
-
-        do{
-            patient = try await viewModel?.fetchPatients(for: id) ?? []
-        }
-        catch{
-            print(error)
-            return
-        }
-        categorizePatients()
+        loadPatients()
         collectionView.reloadData()
-        collectionView.setCollectionViewLayout(createLayout(), animated: false)
     }
 
+    func loadPatients() {
+        guard let id = UUID(uuidString: "6bf94a4d-cc66-4d87-a90d-be2500434e3d") else { return }
+        spinner.startAnimating()
+
+            Task {
+                do {
+                    let fetchedPatients = try await viewModel?.fetchPatients(for: id) ?? []
+
+                    await MainActor.run {
+                        self.patient = fetchedPatients
+                        self.categorizePatients()
+                        self.collectionView.reloadData()
+                        self.spinner.stopAnimating()
+                    }
+                } catch {
+                    print(error)
+                    await MainActor.run {
+                        self.spinner.stopAnimating()
+                    }
+                }
+            }
+    }
+    
     var upcoming: [Patient] = []
     var missed: [Patient] = []
     var done: [Patient] = []
@@ -374,6 +382,22 @@ extension HomeCollectionViewController {
         if segue.identifier == "PatientDetail" {
             let destinationVC = segue.destination as! PatientDetailCollectionViewController
             destinationVC.patient = selectedPatient
+        }
+        if segue.identifier == "AddPatientSegue" {
+            
+            if let nav = segue.destination as? UINavigationController,
+               let destinationVC = nav.topViewController as? AddPatientTableViewController {
+                
+                destinationVC.onDismiss = { [weak self] in
+                    guard let self = self else { return }
+
+                        if let newPatient = destinationVC.patient {
+                            self.patient.append(newPatient)
+                            self.categorizePatients()
+                            self.collectionView.reloadData()
+                        }
+                }
+            }
         }
     }
 }
