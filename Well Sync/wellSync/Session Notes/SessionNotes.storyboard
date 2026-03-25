@@ -102,7 +102,11 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="Session Notes" id="u4Y-by-1sx">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="zRj-3P-hLL"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="zRj-3P-hLL">
+                            <connections>
+                                <segue destination="Zph-02-Amv" kind="presentation" id="ePT-uE-EBu"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <segue destination="w0Y-kH-Gac" kind="show" identifier="detailSession" id="zH3-Qy-NtF"/>
@@ -111,6 +115,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x0S-lV-7ca" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3026.7175572519081" y="603.52112676056345"/>
+        </scene>
+        <!--AddSession-->
+        <scene sceneID="EhL-MN-Xwp">
+            <objects>
+                <viewControllerPlaceholder storyboardName="AddSession" referencedIdentifier="AddSession" id="Zph-02-Amv" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Igu-Zv-avG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3529" y="152"/>
         </scene>
         <!--Detail Session Collection View Controller-->
         <scene sceneID="G4M-Bk-dRF">
