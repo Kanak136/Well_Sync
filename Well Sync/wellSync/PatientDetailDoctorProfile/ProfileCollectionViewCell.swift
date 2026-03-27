@@ -47,9 +47,9 @@ class ProfileCollectionViewCell: UICollectionViewCell {
 //            let dateString = formatter.string(from: nextDate)
 //            calendarButton.setTitle("   \(dateString)", for: .normal)
 //            calendarButton.tintColor = .systemGray
-////        }else{
-////            calendarButton.setTitle("", for: .normal)
-////        }
+//        }else{
+//            calendarButton.setTitle("", for: .normal)
+//        }
 //    }
     func configureCell(with patient: Patient){
         
@@ -80,7 +80,6 @@ class ProfileCollectionViewCell: UICollectionViewCell {
                           let image = UIImage(data: data) else { return }
                     
                     DispatchQueue.main.async {
-                        // ✅ Prevent reuse issue
                         if self.profileImageView.accessibilityIdentifier == currentTag {
                             self.profileImageView.image = image
                         }
@@ -89,7 +88,6 @@ class ProfileCollectionViewCell: UICollectionViewCell {
             }
         }
         
-        // बाकी UI
         nameLabel.text = patient.name
         AgeLabel.text = "Age: "
         
@@ -100,17 +98,21 @@ class ProfileCollectionViewCell: UICollectionViewCell {
         guard let nextDate = patient.nextSessionDate else {
             calendarButton.setTitle("Schedule", for: .normal)
             calendarButton.backgroundColor = .systemBlue
+            calendarButton.setTitleColor(.white, for: .normal)
             return
         }
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM dd"
-            let dateString = formatter.string(from: nextDate)
-            calendarButton.setTitle("   \(dateString)", for: .normal)
+            
         if Calendar.current.isDateInToday(nextDate) {
+                calendarButton.setTitle("Schedule", for: .normal)
                 calendarButton.backgroundColor = .systemBlue
                 calendarButton.setTitleColor(.white, for: .normal)
                 calendarButton.tintColor = .white
             } else {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "MMM dd"
+                let dateString = formatter.string(from: nextDate)
+                
+                calendarButton.setTitle("   \(dateString)", for: .normal)
                 calendarButton.backgroundColor = .systemGray5
                 calendarButton.setTitleColor(.secondaryLabel, for: .normal)
                 calendarButton.tintColor = .secondaryLabel

@@ -255,7 +255,9 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                             try await AccessSupabase.shared.deleteAppointment(id: id)
                         }
                         
-                        patient.nextSessionDate = nil
+                        let pre = patient.previousSessionDate
+                        patient.nextSessionDate = patient.previousSessionDate
+                        patient.previousSessionDate = pre
                         try await AccessSupabase.shared.updatePatient(patient)
                         
                         await MainActor.run {
@@ -276,10 +278,12 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                 do{
                     let appointments = try await AccessSupabase.shared.fetchAppointments(patientID: patient.patientID)
                     let futureUpcomingAppt = appointments.first(where:{
-                        $0.status == .upcoming &&
-                        ($0.scheduledAt ?? Date.distantPast) > Date()
+                        $0.status == .upcoming
+//                        && ($0.scheduledAt ?? Date.distantPast) > Date()
                     })
                     if let apptToUpdate = futureUpcomingAppt{
+                        print(patient.nextSessionDate)
+//                        patient.previousSessionDate = patient.nextSessionDate
                         var updatedAppt = apptToUpdate
                         updatedAppt.scheduledAt = selectedFullDate
                         _ = try await AccessSupabase.shared.updateAppointment(updatedAppt)
@@ -291,10 +295,14 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                         _ = try await AccessSupabase.shared.createAppointment(newAppointment)
                         print("new Appointment")
                     }
-                    if let currentNextDate = patient.nextSessionDate {
-                        patient.previousSessionDate = currentNextDate
-                    }
+//                    if let currentNextDate = patient.nextSessionDate {
+//                        patient.previousSessionDate = currentNextDate
+//                    }
+                    if let currentNext = patient.nextSessionDate, currentNext < selectedFullDate {
+                                     patient.previousSessionDate = currentNext
+                                }
                     patient.nextSessionDate = selectedFullDate
+                    print(patient.previousSessionDate)
                     try await AccessSupabase.shared.updatePatient(patient)
                     await MainActor.run {
                         self.patient = patient
@@ -312,6 +320,37 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                     }
                 }catch{
                     print("Scheduling Error: \(error)")
+                }
+            }
+        }
+        popoverVC.onScheduleChange = { [weak self] newDate in
+            guard let self = self, var patient = self.patient else { return }
+            
+            Task {
+                do {
+                    // 1. Fetch appointments to find the one marked as 'upcoming'
+                    let appointments = try await AccessSupabase.shared.fetchAppointments(patientID: patient.patientID)
+                    
+                    if let apptToUpdate = appointments.first(where: { $0.status == .upcoming }) {
+                        var updatedAppt = apptToUpdate
+                        updatedAppt.scheduledAt = newDate
+                        
+                        // 2. Update Appointment in Database
+                        _ = try await AccessSupabase.shared.updateAppointment(updatedAppt)
+                        
+                        // 3. Update Patient's nextSessionDate
+                        patient.nextSessionDate = newDate
+                        try await AccessSupabase.shared.updatePatient(patient)
+                        
+                        // 4. UI Refresh
+                        await MainActor.run {
+                            self.patient = patient
+                            self.PatientProfileCollectionView.reloadData()
+                            print("Session successfully changed to \(newDate)")
+                        }
+                    }
+                } catch {
+                    print("Error changing session: \(error)")
                 }
             }
         }

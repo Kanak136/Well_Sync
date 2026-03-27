@@ -15,6 +15,7 @@ class ScheduleViewController: UIViewController, UICalendarSelectionSingleDateDel
     let scheduleButton = UIButton()
     var onScheduleConfirmed: ((Date) -> Void)?
     var onScheduleCancelled: (() -> Void)?
+    var onScheduleChange:((Date) -> Void)?
     var selectedDate: DateComponents?
     var selection: UICalendarSelectionSingleDate?
     var scheduleDate: Date?
@@ -43,29 +44,55 @@ class ScheduleViewController: UIViewController, UICalendarSelectionSingleDateDel
         }
     }
     func updateButtonText(){
-        let calendar = Calendar.current
+//        let calendar = Calendar.current
         var config = UIButton.Configuration.tinted()
         config.cornerStyle = .capsule
         
-        if let schedule = scheduleDate, let selected = selectedDate?.date {
-            if calendar.isDate(schedule, inSameDayAs: selected) {
+        guard let selected = selectedDate?.date else {
+            scheduleButton.setTitle("Select a Date", for: .normal)
+            scheduleButton.isEnabled = false
+            config.baseBackgroundColor = .systemGray4
+            scheduleButton.configuration = config
+            return
+        }
+        scheduleButton.isEnabled = true
+        let calendar = Calendar.current
+        
+        if let currentScheduled = patient?.nextSessionDate{
+            if calendar.isDateInToday(currentScheduled){
+                scheduleButton.setTitle("Schedule", for: .normal)
+                config.baseBackgroundColor = .systemGreen
+            } else if calendar.isDate(currentScheduled, inSameDayAs: selected) {
                 scheduleButton.setTitle("Cancel Session", for: .normal)
                 config.baseBackgroundColor = .systemRed
-                config.baseForegroundColor = .systemRed
-            } else {
+            }
+            else if patient?.nextSessionDate != nil {
                 scheduleButton.setTitle("Change Session", for: .normal)
                 config.baseBackgroundColor = .systemBlue
-                config.baseForegroundColor = .systemBlue
             }
-        }else if selectedDate != nil{
-            scheduleButton.setTitle("Schedule Session", for: .normal)
-            config.baseBackgroundColor = .systemBlue
-            config.baseForegroundColor = .systemBlue
-        } else {
-            scheduleButton.setTitle("Select a Date", for: .normal)
-            config.baseBackgroundColor = .systemGray
-            config.baseForegroundColor = .systemGray
+        }else{
+            scheduleButton.setTitle("Schedule", for: .normal)
+            config.baseBackgroundColor = .systemGreen
         }
+//        if let schedule = scheduleDate, let selected = selectedDate?.date {
+//            if calendar.isDate(schedule, inSameDayAs: selected) {
+//                scheduleButton.setTitle("Cancel Session", for: .normal)
+//                config.baseBackgroundColor = .systemRed
+//                config.baseForegroundColor = .systemRed
+//            } else {
+//                scheduleButton.setTitle("Change Session", for: .normal)
+//                config.baseBackgroundColor = .systemBlue
+//                config.baseForegroundColor = .systemBlue
+//            }
+//        }else if selectedDate != nil{
+//            scheduleButton.setTitle("Schedule Session", for: .normal)
+//            config.baseBackgroundColor = .systemBlue
+//            config.baseForegroundColor = .systemBlue
+//        } else {
+//            scheduleButton.setTitle("Select a Date", for: .normal)
+//            config.baseBackgroundColor = .systemGray
+//            config.baseForegroundColor = .systemGray
+//        }
         scheduleButton.configuration = config
         //        if scheduleDate != nil {
         //            scheduleButton.setTitle("Change Session", for: .normal )
@@ -118,6 +145,8 @@ class ScheduleViewController: UIViewController, UICalendarSelectionSingleDateDel
         
         let currentTitle = scheduleButton.title(for: .normal)
                 if currentTitle == "Cancel Session" {
+//                    onScheduleCancelled?()
+//                            dismiss(animated: true)
                     handleCancellation()
                 } else {
                     handleScheduling()
@@ -158,7 +187,12 @@ class ScheduleViewController: UIViewController, UICalendarSelectionSingleDateDel
             finalComponents.minute = timeComponents.minute
             
             if let finalDate = calendar.date(from: finalComponents) {
-                onScheduleConfirmed?(finalDate)
+                let currentTitle = scheduleButton.title(for: .normal)
+                if currentTitle == "Change Session" {
+                    onScheduleChange?(finalDate)
+                }else{
+                    onScheduleConfirmed?(finalDate)
+                }
                 dismiss(animated: true)
             }
         }
@@ -216,7 +250,7 @@ extension ScheduleViewController{
         let calendar = Calendar.current
         guard let date = dateComponents.date else{return nil}
         
-        if let schedule = scheduleDate, calendar.isDate(schedule, inSameDayAs: date){
+        if let schedule = patient?.nextSessionDate, calendar.isDate(schedule, inSameDayAs: date){
             return .default(color: .systemGray, size: .medium)
         }
 //        let isCompleted = completedAppointments.contains { appointment in
