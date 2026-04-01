@@ -144,22 +144,6 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: UICollectionViewCell
         
-//        if indexPath.row == 0 {
-//            let cell = collectionView.dequeueReusableCell(
-//                withReuseIdentifier: "streakCell",
-//                for: indexPath
-//            ) as! StreakCell                           // ✅ cast to StreakCell
-//
-//            // ✅ Build this week's logged dates from your activity logs
-//            let cal = Calendar.current
-//            let thisWeeksLogs: [Date] = toDoItems
-//                .flatMap { $0.logs }
-//                .filter { cal.isDate($0.date, equalTo: Date(), toGranularity: .weekOfYear) }
-//                .map { $0.date }
-//
-//            cell.configure(streakCount: 7, loggedDates: thisWeeksLogs)  // ✅ actually calls configure
-//            return cell                                // ✅ early return
-//        }
         if indexPath.row == 0 {
 
             let cell = collectionView.dequeueReusableCell(
@@ -176,8 +160,9 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                     cal.isDate($0, equalTo: Date(), toGranularity: .weekOfYear)
                 }
 
-//            cell.loggedDates = thisWeeksLogs
-
+            cell.loggedDates = thisWeeksLogs
+            cell.configure()
+            style(cell)
             return cell
         }
         else if indexPath.row == 1 {
@@ -194,11 +179,31 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             cell.layer.cornerRadius = 16
             cell.layer.masksToBounds = true
             cell.backgroundColor = .secondarySystemBackground
+            style(cell)
             return cell
         }
         
         else if indexPath.row == 2{
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "moodCount", for: indexPath)
+           let cell = collectionView
+                .dequeueReusableCell(
+                    withReuseIdentifier: "moodCount",
+                    for: indexPath
+                ) as! MoodCollectionViewCell
+            var mood:[MoodLog] = []
+            Task{
+                do{
+                    mood = try await AccessSupabase.shared
+                        .fetchMoodLogs(patientID: patient!.patientID)
+                }
+                catch{
+                    print("Mood cell: ",error)
+                }
+                DispatchQueue.main.async {
+                    cell.configure(total: mood.count)
+                }
+            }
+            style(cell)
+            return cell
         }
         
         else if indexPath.row == 3 {
@@ -213,6 +218,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             let sessionDate  = Calendar.current.date(from: comps) ?? Date()
 
             cell.configure(doctorName: "Dr. Meena Kumari", sessionDate: sessionDate)
+            style(cell)
             return cell
         }
         
@@ -227,6 +233,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             cell.layer.cornerRadius = 16
             cell.layer.masksToBounds = true
             cell.backgroundColor = .secondarySystemBackground
+            style(cell)
             return cell
         }
         else if indexPath.row == 5{
@@ -248,6 +255,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             cell.layer.cornerRadius = 16
             cell.layer.masksToBounds = true
             cell.backgroundColor = .secondarySystemBackground
+            style(cell)
         }
         return cell
     }
@@ -263,10 +271,10 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             let halfWidth = (fullWidth - interItemSpacing) / 2
 
             switch indexPath.row {
-            case 0:       return CGSize(width: fullWidth, height: 230)
+            case 0:       return CGSize(width: fullWidth, height: 200)
             case 1, 2:    return CGSize(width: halfWidth, height: 150)
             case 3:       return CGSize(width: fullWidth, height: 122)
-            case 4:       return CGSize(width: fullWidth, height: 200)
+            case 4:       return CGSize(width: fullWidth, height: 215)
             case 5:       return CGSize(width: fullWidth, height: 30)
             default:      return CGSize(width: fullWidth, height: 70)
             }
@@ -311,6 +319,9 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                 self?.resetMoodViews()
             }
             vc.onCheck = { [weak self] in
+                let cell = self?.collectionView.cellForItem(at: IndexPath(row: 2, section: 0)) as? MoodCollectionViewCell
+                cell?.increase()
+//                self?.collectionView.reloadItems(at: [IndexPath(row: 2, section: 0)])
                 self?.resetMoodViews()
             }
         }
@@ -335,6 +346,22 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         collectionView.reloadData()
         resetMoodViews()
     }
-    
+    func style(_ cell: UICollectionViewCell) {
+        cell.layer.shadowColor = UIColor.black.cgColor
+        
+        cell.layer.shadowOpacity = 0.08
+        
+        cell.layer.shadowOffset = CGSize(width: 0, height: 2)
+        
+        cell.layer.shadowRadius = 5
+        
+        cell.layer.masksToBounds = false
+        
+         cell.contentView.layer.cornerRadius = 20
+         cell.contentView.layer.masksToBounds = true
+         cell.layer.cornerRadius = 20
+        
+         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: 20).cgPath
+    }
 }
 

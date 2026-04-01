@@ -108,7 +108,7 @@ class MoodLogCollectionViewController:
         switch indexPath.section {
             
         case 0:
-            return CGSize(width: cardWidth, height: 180)
+            return CGSize(width: cardWidth, height: 215)
             
         case 1:
             let feelingCount = {
@@ -192,7 +192,6 @@ class MoodLogCollectionViewController:
         saveLog(rawMood: rawMood, moodLevel: moodLevel)
     }
     private func saveLog(rawMood: Int, moodLevel: MoodLevel) {
-        
 
         let feelingObjects: [Feeling] = selectedFeelings.compactMap { feelingName in
             feelingsFromDB.first(where: {
