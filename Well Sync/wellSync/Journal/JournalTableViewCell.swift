@@ -39,6 +39,4 @@ class JournalTableViewCell: UITableViewCell {
             iconImage.image = UIImage(systemName: "play.circle.fill")
         }
     }
-
-
 }
