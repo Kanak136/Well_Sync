@@ -79,10 +79,9 @@ class StreakCell: UICollectionViewCell,FSCalendarDataSource, FSCalendarDelegate 
 //            calendar.select(date, scrollToDate: false)
 //        }
 
-        updateStreak()
     }
 
-    private func updateStreak() {
-        streakLabel.text = "\(loggedDates?.count, default: "0")"
+    func updateStreak(_ count:Int) {
+        streakLabel.text = "🔥 \(count) Days"
     }
 }

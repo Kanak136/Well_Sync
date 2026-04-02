@@ -79,6 +79,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
     ]
     @IBOutlet var moodCount: UILabel!
     var toDoItems: [TodayActivityItem] = []
+    var ActivityLogs:[ActivityLog] = []
     var patient: Patient?
     
     private func makeDashboardMenu() -> UIMenu {
@@ -105,8 +106,13 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
 
         let menu = makeDashboardMenu()
         let more = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: menu)
-        navigationItem.rightBarButtonItem = more
         load()
+        navigationItem.rightBarButtonItem = more
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        load()
+        resetMoodViews()
     }
     func load() {
         let today = Date()
@@ -124,8 +130,9 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                         logs: todayLogs
                     )
                 }
+                ActivityLogs = try await AccessSupabase.shared.fetchLogs(for: patient!.patientID)
                 self.toDoItems = allToday.filter { !$0.isCompletedToday }
-                self.collectionView.reloadData()
+                self.collectionView.reloadSections(IndexSet([0, 2]))
             }catch{
                 print("Load activity error: \(error)")
             }
@@ -133,116 +140,141 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
+        3
     }
 
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        return 6 + toDoItems.count
+        switch section{
+        case 0:
+            return 1
+        case 1:
+            return 5
+        default:
+            return toDoItems.count
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: UICollectionViewCell
-        
-        if indexPath.row == 0 {
-
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "streakCell",
-                for: indexPath
-            ) as! StreakCell
-
-            let cal = Calendar.current
-
-            let thisWeeksLogs: [Date] = toDoItems
-                .flatMap { $0.logs }
-                .map { $0.date }
-                .filter {
-                    cal.isDate($0, equalTo: Date(), toGranularity: .weekOfYear)
-                }
-
-            cell.loggedDates = thisWeeksLogs
-            cell.configure()
-            style(cell)
-            return cell
-        }
-        else if indexPath.row == 1 {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "activityRing",
-                for: indexPath
-            ) as! ActivityRingCell
-            
-            cell.configure(progress: 1/3)
-            
-            if let label = cell.viewWithTag(1) as? UILabel {
-                label.text = items[indexPath.row]
-            }
-            cell.layer.cornerRadius = 16
-            cell.layer.masksToBounds = true
-            cell.backgroundColor = .secondarySystemBackground
-            style(cell)
-            return cell
-        }
-        
-        else if indexPath.row == 2{
-           let cell = collectionView
-                .dequeueReusableCell(
-                    withReuseIdentifier: "moodCount",
+        switch indexPath.section{
+        case 0:
+            if indexPath.row == 0 {
+                
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "streakCell",
                     for: indexPath
-                ) as! MoodCollectionViewCell
-            var mood:[MoodLog] = []
-            Task{
-                do{
-                    mood = try await AccessSupabase.shared
-                        .fetchMoodLogs(patientID: patient!.patientID)
+                ) as! StreakCell
+                
+                let cal = Calendar.current
+                
+                let thisWeeksLogs: [Date] = toDoItems
+                    .flatMap { $0.logs }
+                    .map { $0.date }
+                    .filter {
+                        cal.isDate($0, equalTo: Date(), toGranularity: .weekOfYear)
+                    }
+                
+                let allLoggedDates: Set<Date> = Set(
+                    ActivityLogs.map { cal.startOfDay(for: $0.date) }
+                )
+                
+                var currentStreak: Int = 0
+                
+                if let mostRecentDate = allLoggedDates.sorted().last {
+                    var checkDate = mostRecentDate
+                    while allLoggedDates.contains(checkDate) {
+                        currentStreak += 1
+                        guard let previousDay = cal.date(byAdding: .day, value: -1, to: checkDate) else {
+                            break
+                        }
+                        checkDate = previousDay
+                    }
                 }
-                catch{
-                    print("Mood cell: ",error)
-                }
-                DispatchQueue.main.async {
-                    cell.configure(total: mood.count)
-                }
+                
+                cell.loggedDates = thisWeeksLogs
+                cell.configure()
+                cell.updateStreak(currentStreak)
+                style(cell)
+                return cell
             }
-            style(cell)
-            return cell
-        }
-        
-        else if indexPath.row == 3 {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "nextSession",
-                for: indexPath
-            ) as! NextSessionCell
-
-            var comps        = DateComponents()
-            comps.year       = 2026; comps.month = 3; comps.day = 26
-            comps.hour       = 14;   comps.minute = 0
-            let sessionDate  = Calendar.current.date(from: comps) ?? Date()
-
-            cell.configure(doctorName: "Dr. Meena Kumari", sessionDate: sessionDate)
-            style(cell)
-            return cell
-        }
-        
-        else if indexPath.row == 4 {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "moodLog",
-                for: indexPath
-            ) as! MoodLogCollectionViewCell
-
-            cell.configureTap(target: self, action: #selector(moodTapped(_:)))
-            if let label = cell.viewWithTag(1) as? UILabel { label.text = items[indexPath.row] }
-            cell.layer.cornerRadius = 16
-            cell.layer.masksToBounds = true
-            cell.backgroundColor = .secondarySystemBackground
-            style(cell)
-            return cell
-        }
-        else if indexPath.row == 5{
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "section", for: indexPath)
-        }
-        else {
+        case 1:
+            if indexPath.row == 0 {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "activityRing",
+                    for: indexPath
+                ) as! ActivityRingCell
+                
+                cell.configure(progress: 1/3)
+                
+                if let label = cell.viewWithTag(1) as? UILabel {
+                    label.text = items[indexPath.row+1]
+                }
+                cell.layer.cornerRadius = 16
+                cell.layer.masksToBounds = true
+                cell.backgroundColor = .secondarySystemBackground
+                style(cell)
+                return cell
+            }
+            else if indexPath.row == 1{
+                let cell = collectionView
+                    .dequeueReusableCell(
+                        withReuseIdentifier: "moodCount",
+                        for: indexPath
+                    ) as! MoodCollectionViewCell
+                var mood:[MoodLog] = []
+                Task{
+                    do{
+                        mood = try await AccessSupabase.shared
+                            .fetchMoodLogs(patientID: patient!.patientID)
+                    }
+                    catch{
+                        print("Mood cell: ",error)
+                    }
+                    DispatchQueue.main.async {
+                        cell.configure(total: mood.count)
+                    }
+                }
+                style(cell)
+                return cell
+            }
+            else if indexPath.row == 2 {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "nextSession",
+                    for: indexPath
+                ) as! NextSessionCell
+                
+                var comps        = DateComponents()
+                comps.year       = 2026; comps.month = 3; comps.day = 26
+                comps.hour       = 14;   comps.minute = 0
+                let sessionDate  = Calendar.current.date(from: comps) ?? Date()
+                
+                cell.configure(doctorName: "Dr. Meena Kumari", sessionDate: sessionDate)
+                style(cell)
+                return cell
+            }
+            else if indexPath.row == 3 {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "moodLog",
+                    for: indexPath
+                ) as! MoodLogCollectionViewCell
+                
+                cell.configureTap(target: self, action: #selector(moodTapped(_:)))
+                if let label = cell.viewWithTag(1) as? UILabel { label.text = items[indexPath.row+1] }
+                cell.layer.cornerRadius = 16
+                cell.layer.masksToBounds = true
+                cell.backgroundColor = .secondarySystemBackground
+                style(cell)
+                return cell
+            }
+            else if indexPath.row == 4{
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "section", for: indexPath)
+                return cell
+            }
+        default:
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BasicCell", for: indexPath)
             
-            let toDoIndex = indexPath.row - 6
+            let toDoIndex = indexPath.row
             let item = toDoItems[toDoIndex]
             
             if let label = cell.viewWithTag(1) as? UILabel {
@@ -256,13 +288,12 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             cell.layer.masksToBounds = true
             cell.backgroundColor = .secondarySystemBackground
             style(cell)
+            return cell
         }
-        return cell
+        return UICollectionViewCell()
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
         let leftInset: CGFloat  = 16
             let rightInset: CGFloat = 16
             let interItemSpacing: CGFloat = 8
@@ -270,15 +301,29 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             let fullWidth = collectionView.frame.width - leftInset - rightInset
             let halfWidth = (fullWidth - interItemSpacing) / 2
 
-            switch indexPath.row {
-            case 0:       return CGSize(width: fullWidth, height: 200)
-            case 1, 2:    return CGSize(width: halfWidth, height: 150)
-            case 3:       return CGSize(width: fullWidth, height: 122)
-            case 4:       return CGSize(width: fullWidth, height: 215)
-            case 5:       return CGSize(width: fullWidth, height: 30)
-            default:      return CGSize(width: fullWidth, height: 70)
+        switch indexPath.section{
+            case 0:
+                if indexPath.row == 0 {
+                    return CGSize(width: fullWidth, height: 150)
+                }
+            case 1:
+                if indexPath.row == 0 || indexPath.row == 1 {
+                    return CGSize(width: halfWidth, height: 150)
+                }
+                else if indexPath.row == 2 {
+                    return CGSize(width: fullWidth, height: 122)
+                }
+                else if indexPath.row == 3 {
+                    return CGSize(width: fullWidth, height: 215)
+                }
+                else if indexPath.row == 4 {
+                    return CGSize(width: fullWidth, height: 30)
+                }
+            default:
+                return CGSize(width: fullWidth, height: 70)
             }
-    }
+        return CGSize(width: fullWidth, height: 70)
+        }
     func generateLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 8
@@ -319,7 +364,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                 self?.resetMoodViews()
             }
             vc.onCheck = { [weak self] in
-                let cell = self?.collectionView.cellForItem(at: IndexPath(row: 2, section: 0)) as? MoodCollectionViewCell
+                let cell = self?.collectionView.cellForItem(at: IndexPath(row: 1, section: 1)) as? MoodCollectionViewCell
                 cell?.increase()
 //                self?.collectionView.reloadItems(at: [IndexPath(row: 2, section: 0)])
                 self?.resetMoodViews()
@@ -339,13 +384,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        load()
-        
-        collectionView.reloadData()
-        resetMoodViews()
-    }
+    
     func style(_ cell: UICollectionViewCell) {
         cell.layer.shadowColor = UIColor.black.cgColor
         
