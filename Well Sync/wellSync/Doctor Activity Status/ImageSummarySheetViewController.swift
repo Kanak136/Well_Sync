@@ -18,7 +18,14 @@ class ImageSummarySheetViewController: UIViewController {
     @IBOutlet weak var summaryTextView: UITextView!
     
     // MARK: - Properties
-    var image: UIImage?
+    var image: UIImage?{
+        didSet{
+            guard image != nil else {
+                return
+            }
+            fetchSummary()
+        }
+    }
     var entryTitle: String = "Journal Entry"
     
     // MARK: - Lifecycle
@@ -28,37 +35,38 @@ class ImageSummarySheetViewController: UIViewController {
         subtitleLabel.text = entryTitle
         summaryTextView.isHidden = true
         spinner.startAnimating()
-        fetchSummary()
+        
     }
     
     // MARK: - API
     
     private func fetchSummary() {
         guard let image,
-              let imageData = image.jpegData(compressionQuality: 0.7) else {
+              let _ = image.jpegData(compressionQuality: 0.7) else {
             showError(); return
         }
-        
-        let base64 = imageData.base64EncodedString()
-        
+        print("summarize started......")
         Task {
             do {
-                let text = "Summarized text will appear here."
-                DispatchQueue.main.async { self.showSummary(text) }
+                // ✅ Now 'try' is valid because the function throws
+                let result = try await Summarise.summarise.extractAndSummarizeWithGemini(image: image)
+                
+                DispatchQueue.main.async {
+                    self.summaryTextView.text = result
+                    self.spinner.stopAnimating()
+                    self.loadingLabel.isHidden = true
+                    self.summaryTextView.isHidden = false
+                }
+
             } catch {
-                DispatchQueue.main.async { self.showError() }
+                // ✅ Now this catch block is reachable
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.loadingLabel.isHidden = true
+                    self.showError()
+                }
             }
         }
-    }
-
-    
-    // MARK: - State
-    
-    private func showSummary(_ text: String) {
-        spinner.stopAnimating()
-        loadingLabel.isHidden = true
-        summaryTextView.isHidden = false
-        summaryTextView.text = text
     }
     
     private func showError() {
