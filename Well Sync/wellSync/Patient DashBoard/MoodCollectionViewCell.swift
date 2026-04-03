@@ -246,177 +246,141 @@ import UIKit
 class MoodCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet var MoodCount: UILabel!
-    
-    
-    func configure(total: Int) {
-        MoodCount.text = "\(total)"
+    @IBOutlet var indicator: UIView!   // ← keep as UIView in storyboard, set class to MoodBarChartView
+
+    var totalMood: [MoodLog] = []
+    var todayMood: [MoodLog] = []
+
+    private var chartView: MoodBarChartView?
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupChartView()
     }
 
-    func increase() {
-        var count:Int
-        let cal = Calendar.current
-        
-        let current = Int(MoodCount.text ?? "0") ?? 0
-//        animatePlusOne(to: current + 1)
+    private func setupChartView() {
+        let chart = MoodBarChartView()
+        chart.translatesAutoresizingMaskIntoConstraints = false
+        chart.backgroundColor = .clear
+        indicator.addSubview(chart)
+
+        NSLayoutConstraint.activate([
+            chart.leadingAnchor.constraint(equalTo: indicator.leadingAnchor),
+            chart.trailingAnchor.constraint(equalTo: indicator.trailingAnchor),
+            chart.topAnchor.constraint(equalTo: indicator.topAnchor),
+            chart.bottomAnchor.constraint(equalTo: indicator.bottomAnchor)
+        ])
+
+        chartView = chart
     }
 
-//    private func animatePlusOne(to newValue: Int) {
-//        guard let container = MoodCount.superview else { return }
-//        
-//        // 1. Add subtle haptic feedback for a tactile feel
-//        let generator = UIImpactFeedbackGenerator(style: .light)
-//        generator.prepare()
-//        generator.impactOccurred()
+    func configure(mood: [MoodLog]) {
+        totalMood      = mood
+        let today      = Date()
+        todayMood = totalMood.filter { Calendar.current.isDate($0.date, inSameDayAs: today) }
+        chartView?.update(with: todayMood)// ✅ show today's mood distribution
+        MoodCount.text = "\(todayMood.count)"
+    }
+}
+
+class MoodBarChartView: UIView {
+
+    private let moodColors: [UIColor] = [
+        UIColor(red: 0.87, green: 0.26, blue: 0.26, alpha: 1), // red      - mood 1
+        UIColor(red: 0.94, green: 0.51, blue: 0.13, alpha: 1), // orange   - mood 2
+        UIColor(red: 0.95, green: 0.78, blue: 0.18, alpha: 1), // yellow   - mood 3
+        UIColor(red: 0.55, green: 0.76, blue: 0.29, alpha: 1), // lt green - mood 4
+        UIColor(red: 0.20, green: 0.53, blue: 0.20, alpha: 1)  // dk green - mood 5
+    ]
+
+    // counts[0] = mood 1 count ... counts[4] = mood 5 count
+    var counts: [Int] = [0, 0, 0, 0, 0] {
+        didSet { setNeedsLayout() }
+    }
+
+    private var barLayers: [CAShapeLayer] = []
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        drawBars()
+    }
+
+//    private func drawBars() {
+//        // Remove old layers
+//        barLayers.forEach { $0.removeFromSuperlayer() }
+//        barLayers.removeAll()
 //
-//        // 2. Main Number "Pop" Animation
-//        // Swell up slightly, change the text, then spring back to normal
-//        UIView.animate(withDuration: 0.15, animations: {
-//            self.MoodCount.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
-//        }) { [weak self] _ in
-//            self?.MoodCount.text = "\(newValue)"
-//            UIView.animate(withDuration: 0.3,
-//                           delay: 0,
-//                           usingSpringWithDamping: 0.5,
-//                           initialSpringVelocity: 5,
-//                           options: .curveEaseInOut,
-//                           animations: {
-//                self?.MoodCount.transform = .identity
-//            })
-//        }
+//        let total       = counts.reduce(0, +)
+//        let maxCount    = counts.max() ?? 1
+//        let barCount    = 5
+//        let spacing:    CGFloat = 10
+//        let barWidth:   CGFloat = (bounds.width - spacing * CGFloat(barCount - 1)) / CGFloat(barCount)
+//        let maxBarHeight: CGFloat = bounds.height - 8
+//        let minBarHeight: CGFloat = barWidth * 0.6  // minimum pill height
 //
-//        // 3. Create the +1 Particle
-//        let plusOne = UILabel()
-//        plusOne.text = "+1"
-//        plusOne.font = UIFont.systemFont(ofSize: MoodCount.font.pointSize * 0.6, weight: .heavy)
-//        plusOne.textColor = .systemGreen
-//        plusOne.alpha = 0
-//        plusOne.sizeToFit()
+//        for i in 0..<barCount {
+//            let count      = counts[i]
+//            let ratio      = maxCount > 0 ? CGFloat(count) / CGFloat(maxCount) : 0
+//            let barHeight  = max(minBarHeight, ratio * maxBarHeight)
+//            let xOrigin    = CGFloat(i) * (barWidth + spacing)
+//            let yOrigin    = bounds.height - barHeight
 //
-//        // Start position: top right edge of the main counter
-//        let labelFrame = container.convert(MoodCount.frame, to: contentView)
-//        plusOne.center = CGPoint(
-//            x: labelFrame.maxX - 5,
-//            y: labelFrame.minY + 5
-//        )
-//        contentView.addSubview(plusOne)
+//            let rect = CGRect(x: xOrigin, y: yOrigin, width: barWidth, height: barHeight)
+//            let radius = barWidth / 2
+//            let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
 //
-//        // Initial state: Shrunk and tilted slightly left
-//        plusOne.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-//            .concatenating(CGAffineTransform(rotationAngle: -0.2))
+//            let shapeLayer        = CAShapeLayer()
+//            shapeLayer.path       = path.cgPath
+//            shapeLayer.fillColor  = moodColors[i].cgColor
 //
-//        // 4. Keyframe Animation for the floating +1
-//        UIView.animateKeyframes(withDuration: 0.8, delay: 0, options: [.calculationModeCubic]) {
-//            
-//            // Phase 1: Pop out, scale up, tilt right
-//            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.2) {
-//                plusOne.alpha = 1
-//                plusOne.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-//                    .concatenating(CGAffineTransform(rotationAngle: 0.1))
-//                plusOne.center.x += 15
-//                plusOne.center.y -= 15
-//            }
-//            
-//            // Phase 2: Settle scale back to 1.0, continue drifting up
-//            UIView.addKeyframe(withRelativeStartTime: 0.2, relativeDuration: 0.3) {
-//                plusOne.transform = .identity
-//                plusOne.center.y -= 15
-//            }
-//            
-//            // Phase 3: Shrink slightly, float higher, and fade out smoothly
-//            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
-//                plusOne.alpha = 0
-//                plusOne.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-//                plusOne.center.y -= 25
-//            }
-//            
-//        } completion: { _ in
-//            plusOne.removeFromSuperview()
+//            layer.addSublayer(shapeLayer)
+//            barLayers.append(shapeLayer)
 //        }
 //    }
-//    private func animatePlusOne(to newValue: Int) {
-//            guard let container = MoodCount.superview else { return }
-//            
-//            // 1. Haptic feedback
-//            let generator = UIImpactFeedbackGenerator(style: .light)
-//            generator.prepare()
-//            generator.impactOccurred()
-//
-//            // 2. Main Number "Pop" Animation
-//            UIView.animate(withDuration: 0.15, animations: {
-//                self.MoodCount.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
-//            }) { [weak self] _ in
-//                self?.MoodCount.text = "\(newValue)"
-//                UIView.animate(withDuration: 0.3,
-//                               delay: 0,
-//                               usingSpringWithDamping: 0.5,
-//                               initialSpringVelocity: 5,
-//                               options: .curveEaseInOut,
-//                               animations: {
-//                    self?.MoodCount.transform = .identity
-//                })
-//            }
-//
-//            // 3. Create the +1 Particle
-//            let plusOne = UILabel()
-//            plusOne.text = "+1"
-//            plusOne.font = UIFont.systemFont(ofSize: MoodCount.font.pointSize * 0.6, weight: .heavy)
-//            plusOne.textColor = .systemGreen
-//            plusOne.alpha = 0
-//            plusOne.sizeToFit()
-//
-//            let labelFrame = container.convert(MoodCount.frame, to: contentView)
-//            
-//            // --- NEW RANDOMIZATION LOGIC ---
-//            
-//            // Random Start Position (Anywhere within the label's frame)
-//            let randomStartX = labelFrame.midX + CGFloat.random(in: -(labelFrame.width/2)...(labelFrame.width/2))
-//            let randomStartY = labelFrame.midY + CGFloat.random(in: -(labelFrame.height/2)...(labelFrame.height/2))
-//            plusOne.center = CGPoint(x: randomStartX, y: randomStartY)
-//            
-//            // Random Initial Tilt (Between -30 and +30 degrees roughly)
-//            let randomInitialRotation = CGFloat.random(in: -0.5...0.5)
-//            
-//            // Random Drift Trajectory (Mostly upward, random left or right spread)
-//            let driftX = CGFloat.random(in: -30...30)
-//            let driftY = CGFloat.random(in: -40...(-20))
-//
-//            // -------------------------------
-//            
-//            contentView.addSubview(plusOne)
-//
-//            // Initial state: Shrunk and randomly tilted
-//            plusOne.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-//                .concatenating(CGAffineTransform(rotationAngle: randomInitialRotation))
-//
-//            // 4. Keyframe Animation with random trajectories
-//            UIView.animateKeyframes(withDuration: 0.8, delay: 0, options: [.calculationModeCubic]) {
-//                
-//                // Phase 1: Pop out, scale up, settle rotation
-//                UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.2) {
-//                    plusOne.alpha = 1
-//                    plusOne.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-//                        .concatenating(CGAffineTransform(rotationAngle: randomInitialRotation * 0.5)) // Ease out the tilt
-//                    plusOne.center.x += (driftX * 0.3)
-//                    plusOne.center.y += (driftY * 0.3)
-//                }
-//                
-//                // Phase 2: Settle scale back to 1.0, continue drift
-//                UIView.addKeyframe(withRelativeStartTime: 0.2, relativeDuration: 0.3) {
-//                    plusOne.transform = .identity
-//                    plusOne.center.x += (driftX * 0.3)
-//                    plusOne.center.y += (driftY * 0.3)
-//                }
-//                
-//                // Phase 3: Shrink slightly, drift to final position, fade out
-//                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
-//                    plusOne.alpha = 0
-//                    plusOne.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-//                    plusOne.center.x += (driftX * 0.4)
-//                    plusOne.center.y += (driftY * 0.4)
-//                }
-//                
-//            } completion: { _ in
-//                plusOne.removeFromSuperview()
-//            }
-//        }
+    private func drawBars() {
+        barLayers.forEach { $0.removeFromSuperlayer() }
+        barLayers.removeAll()
+
+        let maxCount      = counts.max() ?? 0
+        let barCount      = 5
+        let spacing:      CGFloat = 12                                           // ✅ tighter spacing
+        let barWidth:     CGFloat = (bounds.width - spacing * CGFloat(barCount - 1)) / CGFloat(barCount)
+        let maxBarHeight: CGFloat = bounds.height - 1
+        let minBarHeight: CGFloat = barWidth * 0.5                               // ✅ half-width = natural pill
+
+        for i in 0..<barCount {
+            let count     = counts[i]
+            let ratio     = maxCount > 0 ? CGFloat(count) / CGFloat(maxCount) : 0
+            let barHeight = maxCount == 0
+                ? minBarHeight
+                : max(minBarHeight, ratio * maxBarHeight)
+
+            let xOrigin   = CGFloat(i) * (barWidth + spacing)
+            let yOrigin   = bounds.height - barHeight
+
+            let rect      = CGRect(x: xOrigin, y: yOrigin, width: barWidth, height: barHeight)
+            let radius    = barWidth / 2                                          // ✅ always fully rounded ends
+            let path      = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+
+            let shapeLayer       = CAShapeLayer()
+            shapeLayer.path      = path.cgPath
+            shapeLayer.fillColor = maxCount == 0
+                ? moodColors[i].withAlphaComponent(0.25).cgColor
+                : moodColors[i].cgColor
+
+            layer.addSublayer(shapeLayer)
+            barLayers.append(shapeLayer)
+        }
+    }
+    
+    func update(with logs: [MoodLog]) {
+        var c = [0, 0, 0, 0, 0]
+        for log in logs {
+            let index = log.mood - 1  // assuming mood is 1...5
+            if index >= 0 && index < 5 {
+                c[index] += 1
+            }
+        }
+        counts = c
+    }
 }

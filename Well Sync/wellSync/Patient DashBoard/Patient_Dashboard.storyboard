@@ -183,25 +183,52 @@
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K9C-pf-qzM">
                                             <rect key="frame" x="8" y="8" width="168" height="138"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mood Count" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZp-0C-gUo">
-                                                    <rect key="frame" x="28.666666666666657" y="12" width="111" height="24"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mood Logs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZp-0C-gUo">
+                                                    <rect key="frame" x="8" y="45.666666666666664" width="106.66666666666667" height="26.999999999999993"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uyd-cl-eAi">
-                                                    <rect key="frame" x="77.666666666666671" y="68.333333333333329" width="13" height="33.666666666666671"/>
+                                                    <rect key="frame" x="8" y="8" width="13" height="33.666666666666664"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                                    <color key="textColor" systemColor="systemGrayColor"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
+                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kc7-vC-lIC" customClass="MoodBarChartView" customModule="wellSync" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="76.666666666666671" width="168" height="53.333333333333329"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+2 today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NGF-U2-Lxe">
+                                                    <rect key="frame" x="74" y="15" width="86" height="20"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.75294117650000003" blue="0.90980392160000001" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="86" id="OjA-ql-Pje"/>
+                                                        <constraint firstAttribute="height" constant="20" id="q9p-AO-rZj"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="12"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                             <constraints>
-                                                <constraint firstItem="uyd-cl-eAi" firstAttribute="centerX" secondItem="NZp-0C-gUo" secondAttribute="centerX" id="8AB-Xh-CxK"/>
-                                                <constraint firstItem="uyd-cl-eAi" firstAttribute="centerY" secondItem="K9C-pf-qzM" secondAttribute="centerY" constant="16" id="QFO-1p-U4D"/>
-                                                <constraint firstItem="NZp-0C-gUo" firstAttribute="top" secondItem="K9C-pf-qzM" secondAttribute="top" constant="12" id="T1q-ZP-E3n"/>
-                                                <constraint firstItem="NZp-0C-gUo" firstAttribute="centerX" secondItem="K9C-pf-qzM" secondAttribute="centerX" id="vqM-VO-Sap"/>
+                                                <constraint firstItem="kc7-vC-lIC" firstAttribute="top" secondItem="NZp-0C-gUo" secondAttribute="bottom" constant="4" id="4Ev-fz-0MU"/>
+                                                <constraint firstItem="NGF-U2-Lxe" firstAttribute="centerY" secondItem="uyd-cl-eAi" secondAttribute="centerY" id="9le-yd-sbm"/>
+                                                <constraint firstItem="NZp-0C-gUo" firstAttribute="top" secondItem="uyd-cl-eAi" secondAttribute="bottom" constant="4" id="PcC-oH-z7k"/>
+                                                <constraint firstItem="kc7-vC-lIC" firstAttribute="leading" secondItem="K9C-pf-qzM" secondAttribute="leading" id="QEI-Ei-rxJ"/>
+                                                <constraint firstAttribute="bottom" secondItem="kc7-vC-lIC" secondAttribute="bottom" constant="8" id="WGP-cc-4kQ"/>
+                                                <constraint firstItem="uyd-cl-eAi" firstAttribute="leading" secondItem="K9C-pf-qzM" secondAttribute="leading" constant="8" id="WPH-g6-m9W"/>
+                                                <constraint firstAttribute="trailing" secondItem="kc7-vC-lIC" secondAttribute="trailing" id="WmP-zS-6mx"/>
+                                                <constraint firstAttribute="trailing" secondItem="NGF-U2-Lxe" secondAttribute="trailing" constant="8" id="bhh-XQ-vhU"/>
+                                                <constraint firstItem="uyd-cl-eAi" firstAttribute="top" secondItem="K9C-pf-qzM" secondAttribute="top" constant="8" id="f10-XU-eWh"/>
+                                                <constraint firstItem="NZp-0C-gUo" firstAttribute="leading" secondItem="uyd-cl-eAi" secondAttribute="leading" id="hZ7-Dc-h9u"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -226,6 +253,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="MoodCount" destination="uyd-cl-eAi" id="VNQ-gf-yZh"/>
+                                    <outlet property="indicator" destination="kc7-vC-lIC" id="D4y-w9-ACK"/>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="nextSession" id="hR8-m1-Zed" customClass="NextSessionCell" customModule="wellSync" customModuleProvider="target">
@@ -14714,16 +14742,16 @@ AAAAAAAMgbQ
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.21960784310000001" blue="0.23529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

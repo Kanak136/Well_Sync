@@ -2033,6 +2033,8 @@ struct LogSummaryItem {
     }
 }
 
+
+
 func buildTodayItems(for patientID: UUID) async throws -> [TodayActivityItem] {
     let today = Date()
 

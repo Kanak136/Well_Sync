@@ -14,12 +14,20 @@ class PatientNotesCollectionViewController: UICollectionViewController {
     
     var onAdd: (() -> Void)?
     var notes: [PatientNote]?
-    var patient: Patient?
+    var patient: Patient?{
+        didSet{
+            guard patient != nil else {
+                return
+            }
+            
+        }
+    }
     var patientID: UUID?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+    }
+    func load(){
         guard let patientID = patient?.patientID else {
             print("Patient not set yet ❌")
             return
