@@ -79,6 +79,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
     var mood:         [MoodLog]           = []
     
     var currentStreak: Int = 0
+    var totalTodayItems: Int = 0
 
     var patient: Patient? {
         didSet {
@@ -159,9 +160,10 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                     self.ActivityLogs   = logs
                     self.mood           = moods
                     self.currentStreak  = streak
+                    self.totalTodayItems = allToday.count
                     self.toDoItems      = allToday.filter { !$0.isCompletedToday }
                     self.collectionView.reloadSections(IndexSet([0, 2]))
-                    self.collectionView.reloadItems(at: [IndexPath(row: 1, section: 1)])
+                    self.collectionView.reloadItems(at: [IndexPath(row: 0, section: 1),IndexPath(row: 1, section: 1)])
                 }
 
             } catch {
@@ -207,8 +209,13 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "activityRing", for: indexPath
                 ) as! ActivityRingCell
-                cell.configure(progress: 1/3)
+                let completed = totalTodayItems - toDoItems.count
+                    let progress  = totalTodayItems > 0
+                        ? CGFloat(completed) / CGFloat(totalTodayItems)
+                        : 0
+                    cell.configure(progress: progress)
                 if let label = cell.viewWithTag(1) as? UILabel { label.text = items[indexPath.row + 1] }
+                if let label1 = cell.viewWithTag(2) as? UILabel { label1.text = "\(completed)/\(totalTodayItems)" }
                 style(cell)
                 return cell
             }
