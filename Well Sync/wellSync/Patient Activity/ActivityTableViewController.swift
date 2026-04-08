@@ -391,11 +391,23 @@ class ActivityTableViewController: UITableViewController, UIImagePickerControlle
         ) as! TodayTableViewCell
 
         if indexPath.section == 0 {
-            cell.configure(with: todayItems[indexPath.row])
-            cell.onPhotoSourceSelected = { [weak self] sourceType in
-                self?.selectedItem = self?.todayItems[indexPath.row]
-                self?.uploads = []
-                self?.openImagePicker(sourceType: sourceType)
+            if todayItems[indexPath.row].isUploadType{
+                cell.configure(with: todayItems[indexPath.row])
+                cell.onPhotoSourceSelected = { [weak self] sourceType in
+                    self?.selectedItem = self?.todayItems[indexPath.row]
+                    self?.uploads = []
+                    self?.openImagePicker(sourceType: sourceType)
+                }
+            }
+            else{
+                cell.configureAsTimer(with: todayItems[indexPath.row])
+                cell.onTimerTapped = { [weak self] in
+                        guard let self = self else { return }
+                        self.selectedItem = self.todayItems[indexPath.row]
+                        
+                        // 🔥 Perform segue
+                        self.performSegue(withIdentifier: "Timer", sender: self)
+                    }
             }
         } else {
             let summary = logSummaries[indexPath.row]

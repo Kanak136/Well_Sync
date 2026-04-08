@@ -117,10 +117,21 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Activity" largeTitleDisplayMode="always" id="SyC-EL-5hE"/>
+                    <connections>
+                        <segue destination="TFI-bQ-WJw" kind="presentation" identifier="Timer" id="p6D-j6-60J"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Ad-XG-cJA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2522.9007633587785" y="1083.8028169014085"/>
+        </scene>
+        <!--Timer-->
+        <scene sceneID="Srt-B2-y5L">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Timer" referencedIdentifier="Timer" id="TFI-bQ-WJw" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vnx-Pw-6Tu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3019" y="1084"/>
         </scene>
         <!--Activity-->
         <scene sceneID="CAH-zj-pUu">
