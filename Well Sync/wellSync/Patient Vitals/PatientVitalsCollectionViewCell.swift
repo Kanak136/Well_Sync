@@ -28,7 +28,7 @@ class PatientVitalsCollectionViewCell: UICollectionViewCell {
         for (index, rate) in points.enumerated() {
             entries.append(ChartDataEntry(x: Double(index), y: rate))
         }
-        healthKit.fetchHeartRate(valueLabel)
+//        healthKit.fetchHeartRate(valueLabel)
         let dataSet = LineChartDataSet(entries: entries, label: "")
         dataSet.mode = LineChartDataSet.Mode.horizontalBezier
         dataSet.drawCirclesEnabled = true
