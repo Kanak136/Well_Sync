@@ -248,6 +248,12 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         }else if indexPath.section == 2 && previousActivity[indexPath.row].isUploadType == true{
             performSegue(withIdentifier: "Journal", sender: indexPath)
         }
+        if indexPath.section == 1 && activities[indexPath.row].isUploadType == false{
+            performSegue(withIdentifier: "graph", sender: indexPath)
+        }else if indexPath.section == 2 && previousActivity[indexPath.row].isUploadType == false{
+            performSegue(withIdentifier: "graph", sender: indexPath)
+        }
+        
     }
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         var headerView:HeaderCollectionReusableView!
@@ -281,37 +287,58 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
 //        }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        // MARK: Add Activity
         if segue.identifier == "showAddActivity",
            let nav = segue.destination as? UINavigationController,
            let addVC = nav.topViewController as? AddActivityTableViewController {
-            
+
             addVC.patient = self.patient
             addVC.onSave = {
                 self.loadActivity()
             }
         }
-        print(sender)
+
+        guard let indexPath = sender as? IndexPath else { return }
+
+        // MARK: Journal (upload-type)
         if segue.identifier == "Journal",
-           let journalVC = segue.destination as? JournalTableViewController,
-           let indexPath = sender as? IndexPath {
-            
+           let journalVC = segue.destination as? JournalTableViewController {
+
             if indexPath.section == 1 {
-                // Current activity
                 let item = activities[indexPath.row]
-                print(item,self.patient!)
                 journalVC.selectedAssignment = item.assignment
-                journalVC.selectedActivity = item.activity
-                journalVC.patient = self.patient
-                
+                journalVC.selectedActivity   = item.activity
+                journalVC.patient            = self.patient
+
             } else if indexPath.section == 2 {
-                // Previous activity
                 let item = previousActivity[indexPath.row]
-                print(item,self.patient!)
                 journalVC.selectedAssignment = item.assignment
-                journalVC.selectedActivity = item.activity
-                journalVC.patient = self.patient
+                journalVC.selectedActivity   = item.activity
+                journalVC.patient            = self.patient
+            }
+        }
+
+        // MARK: Graph (timer-type) ← NEW BLOCK
+        if segue.identifier == "graph",
+           let graphVC = segue.destination as? GraphCollectionViewController {
+
+            if indexPath.section == 1 {
+                // Current activity — all logs for that assignment
+                let item = activities[indexPath.row]
+                graphVC.activity = item.activity
+                graphVC.logs     = item.logs        // [ActivityLog] already fetched
+                graphVC.patient  = self.patient
+
+            } else if indexPath.section == 2 {
+                // Previous activity — all logs for that assignment
+                let item = previousActivity[indexPath.row]
+                graphVC.activity = item.activity
+                graphVC.logs     = item.logs        // [ActivityLog] already fetched
+                graphVC.patient  = self.patient
             }
         }
     }
+
     
 }

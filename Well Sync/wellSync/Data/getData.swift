@@ -2126,35 +2126,35 @@ func buildTodayItems(for patientID: UUID) async throws -> [TodayActivityItem] {
 //    return items
 //}
 //
-func buildLogSummaries(for patientID: UUID) async throws -> [LogSummaryItem] {
+    func buildLogSummaries(for patientID: UUID) async throws -> [LogSummaryItem] {
 
-    // Was: assignedActivities.filter
-    let allAssignments = try await AccessSupabase.shared.fetchAssignments(for: patientID)
-    let inactiveAssignments = allAssignments.filter { !$0.isActiveToday }
+        // Was: assignedActivities.filter
+        let allAssignments = try await AccessSupabase.shared.fetchAssignments(for: patientID)
+        let inactiveAssignments = allAssignments.filter { !$0.isActiveToday }
 
-    // Was: activityLogs.filter
-    let allLogs = try await AccessSupabase.shared.fetchLogs(for: patientID)
+        // Was: activityLogs.filter
+        let allLogs = try await AccessSupabase.shared.fetchLogs(for: patientID)
 
-    var summaries: [LogSummaryItem] = []
+        var summaries: [LogSummaryItem] = []
 
-    for assignment in inactiveAssignments {
+        for assignment in inactiveAssignments {
 
-        guard let activity = try await AccessSupabase.shared.fetchActivityByID(
-            assignment.activityID
-        ) else {
-            print("Activity not found for ID: \(assignment.activityID)")
-            continue
+            guard let activity = try await AccessSupabase.shared.fetchActivityByID(
+                assignment.activityID
+            ) else {
+                print("Activity not found for ID: \(assignment.activityID)")
+                continue
+            }
+
+            let logs = allLogs.filter { $0.assignedID == assignment.assignedID }
+
+            summaries.append(LogSummaryItem(
+                                assignment: assignment,
+                                activity: activity,
+                                logs: logs,
+                                totalLogs: logs.count
+                            ))
         }
 
-        let logs = allLogs.filter { $0.assignedID == assignment.assignedID }
-
-        summaries.append(LogSummaryItem(
-                            assignment: assignment,  
-                            activity: activity,
-                            logs: logs,
-                            totalLogs: logs.count
-                        ))
+        return summaries.sorted { $0.totalLogs > $1.totalLogs }
     }
-
-    return summaries.sorted { $0.totalLogs > $1.totalLogs }
-}
