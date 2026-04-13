@@ -14,11 +14,11 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     // MARK: - Properties
     
     let cards = ["Segment", "Calender", "Mood Count", "Mood Chart", "Insights"]
-    
+    var isPreloaded = false
+    var moodLogs: [MoodLog] = []
     private var selectedSegmentIndex: Int = 0
     private var calendarCellHeight: CGFloat = 250
     
-    private var moodLogs: [MoodLog] = []
     
     private var currentVisibleRange: ClosedRange<Date>?
     
@@ -50,22 +50,24 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     // MARK: - Data Loading
     
     func load() {
+
+        if isPreloaded {
+            self.collectionView.reloadData()
+            return
+        }
+
         Task {
             do {
                 let logs = try await AccessSupabase.shared.fetchMoodLogs(
-                    patientID: currPatient?.patientID
-                    ?? UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+                    patientID: currPatient?.patientID ??
+                    UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
                 )
+
                 await MainActor.run {
                     self.moodLogs = logs
-                    self.insightCache = [:]
-                    self.insign = ""
-                    
                     self.collectionView.reloadData()
-                    // After reloadData the calendar cell re-configures itself,
-                    // fires the delegate, and refreshDataCells() runs again
-                    // — this time with the real moodLogs.
                 }
+
             } catch {
                 print("Error fetching mood logs:", error)
             }
@@ -280,81 +282,6 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
             return section
         }
     }
-    
-    // MARK: - AI Insight (chunked on-device model)
-    
-    //    func insightLocal(moodLog: [MoodLog]) async -> String {
-    //
-    //        guard !moodLog.isEmpty else {
-    //            return "No mood data available for clinical evaluation."
-    //        }
-    //
-    //        let sortedLogs = moodLog.sorted { $0.date < $1.date }
-    //        let chunkSize  = 6
-    //        let chunks: [[MoodLog]] = stride(from: 0, to: sortedLogs.count, by: chunkSize).map {
-    //            Array(sortedLogs[$0..<min($0 + chunkSize, sortedLogs.count)])
-    //        }
-    //
-    //        var partialInsights: [String] = []
-    //
-    //        for chunk in chunks {
-    //            let logsText = chunk.map { log in
-    //                let date     = log.date.formatted(date: .abbreviated, time: .omitted)
-    //                let note     = (log.moodNote ?? "No note").prefix(80)
-    //                let feelings = log.selectedFeeling?.map { "\($0)" }.joined(separator: ", ") ?? "None"
-    //                return """
-    //                Date: \(date)
-    //                Mood: \(log.mood)
-    //                Feelings: \(feelings)
-    //                Note: \(note)
-    //                """
-    //            }.joined(separator: "\n\n")
-    //
-    //            let prompt = """
-    //            You are a clinical assistant supporting a mental health professional.
-    //            Analyze the following mood logs and generate a precise clinical observation.
-    //            Instructions:
-    //            - mood 1 - very bad, 2 - bad, 3 - neutral, 4 - happy, 5 - very happy
-    //            - Maximum 50 words
-    //            - Be specific and observational
-    //            - Avoid vague terms like "overall" or "seems"
-    //            - Highlight variability, emotional signals, or notable patterns
-    //            - Do NOT give advice
-    //            Mood Logs:
-    //            \(logsText)
-    //            """
-    //
-    //            do {
-    //                let session  = LanguageModelSession()
-    //                let response = try await session.respond(to: prompt)
-    //                partialInsights.append(response.content)
-    //            } catch { continue }
-    //        }
-    //
-    //        let finalPrompt = """
-    //        You are a clinical assistant preparing a summary for a doctor.
-    //        Combine the following observations into a final clinical summary.
-    //        Instructions:
-    //        - Maximum 50 words
-    //        - Write in 2–3 sentences
-    //        - Use professional, objective tone
-    //        - Clearly describe mood pattern, emotional indicators, and any noticeable changes
-    //        - Avoid "overall" or "seems" — be specific
-    //        - Do NOT give advice
-    //        Observations:
-    //        \(partialInsights.joined(separator: "\n"))
-    //        """
-    //
-    //        do {
-    //            let session       = LanguageModelSession()
-    //            let finalResponse = try await session.respond(to: finalPrompt)
-    //            return finalResponse.content
-    //        } catch {
-    //            print("Final Insight Error:", error)
-    //            return "\(error)"
-    //        }
-    //    }
-    //}
     
     // MARK: - AI Insight (Gemini via Firebase AI Logic)
     

@@ -1,143 +1,3 @@
-////
-////
-////  CalendarCell1.swift
-////  wellSync
-////
-////  Created by Vidit Saran Agarwal on 17/03/26.
-////
-//
-//import UIKit
-//import FSCalendar
-//
-//class CalendarCell1: UICollectionViewCell,
-//                     FSCalendarDataSource,
-//                     FSCalendarDelegate,
-//                     FSCalendarDelegateAppearance {
-//
-//    @IBOutlet weak var calendar: FSCalendar!
-//    var onHeightChange: ((CGFloat) -> Void)?
-//
-//    var moodLogs: [MoodLog] = [] {
-//        didSet {
-//            buildDominantMoodMap()
-//            calendar.reloadData()
-//        }
-//    }
-//
-//    private var dominantMoodByDay: [String: Int] = [:]
-//
-//    private let dateFormatter: DateFormatter = {
-//        let f = DateFormatter()
-//        f.dateFormat = "yyyy-MM-dd"
-//        return f
-//    }()
-//
-//    // MARK: - Lifecycle
-//
-//    override func awakeFromNib() {
-//        super.awakeFromNib()
-//        setupCalendar()
-//    }
-//
-//    // MARK: - Calendar Setup
-//
-//    private func setupCalendar() {
-//        calendar.dataSource = self
-//        calendar.delegate = self
-//        calendar.scrollDirection = .horizontal
-//        calendar.placeholderType = .none
-//        calendar.firstWeekday = 1
-//        calendar.scope = .week
-//
-//        calendar.appearance.headerMinimumDissolvedAlpha = 0
-//        calendar.appearance.headerTitleFont  = .systemFont(ofSize: 15, weight: .bold)
-//        calendar.appearance.headerTitleColor = UIColor.label
-//        calendar.appearance.headerDateFormat = "MMMM yyyy"
-//
-//        calendar.appearance.weekdayFont      = .systemFont(ofSize: 12, weight: .semibold)
-//        calendar.appearance.weekdayTextColor = UIColor.secondaryLabel
-//
-//        calendar.appearance.titleFont           = .systemFont(ofSize: 15, weight: .medium)
-//        calendar.appearance.titleDefaultColor   = UIColor.label
-//        calendar.appearance.titleWeekendColor   = UIColor.label
-//
-//        calendar.appearance.selectionColor      = UIColor.systemIndigo
-//        calendar.appearance.titleSelectionColor = UIColor.label
-//
-//        calendar.appearance.todayColor          = .clear
-//        calendar.appearance.titleTodayColor     = UIColor.systemIndigo
-//
-//        calendar.appearance.borderRadius = 1.0
-//        calendar.appearance.eventOffset  = .zero
-//    }
-//
-//    // MARK: - Data Processing
-//
-//    private func buildDominantMoodMap() {
-//        var grouped: [String: [Int]] = [:]
-//        for log in moodLogs {
-//            let key = dateFormatter.string(from: log.date)
-//            grouped[key, default: []].append(log.mood)
-//        }
-//
-//        dominantMoodByDay = grouped.mapValues { moods in
-//            var counts: [Int: Int] = [:]
-//            for mood in moods {
-//                counts[mood, default: 0] += 1
-//            }
-//            let maxCount = counts.values.max() ?? 1
-//            return counts
-//                .filter { $0.value == maxCount }
-//                .keys
-//                .max() ?? moods[0]
-//        }
-//    }
-//
-//    private func moodColor(for mood: Int) -> UIColor {
-//        switch mood {
-//        case 1:  return UIColor.systemRed
-//        case 2:  return UIColor.systemOrange
-//        case 3:  return UIColor.systemYellow
-//        case 4:  return UIColor(red: 0.6, green: 0.9, blue: 0.4, alpha: 1)
-//        default: return UIColor.systemGreen
-//        }
-//    }
-//
-////    private func titleColor(for mood: Int) -> UIColor {
-////        return mood == 3 ? UIColor.label : .white
-////    }
-//
-//    // MARK: - Scope Helpers
-//
-//    func setupForWeek() {
-//        if calendar.scope != .week {
-//            calendar.setScope(.week, animated: true)
-//        }
-//        calendar.scrollEnabled = true
-//    }
-//
-//    func setupForMonth() {
-//        if calendar.scope != .month {
-//            calendar.setScope(.month, animated: true)
-//        }
-//        calendar.scrollEnabled = true
-//    }
-//
-//    func configure(segment: Int) {
-//        if segment == 0 { setupForWeek() } else { setupForMonth() }
-//    }
-//
-//    // MARK: - Height Change Callback
-//
-//    func calendar(_ calendar: FSCalendar,
-//                  boundingRectWillChange bounds: CGRect,
-//                  animated: Bool) {
-//        calendar.frame.size.height = bounds.height
-//        onHeightChange?(bounds.height)
-//    }
-//}
-
-
 //
 //  CalendarCell1.swift
 //  wellSync
@@ -273,10 +133,7 @@ class CalendarCell1: UICollectionViewCell,
         contentView.bringSubviewToFront(prevButton)
         contentView.bringSubviewToFront(nextButton)
     }
-
-    /// Step 2a — Frame-based positioning so the buttons sit exactly in the
-    /// FSCalendar header row (approx top 36 pt of the calendar frame).
-    /// This runs every layoutSubviews call, which handles scope animations too.
+    
     private func positionChevronButtons() {
         guard let cal = calendar else { return }
 
@@ -306,10 +163,6 @@ class CalendarCell1: UICollectionViewCell,
     }
 
     // MARK: - Chevron Actions
-
-    /// Step 3: Navigate to the PREVIOUS week or month.
-    /// We compute the target date from `calendar.currentPage` so FSCalendar's
-    /// own page-tracking stays in sync, then call `setCurrentPage(_:animated:)`.
     @objc private func goToPrev() {
         let cal      = Calendar.current
         let current  = calendar.currentPage

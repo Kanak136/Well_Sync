@@ -84,7 +84,10 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
                                 <connections>
+                                    <outlet property="leftButton" destination="Ibj-01-eEL" id="xBh-hc-5dA"/>
                                     <outlet property="lineChart" destination="Yys-9Q-5qH" id="xia-rb-KJg"/>
+                                    <outlet property="rightButton" destination="Qvx-r1-23M" id="u1b-rV-SXx"/>
+                                    <outlet property="titleLabel" destination="s4P-2B-Fjc" id="Ne9-QQ-4iC"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sActivityCell" rowHeight="145" id="K1m-ix-zYQ" customClass="SummaryActivityTableViewCell" customModule="wellSync" customModuleProvider="target">

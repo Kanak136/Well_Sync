@@ -274,18 +274,44 @@ class VitalsBarCollectionViewCell: UICollectionViewCell {
             }
             return (values, labels)
 
+//        case .monthly:
+//            var values: [Double] = Array(repeating: 0, count: 4)
+//            let labels = ["W1", "W2", "W3", "W4"]
+//
+//            for log in sleepLogs {
+//                let dayStart = calendar.startOfDay(for: log.start_time)
+//                let diff = calendar.dateComponents([.day], from: calendar.startOfDay(for: startDate), to: dayStart).day ?? 0
+//                let weekIndex = min(diff / 7, 3)
+//                if weekIndex >= 0 {
+//                    values[weekIndex] += log.duration_minutes / 60.0
+//                }
+//            }
+//            return (values, labels)
         case .monthly:
-            var values: [Double] = Array(repeating: 0, count: 4)
-            let labels = ["W1", "W2", "W3", "W4"]
+            let calendar = Calendar.current
+            let range = calendar.range(of: .day, in: .month, for: startDate)!
+            let daysCount = range.count
+
+            var values = Array(repeating: 0.0, count: daysCount)
+            var labels: [String] = []
+
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d"
+
+            for i in 0..<daysCount {
+                let day = calendar.date(byAdding: .day, value: i, to: startDate)!
+                labels.append(formatter.string(from: day))
+            }
 
             for log in sleepLogs {
                 let dayStart = calendar.startOfDay(for: log.start_time)
-                let diff = calendar.dateComponents([.day], from: calendar.startOfDay(for: startDate), to: dayStart).day ?? 0
-                let weekIndex = min(diff / 7, 3)
-                if weekIndex >= 0 {
-                    values[weekIndex] += log.duration_minutes / 60.0
+                let diff = calendar.dateComponents([.day], from: startDate, to: dayStart).day ?? -1
+
+                if diff >= 0 && diff < daysCount {
+                    values[diff] += log.duration_minutes / 60.0
                 }
             }
+
             return (values, labels)
         }
     }
@@ -311,23 +337,43 @@ class VitalsBarCollectionViewCell: UICollectionViewCell {
 
             return (values, labels)
 
+//        case .monthly:
+//            var values = Array(repeating: 0.0, count: 4)
+//            let labels = ["W1", "W2", "W3", "W4"]
+//
+//            guard let monthInterval = calendar.dateInterval(of: .month, for: startDate) else {
+//                return (values, labels)
+//            }
+//
+//            for (date, steps) in stepsByDay {
+//
+//                // ❗ ONLY include dates inside THIS month
+//                guard date >= monthInterval.start && date < monthInterval.end else { continue }
+//
+//                let weekOfMonth = calendar.component(.weekOfMonth, from: date)
+//
+//                let index = min(max(weekOfMonth - 1, 0), 3)
+//                values[index] += steps
+//            }
+//
+//            return (values, labels)
         case .monthly:
-            var values = Array(repeating: 0.0, count: 4)
-            let labels = ["W1", "W2", "W3", "W4"]
+            let calendar = Calendar.current
+            let range = calendar.range(of: .day, in: .month, for: startDate)!
+            let daysCount = range.count
 
-            guard let monthInterval = calendar.dateInterval(of: .month, for: startDate) else {
-                return (values, labels)
-            }
+            var values = Array(repeating: 0.0, count: daysCount)
+            var labels: [String] = []
 
-            for (date, steps) in stepsByDay {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d"
 
-                // ❗ ONLY include dates inside THIS month
-                guard date >= monthInterval.start && date < monthInterval.end else { continue }
+            for i in 0..<daysCount {
+                let day = calendar.date(byAdding: .day, value: i, to: startDate)!
+                labels.append(formatter.string(from: day))
 
-                let weekOfMonth = calendar.component(.weekOfMonth, from: date)
-
-                let index = min(max(weekOfMonth - 1, 0), 3)
-                values[index] += steps
+                let key = calendar.startOfDay(for: day)
+                values[i] = stepsByDay[key] ?? 0
             }
 
             return (values, labels)
@@ -371,7 +417,7 @@ class VitalsBarCollectionViewCell: UICollectionViewCell {
         bgSet.highlightEnabled = false
         bgSet.colors = Array(repeating: bgColor, count: bgEntries.count)
 
-        let data = BarChartData(dataSets: [bgSet, fgSet])
+        let data = BarChartData(dataSets: [fgSet])
         data.barWidth = 0.65
 
         barChartView.data = data
@@ -380,8 +426,26 @@ class VitalsBarCollectionViewCell: UICollectionViewCell {
         barChartView.doubleTapToZoomEnabled = false
         barChartView.pinchZoomEnabled = false
         barChartView.setScaleEnabled(false)
+        // ───── Y AXIS CONFIG ─────
+        let maxVal = values.max() ?? 0
+        let paddedMax = maxVal == 0 ? 1 : maxVal * 1.1   // +10%
+
+        // ❌ disable left axis
         barChartView.leftAxis.enabled = false
-        barChartView.rightAxis.enabled = false
+
+        // ✅ enable right axis
+        let rightAxis = barChartView.rightAxis
+        rightAxis.enabled = true
+        rightAxis.axisMinimum = 0
+        rightAxis.axisMaximum = paddedMax
+
+        rightAxis.drawGridLinesEnabled = true
+        rightAxis.gridColor = UIColor.systemGray5
+        rightAxis.labelFont = .systemFont(ofSize: 10)
+        rightAxis.labelTextColor = .secondaryLabel
+
+        // cleaner look
+        rightAxis.drawAxisLineEnabled = false
         barChartView.highlightPerTapEnabled = true
         barChartView.highlightPerDragEnabled = false
         barChartView.highlightFullBarEnabled = false

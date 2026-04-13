@@ -15,40 +15,38 @@ class PatientDetailCollectionViewController: UICollectionViewController{
     var patient: Patient?
     var selectedAppointment: AppointmentWithPatient?
     var sessionNotes : [SessionNote] = []
-    
+    // ✅ ADD THIS PROPERTY
+    var moodLogs: [MoodLog] = []
     var patientAppointments: [Appointment] = []
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        registerCells()
-//        let Layout = generateLayout()
-//        PatientProfileCollectionView.setCollectionViewLayout(Layout, animated: true)
-//        
-//        PatientProfileCollectionView.delegate = self
-//        PatientProfileCollectionView.dataSource = self
-//        
-//        updateDoneButtonColor()
-//        loadSessionNotes()
-//        if let appointment = selectedAppointment {
-//            let isToday = Calendar.current.isDateInToday(appointment.scheduledAt)
-//            doneButton.isEnabled = isToday
-//        } else {
-//            doneButton.isEnabled = false
-//        }
-//    }
+    func loadMoodLogs() {
+        guard let patientID = patient?.patientID else { return }
+
+        Task {
+            do {
+                let logs = try await AccessSupabase.shared.fetchMoodLogs(patientID: patientID)
+                await MainActor.run {
+                    self.moodLogs = logs.sorted{$0.date < $1.date}
+                }
+            } catch {
+                print("❌ Mood logs error:", error)
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+
         registerCells()
         let Layout = generateLayout()
         PatientProfileCollectionView.setCollectionViewLayout(Layout, animated: true)
-        
+
         PatientProfileCollectionView.delegate = self
         PatientProfileCollectionView.dataSource = self
-        
+
         updateDoneButtonColor()
         loadSessionNotes()
-        loadPatientAppointments() // ✅ ADD THIS
-        
+        loadPatientAppointments()
+        loadMoodLogs()
+
         if let appointment = selectedAppointment {
             let isToday = Calendar.current.isDateInToday(appointment.scheduledAt)
             doneButton.isEnabled = isToday
@@ -56,8 +54,7 @@ class PatientDetailCollectionViewController: UICollectionViewController{
             doneButton.isEnabled = false
         }
     }
-
-    // ✅ ADD THIS NEW FUNCTION anywhere in the class
+    
     func loadPatientAppointments() {
         guard let patientID = patient?.patientID else { return }
         Task {
@@ -87,8 +84,6 @@ class PatientDetailCollectionViewController: UICollectionViewController{
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0{
             let profilecell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCollectionViewCell", for: indexPath) as! ProfileCollectionViewCell
-//            profilecell.configureCell(with: patient!)
-            // ✅ NEW
             profilecell.configureCell(with: patient!, appointments: patientAppointments)
             profilecell.delegate = self
             return profilecell
@@ -102,25 +97,35 @@ class PatientDetailCollectionViewController: UICollectionViewController{
         return 2
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
         if segue.identifier == "Summarised" {
-            let destination     = segue.destination as! SummarisedReportTableViewController
+            let destination = segue.destination as! SummarisedReportTableViewController
             destination.patient = patient
+            destination.moodLogs = self.moodLogs
         }
-        if segue.identifier == "activity" {
-            let destination     = segue.destination as! DoctorActivityStatusCollectionViewController
-            destination.patient = patient
-        }
-        if segue.identifier == "sessionNotes",
-               let vc = segue.destination as? SessionNoteCollectionViewController {
-                vc.patient = self.patient
-//            vc.appointment = self.appointment
-            }
-        if segue.identifier == "mood",let vc = segue.destination as? MoodAnalysisCollectionViewController{
+
+        if segue.identifier == "mood",
+           let vc = segue.destination as? MoodAnalysisCollectionViewController {
             vc.currPatient = self.patient
+            vc.moodLogs = self.moodLogs
+            vc.isPreloaded = true
         }
-        if segue.identifier == "case",let vc = segue.destination as? CaseHistoryViewController{
+
+        if segue.identifier == "activity" {
+            let destination = segue.destination as! DoctorActivityStatusCollectionViewController
+            destination.patient = patient
+        }
+
+        if segue.identifier == "sessionNotes",
+           let vc = segue.destination as? SessionNoteCollectionViewController {
             vc.patient = self.patient
         }
+
+        if segue.identifier == "case",
+           let vc = segue.destination as? CaseHistoryViewController {
+            vc.patient = self.patient
+        }
+
         if segue.identifier == "vitals" {
             let destination = segue.destination as! VitalsCollectionViewController
             destination.patient = self.patient
@@ -479,6 +484,7 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
         //        }
         //        present(popoverVC, animated: true)
         // ✅ CANCEL: Fetch the scheduled appointment, delete it, clear patient's next session date
+        
         popoverVC.onScheduleCancelled = { [weak self] in
             guard let self = self, let patient = self.patient else { return }
             

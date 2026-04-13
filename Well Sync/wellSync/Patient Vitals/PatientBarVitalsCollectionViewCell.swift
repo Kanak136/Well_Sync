@@ -131,8 +131,7 @@ class PatientBarVitalsCollectionViewCell: UICollectionViewCell {
             return calendar.dateComponents([.day], from: startDate, to: date).day ?? -1
 
         case .monthly:
-            // Each bar = 1 week → find which week (0–3)
-            return calendar.dateComponents([.weekOfYear], from: startDate, to: date).weekOfYear ?? -1
+            return calendar.dateComponents([.day], from: startDate, to: date).day ?? -1
         }
     }
 
@@ -165,14 +164,34 @@ class PatientBarVitalsCollectionViewCell: UICollectionViewCell {
 
             return (startDate, endDate, labels)
 
+//        case .monthly:
+//            // Start of the target month
+//            let startOfThisMonth = calendar.dateInterval(of: .month, for: today)!.start
+//            let startDate = calendar.date(byAdding: .month, value: windowOffset, to: startOfThisMonth)!
+//            let endDate   = calendar.date(byAdding: .month, value: 1, to: startDate)!
+//
+//            // Labels: W1, W2, W3, W4
+//            let labels = ["W1", "W2", "W3", "W4"]
+//
+//            formatter.dateFormat = "MMM yyyy"
+//            chartRangeLabel.text = formatter.string(from: startDate)
+//
+//            return (startDate, endDate, labels)
         case .monthly:
-            // Start of the target month
             let startOfThisMonth = calendar.dateInterval(of: .month, for: today)!.start
             let startDate = calendar.date(byAdding: .month, value: windowOffset, to: startOfThisMonth)!
             let endDate   = calendar.date(byAdding: .month, value: 1, to: startDate)!
 
-            // Labels: W1, W2, W3, W4
-            let labels = ["W1", "W2", "W3", "W4"]
+            let range = calendar.range(of: .day, in: .month, for: startDate)!
+            let daysCount = range.count
+
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d"
+
+            let labels = (0..<daysCount).map { i -> String in
+                let date = calendar.date(byAdding: .day, value: i, to: startDate)!
+                return formatter.string(from: date)
+            }
 
             formatter.dateFormat = "MMM yyyy"
             chartRangeLabel.text = formatter.string(from: startDate)
@@ -204,7 +223,7 @@ class PatientBarVitalsCollectionViewCell: UICollectionViewCell {
         bgSet.drawValuesEnabled = false
         bgSet.highlightEnabled  = false
 
-        let data = BarChartData(dataSets: [bgSet, fgSet])
+        let data = BarChartData(dataSets: [fgSet])
         data.barWidth = 0.65
 
         barChartView.data = data
@@ -213,8 +232,21 @@ class PatientBarVitalsCollectionViewCell: UICollectionViewCell {
         barChartView.doubleTapToZoomEnabled   = false
         barChartView.pinchZoomEnabled         = false
         barChartView.setScaleEnabled(false)
-        barChartView.leftAxis.enabled  = false
-        barChartView.rightAxis.enabled = false
+        let maxVal = values.max() ?? 0
+        let paddedMax = maxVal == 0 ? 1 : maxVal * 1.1
+        barChartView.leftAxis.enabled = false
+
+        let rightAxis = barChartView.rightAxis
+        rightAxis.enabled = true
+        rightAxis.axisMinimum = 0
+        rightAxis.axisMaximum = paddedMax
+
+        rightAxis.drawGridLinesEnabled = true
+        rightAxis.gridColor = UIColor.systemGray5
+        rightAxis.labelFont = .systemFont(ofSize: 10)
+        rightAxis.labelTextColor = .secondaryLabel
+
+        rightAxis.drawAxisLineEnabled = false
         barChartView.highlightPerTapEnabled = true
         barChartView.highlightPerDragEnabled = false
         barChartView.highlightFullBarEnabled = false

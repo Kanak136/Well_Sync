@@ -11,7 +11,8 @@ import UIKit
 class SummarisedReportTableViewController: UITableViewController {
     
     var patient: Patient?
-    let sections = ["Mood","Activity","Patient notes","Session Notes", "Journal Summary"]
+    var moodLogs: [MoodLog] = []
+    let sections = ["Mood","Activity","Session Notes", "Journal Summary"]
     var todayItems: [TodayActivityItem] = []
     let activities :[Activity] = []
 
@@ -50,35 +51,16 @@ class SummarisedReportTableViewController: UITableViewController {
     
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "sMoodCell", for: indexPath)
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: "sMoodCell",
+                for: indexPath
+            ) as! SummmaryMoodTableViewCell
+
+            cell.configure(moodLogs: moodLogs) // ✅ USE PASSED DATA
+
             return cell
-            
         }
-//        if indexPath.section == 1 {
-//                let cell = tableView.dequeueReusableCell(
-//                    withIdentifier: "sActivityCell", for: indexPath
-//                ) as! SummaryActivityTableViewCell
-//
-//                cell.selectedBackgroundView                  = UIView()
-//                cell.selectedBackgroundView?.backgroundColor = .clear
-//            cell.onFetched = { [weak self] in
-//                DispatchQueue.main.async {
-//                    UIView.performWithoutAnimation {
-//                                    self?.tableView.beginUpdates()
-//                                    self?.tableView.endUpdates()
-//                                }
-//                }
-//            }
-//                if let patientID = patient?.patientID {
-//                    Task{
-//                        do{
-//                            await cell.configure(for: patientID)
-//                        }
-//                    }
-//                }
-//                return cell
-//            }
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "sActivityCell", for: indexPath
