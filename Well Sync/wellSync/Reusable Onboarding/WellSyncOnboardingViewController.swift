@@ -54,13 +54,23 @@ final class WellSyncOnboardingViewController: UIViewController {
     ]
 
     private var currentIndex = 0
+    private var hasAnimatedInitialSlide = false
+    private var isTransitioning = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureStaticUI()
-        
-        applySlide(animated: false)
+        updateSlideContent()
+        prepareSlideContentForEntrance()
         addSwipeGestures()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard !hasAnimatedInitialSlide else { return }
+        hasAnimatedInitialSlide = true
+        applySlide(animated: true)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -105,11 +115,12 @@ final class WellSyncOnboardingViewController: UIViewController {
         cardView.layer.shadowOffset = CGSize(width: 0, height: 10)
         cardView.layer.borderWidth = 1.2
         cardView.layer.borderColor = UIColor.white.withAlphaComponent(0.6).cgColor
+        cardView.layer.isDoubleSided = false
 
 
         iconContainerView.layer.cornerCurve = .continuous
         iconContainerView.backgroundColor = UIColor.white.withAlphaComponent(0.18)
-        iconContainerView.layer.cornerRadius = 50
+        iconContainerView.layer.cornerRadius = 44
         
 
         nextButton.layer.cornerRadius = 22
@@ -126,81 +137,181 @@ final class WellSyncOnboardingViewController: UIViewController {
         pageControl.currentPageIndicatorTintColor = Palette.actionBlue
         pageControl.pageIndicatorTintColor = Palette.primaryCyan.withAlphaComponent(0.22)
         
-        titleLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        titleLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
+
+        [bulletOneLabel, bulletTwoLabel, bulletThreeLabel].forEach { label in
+            label?.numberOfLines = 0
+            label?.textAlignment = .left
+        }
+    }
+
+    private enum SlideDirection {
+        case forward
+        case backward
+    }
+
+    private func transitionToSlide(at newIndex: Int, direction: SlideDirection) {
+        guard slides.indices.contains(newIndex) else { return }
+        guard !isTransitioning else { return }
+        guard newIndex != currentIndex else { return }
+
+        isTransitioning = true
+        view.isUserInteractionEnabled = false
+
+        currentIndex = newIndex
+        pageControl.currentPage = newIndex
+
+        let transition: UIView.AnimationOptions = direction == .forward
+            ? .transitionFlipFromRight
+            : .transitionFlipFromLeft
+
+        UIView.transition(
+            with: cardView,
+            duration: 0.42,
+            options: [transition, .curveEaseInOut, .showHideTransitionViews, .allowAnimatedContent]
+        ) {
+            self.updateSlideContent()
+            self.prepareSlideContentForEntrance()
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            self.animateSlideContentEntrance()
+            self.view.isUserInteractionEnabled = true
+            self.isTransitioning = false
+        }
     }
 
     private func applySlide(animated: Bool) {
-
-        let updateContent = {
-            let slide = self.slides[self.currentIndex]
-
-            // Title
-            self.titleLabel.text = slide.title
-
-            // Bullets
-            self.bulletOneLabel.text = "• \(slide.bullets[0])"
-            self.bulletTwoLabel.text = "• \(slide.bullets[1])"
-            self.bulletThreeLabel.text = "• \(slide.bullets[2])"
-
-            // Icon
-            self.iconImageView.image = UIImage(systemName: slide.symbolName)
-            self.iconImageView.tintColor = slide.accentColor
-
-            // Icon Background
-            self.iconContainerView.backgroundColor = slide.accentColor.withAlphaComponent(0.14)
-
-            // Page Control
-            self.pageControl.currentPage = self.currentIndex
-
-            // Button
-            let isLast = self.currentIndex == self.slides.count - 1
-            self.nextButton.setTitle(isLast ? "Get Started" : "Continue", for: .normal)
-            self.nextButton.backgroundColor = isLast ? Palette.actionBlue : Palette.primaryCyan
-        }
+        updateSlideContent()
 
         if animated {
-
-            // Reset initial states
-            titleLabel.alpha = 0
-            titleLabel.transform = CGAffineTransform(translationX: 0, y: 20).scaledBy(x: 0.9, y: 0.9)
-
-            bulletOneLabel.alpha = 0
-            bulletTwoLabel.alpha = 0
-            bulletThreeLabel.alpha = 0
-
-            updateContent()
-
-            // Animate TITLE (main focus)
-            UIView.animate(
-                withDuration: 0.45,
-                delay: 0,
-                usingSpringWithDamping: 0.7,
-                initialSpringVelocity: 0.5,
-                options: []
-            ) {
-                self.titleLabel.alpha = 1
-                self.titleLabel.transform = .identity
-                self.view.layoutIfNeeded()
-            }
-
-            // Staggered bullets
-            UIView.animate(withDuration: 0.3, delay: 0.2) {
-                self.bulletOneLabel.alpha = 1
-            }
-
-            UIView.animate(withDuration: 0.3, delay: 0.3) {
-                self.bulletTwoLabel.alpha = 1
-            }
-
-            UIView.animate(withDuration: 0.3, delay: 0.4) {
-                self.bulletThreeLabel.alpha = 1
-            }
-
+            animateSlideContentEntrance()
         } else {
-            updateContent()
+            resetSlideContentAppearance()
         }
+    }
+
+    private func updateSlideContent() {
+        let slide = slides[currentIndex]
+
+        titleLabel.text = slide.title
+        bulletOneLabel.attributedText = makeBulletText(slide.bullets[0])
+        bulletTwoLabel.attributedText = makeBulletText(slide.bullets[1])
+        bulletThreeLabel.attributedText = makeBulletText(slide.bullets[2])
+
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 26, weight: .semibold)
+        iconImageView.image = UIImage(systemName: slide.symbolName, withConfiguration: iconConfig)
+        iconImageView.tintColor = slide.accentColor
+        iconContainerView.backgroundColor = slide.accentColor.withAlphaComponent(0.14)
+
+        pageControl.currentPage = currentIndex
+
+        let isLast = currentIndex == slides.count - 1
+        nextButton.setTitle(isLast ? "Get Started" : "Continue", for: .normal)
+        nextButton.backgroundColor = isLast ? Palette.actionBlue : Palette.primaryCyan
+    }
+
+    private func resetSlideContentAppearance() {
+        iconContainerView.isHidden = false
+        titleLabel.alpha = 1
+        titleLabel.isHidden = false
+        titleLabel.transform = .identity
+        bulletOneLabel.alpha = 1
+        bulletOneLabel.isHidden = false
+        bulletOneLabel.transform = .identity
+        bulletTwoLabel.alpha = 1
+        bulletTwoLabel.isHidden = false
+        bulletTwoLabel.transform = .identity
+        bulletThreeLabel.alpha = 1
+        bulletThreeLabel.isHidden = false
+        bulletThreeLabel.transform = .identity
+        iconContainerView.alpha = 1
+        iconContainerView.transform = .identity
+    }
+
+    private func prepareSlideContentForEntrance() {
+        iconContainerView.isHidden = true
+        iconContainerView.alpha = 0
+        iconContainerView.transform = CGAffineTransform(scaleX: 0.88, y: 0.88)
+
+        titleLabel.alpha = 0
+        titleLabel.isHidden = true
+        titleLabel.transform = CGAffineTransform(translationX: 0, y: 26).scaledBy(x: 0.92, y: 0.92)
+
+        bulletOneLabel.alpha = 0
+        bulletOneLabel.isHidden = true
+        bulletOneLabel.transform = CGAffineTransform(translationX: 0, y: 10)
+        bulletTwoLabel.alpha = 0
+        bulletTwoLabel.isHidden = true
+        bulletTwoLabel.transform = CGAffineTransform(translationX: 0, y: 10)
+        bulletThreeLabel.alpha = 0
+        bulletThreeLabel.isHidden = true
+        bulletThreeLabel.transform = CGAffineTransform(translationX: 0, y: 10)
+    }
+
+    private func animateSlideContentEntrance() {
+        prepareSlideContentForEntrance()
+
+        iconContainerView.isHidden = false
+        titleLabel.isHidden = false
+        bulletOneLabel.isHidden = false
+        bulletTwoLabel.isHidden = false
+        bulletThreeLabel.isHidden = false
+
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.08,
+            usingSpringWithDamping: 0.82,
+            initialSpringVelocity: 0.4,
+            options: []
+        ) {
+            self.iconContainerView.alpha = 1
+            self.iconContainerView.transform = .identity
+        }
+
+        UIView.animate(
+            withDuration: 0.42,
+            delay: 0.12,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 0.45,
+            options: []
+        ) {
+            self.titleLabel.alpha = 1
+            self.titleLabel.transform = .identity
+            self.view.layoutIfNeeded()
+        }
+
+        UIView.animate(withDuration: 0.28, delay: 0.26) {
+            self.bulletOneLabel.alpha = 1
+            self.bulletOneLabel.transform = .identity
+        }
+
+        UIView.animate(withDuration: 0.28, delay: 0.36) {
+            self.bulletTwoLabel.alpha = 1
+            self.bulletTwoLabel.transform = .identity
+        }
+
+        UIView.animate(withDuration: 0.28, delay: 0.46) {
+            self.bulletThreeLabel.alpha = 1
+            self.bulletThreeLabel.transform = .identity
+        }
+    }
+
+    private func makeBulletText(_ text: String) -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.headIndent = 0
+        paragraphStyle.paragraphSpacing = 0
+        paragraphStyle.alignment = .left
+
+        return NSAttributedString(
+            string: text,
+            attributes: [
+                .paragraphStyle: paragraphStyle,
+                .kern: 0.1
+            ]
+        )
     }
 
     private func addSwipeGestures() {
@@ -220,8 +331,7 @@ final class WellSyncOnboardingViewController: UIViewController {
             return
         }
 
-        currentIndex += 1
-        applySlide(animated: true)
+        transitionToSlide(at: currentIndex + 1, direction: .forward)
     }
 
     @IBAction private func skipTapped(_ sender: UIButton) {
@@ -229,18 +339,17 @@ final class WellSyncOnboardingViewController: UIViewController {
     }
 
     @IBAction private func pageChanged(_ sender: UIPageControl) {
-        currentIndex = sender.currentPage
-        applySlide(animated: true)
+        let newIndex = sender.currentPage
+        let direction: SlideDirection = newIndex >= currentIndex ? .forward : .backward
+        transitionToSlide(at: newIndex, direction: direction)
     }
 
     @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
         switch gesture.direction {
         case .left where currentIndex < slides.count - 1:
-            currentIndex += 1
-            applySlide(animated: true)
+            transitionToSlide(at: currentIndex + 1, direction: .forward)
         case .right where currentIndex > 0:
-            currentIndex -= 1
-            applySlide(animated: true)
+            transitionToSlide(at: currentIndex - 1, direction: .backward)
         default:
             break
         }
