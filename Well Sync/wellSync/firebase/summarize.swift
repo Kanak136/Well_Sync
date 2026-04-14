@@ -73,8 +73,8 @@ class Summarise: UIViewController {
 
     lazy var model: GenerativeModel = {
         let ai = FirebaseAI.firebaseAI(backend: .googleAI())
-        return ai.generativeModel(modelName: "gemini-3-flash-preview")
-//        gemini-2.0-flash
+        return ai.generativeModel(modelName: "gemini-2.5-flash-lite")
+//        gemini-2.0-flash gemini-2.5-flash-lite gemini-3-flash-preview
     }()
 
     // MARK: - Activity-aware prompt builder
