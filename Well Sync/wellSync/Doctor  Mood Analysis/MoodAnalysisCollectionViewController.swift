@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseCore
 import FirebaseAILogic
+import FoundationModels
 
 class MoodAnalysisCollectionViewController: UICollectionViewController {
     
@@ -50,24 +51,24 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     // MARK: - Data Loading
     
     func load() {
-
+        
         if isPreloaded {
             self.collectionView.reloadData()
             return
         }
-
+        
         Task {
             do {
                 let logs = try await AccessSupabase.shared.fetchMoodLogs(
                     patientID: currPatient?.patientID ??
                     UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
                 )
-
+                
                 await MainActor.run {
                     self.moodLogs = logs
                     self.collectionView.reloadData()
                 }
-
+                
             } catch {
                 print("Error fetching mood logs:", error)
             }
@@ -321,17 +322,33 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         \(logsText)
         """
         
+        let model = SystemLanguageModel.default
+        
+        switch model.availability {
+        case .available:
+            do {
+                let session = LanguageModelSession()
+                let response = try await session.respond(to: prompt)
+                return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
+            } catch {
+                print("⚠️ Foundation model failed, falling back to Gemini:", error)
+            }
+            
+        case .unavailable(let reason):
+            print("ℹ️ On-device model unavailable:", reason)
+        }
+        
+        // ✅ Step C: Fallback — use Gemini
         do {
             let response = try await Summarise.summarise.model.generateContent(prompt)
             return response.text?.trimmingCharacters(in: .whitespacesAndNewlines)
             ?? "Could not generate insight."
         } catch {
-            print("Gemini insight error:", error)
+            print("❌ Gemini insight error:", error)
             return "Insight unavailable. Please try again later."
         }
     }
 }
-// MARK: - CalendarCell1Delegate
 
 extension MoodAnalysisCollectionViewController: CalendarCell1Delegate {
 
