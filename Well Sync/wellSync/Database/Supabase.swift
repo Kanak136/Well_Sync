@@ -1200,4 +1200,11 @@ final class AccessSupabase {
 
         return try decoder.decode([StepsVital].self, from: response.data)
     }
+    func deletePatientNote(noteID: UUID) async throws {
+        try await supabase
+            .from("patient_notes")
+            .delete()
+            .eq("note_id", value: noteID.uuidString)
+            .execute()
+    }
 }
