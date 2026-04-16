@@ -20,6 +20,8 @@ class MoodDistributionCollectionViewCell: UICollectionViewCell {
     @IBOutlet var badLabel: UILabel!
     @IBOutlet var veryBad: UIProgressView!
     @IBOutlet var veryBadLabel: UILabel!
+    @IBOutlet weak var distributinoType: UILabel!
+    
     var isWeekly: Bool = true
     var moodLogs: [MoodLog] = []
     override func awakeFromNib() {

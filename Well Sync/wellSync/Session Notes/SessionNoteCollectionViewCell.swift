@@ -11,14 +11,13 @@ class SessionNoteCollectionViewCell: UICollectionViewCell {
     @IBOutlet var sessionNumberLabel: UILabel!
     @IBOutlet var sessionSummaryLabel: UILabel!
     @IBOutlet var sessionDateLabel: UILabel!
-    @IBOutlet var sessionTitleLabel: UILabel!
-    func configur(with session: SessionNote?,indexPath: IndexPath){
+    
+    func configur(with session: SessionNote?,index: Int){
         layer.cornerRadius = 25
         sessionNumberLabel.layer.cornerRadius = 10
 //        layer.masksToBounds = false
-        sessionNumberLabel.text = "Session \(indexPath.row + 1)"
+        sessionNumberLabel.text = "Session \(index)"
         sessionDateLabel.text = session?.date.formatted(date: .numeric, time: .omitted) ?? ""
-        sessionTitleLabel.text = session?.title ?? "No Title"
         sessionSummaryLabel.text = session?.notes ?? "No Notes"
     }
 }

@@ -240,6 +240,18 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         ) as? CalendarCell1 {
             calCell.configure(segment: selectedSegmentIndex)
         }
+        if let cell = collectionView.cellForItem(
+            at: IndexPath(
+                item: 0,
+                section: 2
+            )) as? MoodDistributionCollectionViewCell {
+            if sender.selectedSegmentIndex == 0 {
+                cell.distributinoType.text = "Weekly Distribution"
+            }
+            else{
+                cell.distributinoType.text = "Monthly Distribution"
+            }
+        }
     }
     
     // MARK: - Styling
@@ -306,20 +318,60 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
             """
         }.joined(separator: "\n\n")
         
-        let prompt = """
-        You are a clinical assistant preparing a summary for a doctor.
-        Analyze the following mood logs and write a clinical summary.
-        Instructions:
-        - Mood scale: 1 = very bad, 2 = bad, 3 = neutral, 4 = happy, 5 = very happy
-        - Maximum 60 words
-        - Write in 2–3 sentences
-        - Use professional, objective tone
-        - Describe mood pattern, emotional indicators, and any noticeable changes
-        - Avoid words like "overall" or "seems" — be specific
-        - Do NOT give advice or recommendations
+//        let prompt = """
+//        You are a clinical assistant preparing a summary for a doctor.
+//        Analyze the following mood logs and write a clinical summary.
+//        Instructions:
+//        - Mood scale: 1 = very bad, 2 = bad, 3 = neutral, 4 = happy, 5 = very happy
+//        - Maximum 60 words
+//        - Write in 2–3 sentences
+//        - Use professional, objective tone
+//        - Describe mood pattern, emotional indicators, and any noticeable changes
+//        - Avoid words like "overall" or "seems" — be specific
+//        - Do NOT give advice or recommendations
+//        
+//        Mood Logs:
+//        \(logsText)
+//        """
         
+        let prompt = """
+        You are a behavioral health analyst. Your task is to analyze mood log data and extract \
+        meaningful psychological insights — not just describe what happened, but identify \
+        patterns, trends, and anomalies.
+
+        Mood Scale: 1 = Very Bad | 2 = Bad | 3 = Neutral | 4 = Happy | 5 = Very Happy
+
         Mood Logs:
         \(logsText)
+
+        Analyze the data above and provide insights in the following structure:
+
+        Mood Trend
+        Identify whether mood is improving, declining, fluctuating, or stable over time. \
+        Reference specific dates or periods if a shift is visible.
+
+        Emotional Patterns
+        Identify recurring feelings or feeling combinations. Note if certain emotions appear \
+        clustered (e.g., anxiety + sadness appearing together repeatedly).
+
+        High & Low Points
+        Call out the peak mood periods and the lowest mood periods. If a note accompanies \
+        these extremes, reference its context briefly.
+
+        Volatility
+        Is the mood consistent day-to-day, or are there sharp swings? Quantify where possible \
+        (e.g., "mood swings between 2 and 5 within the same week").
+
+        Noteworthy Signals
+        Flag anything clinically significant — prolonged low mood (3+ consecutive days below 3), \
+        emotional numbness (repeated "No note" + low mood), or a sudden drop after a high period.
+
+        Rules:
+        - Be specific — cite mood scores and dates
+        - Do NOT give advice or recommendations
+        - Do NOT use vague language like "seems" or "might"
+        - Keep each section to 2–3 sentences max
+        - If data is insufficient to determine a pattern, state that explicitly
         """
         
         let model = SystemLanguageModel.default
@@ -329,16 +381,17 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
             do {
                 let session = LanguageModelSession()
                 let response = try await session.respond(to: prompt)
+                print("Foundation Modell.....")
                 return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
             } catch {
-                print("⚠️ Foundation model failed, falling back to Gemini:", error)
+                print("⚠️ Foundation model failed, falling back to Gemini: \(error)")
             }
             
         case .unavailable(let reason):
-            print("ℹ️ On-device model unavailable:", reason)
+            print("ℹ️ On-device model unavailable: \(reason)")
         }
         
-        // ✅ Step C: Fallback — use Gemini
+//         ✅ Step C: Fallback — use Gemini
         do {
             let response = try await Summarise.summarise.model.generateContent(prompt)
             return response.text?.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -17,50 +17,50 @@
                 <rect key="frame" x="0.0" y="0.0" width="534" height="380"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Monthly Distribution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hAD-lI-eYo">
-                        <rect key="frame" x="16" y="15.999999999999998" width="192" height="26.333333333333321"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weekly Distribution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hAD-lI-eYo">
+                        <rect key="frame" x="16" y="16" width="184.33333333333334" height="26.999999999999993"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Very Happy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VnN-GL-oLi">
-                        <rect key="frame" x="24" y="58.333333333333343" width="80" height="18"/>
+                        <rect key="frame" x="24" y="59" width="80" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Happy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ip2-XT-W1f">
-                        <rect key="frame" x="24" y="116.33333333333333" width="45" height="17.999999999999986"/>
+                        <rect key="frame" x="24" y="117" width="45" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Neutral" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DbO-eX-2Vn">
-                        <rect key="frame" x="24" y="174.33333333333334" width="51" height="18"/>
+                        <rect key="frame" x="24" y="175" width="51" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XF4-5W-HEb">
-                        <rect key="frame" x="24" y="232.33333333333334" width="27" height="18"/>
+                        <rect key="frame" x="24" y="233" width="27" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Very Bad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NaI-2p-86C">
-                        <rect key="frame" x="24" y="290.33333333333331" width="62" height="18"/>
+                        <rect key="frame" x="24" y="291" width="62" height="18"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Logs: 12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fvA-w7-hD3">
-                        <rect key="frame" x="423.66666666666669" y="15.999999999999998" width="94.333333333333314" height="26.333333333333321"/>
+                        <rect key="frame" x="423.66666666666669" y="16" width="94.333333333333314" height="26.999999999999993"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="6qg-wm-N2m">
-                        <rect key="frame" x="24" y="88.333333333333329" width="494" height="12"/>
+                        <rect key="frame" x="24" y="89" width="494" height="12"/>
                         <color key="backgroundColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="0.10335057218309859" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" red="0.30101084610168921" green="0.58716334342956544" blue="0.3091253185843027" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
@@ -68,7 +68,7 @@
                         </constraints>
                     </progressView>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="abf-Xd-6pd">
-                        <rect key="frame" x="24" y="146.33333333333334" width="494" height="12"/>
+                        <rect key="frame" x="24" y="147" width="494" height="12"/>
                         <color key="backgroundColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" systemColor="systemGreenColor"/>
                         <constraints>
@@ -76,7 +76,7 @@
                         </constraints>
                     </progressView>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="dPB-Bu-nJ5">
-                        <rect key="frame" x="24" y="204.33333333333334" width="494" height="12"/>
+                        <rect key="frame" x="24" y="205" width="494" height="12"/>
                         <color key="backgroundColor" red="1" green="0.80000000000000004" blue="0.0" alpha="0.099829445422535218" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" systemColor="systemYellowColor"/>
                         <constraints>
@@ -84,7 +84,7 @@
                         </constraints>
                     </progressView>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.20000000298023224" translatesAutoresizingMaskIntoConstraints="NO" id="OWY-qA-dtG">
-                        <rect key="frame" x="24" y="262.33333333333331" width="494" height="12"/>
+                        <rect key="frame" x="24" y="263" width="494" height="12"/>
                         <color key="backgroundColor" red="1" green="0.58431372550000005" blue="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" systemColor="systemOrangeColor"/>
                         <constraints>
@@ -92,37 +92,37 @@
                         </constraints>
                     </progressView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4 Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tOA-xv-Klz">
-                        <rect key="frame" x="479.66666666666669" y="60.333333333333336" width="38.333333333333314" height="14.333333333333336"/>
+                        <rect key="frame" x="479.66666666666669" y="61.000000000000007" width="38.333333333333314" height="14.333333333333336"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BbN-FK-0er">
-                        <rect key="frame" x="479.66666666666669" y="118.33333333333333" width="38.333333333333314" height="14.333333333333329"/>
+                        <rect key="frame" x="479.66666666666669" y="119" width="38.333333333333314" height="14.333333333333343"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qO8-2s-2Dr">
-                        <rect key="frame" x="480" y="176.33333333333334" width="38" height="14.333333333333343"/>
+                        <rect key="frame" x="480" y="177" width="38" height="14.333333333333343"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPJ-uj-8ys">
-                        <rect key="frame" x="480" y="234.33333333333334" width="38" height="14.333333333333343"/>
+                        <rect key="frame" x="480" y="235" width="38" height="14.333333333333343"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QbM-BX-I5c">
-                        <rect key="frame" x="481.66666666666669" y="292.33333333333331" width="36.333333333333314" height="14.333333333333314"/>
+                        <rect key="frame" x="481.66666666666669" y="293" width="36.333333333333314" height="14.333333333333314"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" systemColor="secondaryLabelColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="0i6-qS-2RB">
-                        <rect key="frame" x="24" y="318.66666666666669" width="494" height="12"/>
+                        <rect key="frame" x="24" y="319.33333333333331" width="494" height="12"/>
                         <color key="backgroundColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" systemColor="systemRedColor"/>
                         <constraints>
@@ -179,6 +179,7 @@
             <connections>
                 <outlet property="bad" destination="OWY-qA-dtG" id="wdv-Gq-qLo"/>
                 <outlet property="badLabel" destination="HPJ-uj-8ys" id="1Nx-xU-CDU"/>
+                <outlet property="distributinoType" destination="hAD-lI-eYo" id="sFo-RH-dLd"/>
                 <outlet property="happy" destination="abf-Xd-6pd" id="tcF-Z1-ohJ"/>
                 <outlet property="happyLabel" destination="BbN-FK-0er" id="wf1-Js-j8A"/>
                 <outlet property="neutral" destination="dPB-Bu-nJ5" id="6aF-7l-TOO"/>

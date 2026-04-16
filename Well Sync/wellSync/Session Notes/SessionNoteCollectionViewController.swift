@@ -13,6 +13,7 @@ class SessionNoteCollectionViewController: UICollectionViewController {
     var patient: Patient?
     var appointment: Appointment?
     var sessions: [SessionNote] = []
+    var sizeOfNotes: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,7 @@ class SessionNoteCollectionViewController: UICollectionViewController {
                 let fetched = try await AccessSupabase.shared.fetchSessionNotes(patientID: patientID)
                 await MainActor.run {
                     self.sessions = fetched
+                    self.sizeOfNotes = self.sessions.count
                     self.collectionView.reloadData()
                 }
             } catch {
@@ -47,7 +49,11 @@ class SessionNoteCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sessionCell", for: indexPath) as! SessionNoteCollectionViewCell
-        cell.configur(with: sessions[indexPath.row], indexPath: indexPath)
+        cell
+            .configur(
+                with: sessions[indexPath.row],
+                index: (sizeOfNotes ?? 0) - indexPath.row
+            )
         return cell
     }
 
@@ -58,7 +64,7 @@ class SessionNoteCollectionViewController: UICollectionViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(200.0))
+                                               heightDimension: .absolute(150.0))
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .flexible(16)
 
