@@ -142,20 +142,29 @@ extension CaseHistoryViewController: UICollectionViewDataSource{
             return cell
         }else if indexPath.section == 1{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TimelineCell", for: indexPath)
-            guard let TimelineCell = cell as? TimelineCollectionViewCell else {
+            guard let timelineCell = cell as? TimelineCollectionViewCell else {
                 return cell
             }
-            let timeline = timeline[indexPath.item]
-            TimelineCell.configureCell(timeline: timeline)
-            return cell
+            let entry   = timeline[indexPath.item]
+               let isFirst = indexPath.item == 0
+               let isLast  = indexPath.item == timeline.count - 1
+
+               timelineCell.configureCell(timeline: entry, isFirst: isFirst, isLast: isLast)
+               return timelineCell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TimelineCell", for: indexPath)
-        guard let TimelineCell = cell as? TimelineCollectionViewCell else {
+        guard let timelineCell = cell as? TimelineCollectionViewCell else {
             return cell
         }
-        let timeline = timeline[indexPath.item]
-        TimelineCell.configureCell(timeline: timeline)
-        return cell
+        let entry   = timeline[indexPath.item]
+           let isFirst = indexPath.item == 0
+           let isLast  = indexPath.item == timeline.count - 1
+
+           timelineCell.configureCell(timeline: entry, isFirst: isFirst, isLast: isLast)
+           return timelineCell
+//        let timeline = timeline[indexPath.item]
+//        TimelineCell.configureCell(timeline: timeline)
+//        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -211,7 +220,7 @@ extension CaseHistoryViewController: UICollectionViewDataSource{
                 bottom: 0,
                 trailing: 12
             )
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.45), heightDimension: .absolute(120.0))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.45), heightDimension: .absolute(100.0))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
@@ -224,17 +233,17 @@ extension CaseHistoryViewController: UICollectionViewDataSource{
           let item = NSCollectionLayoutItem(layoutSize: itemSize)
           item.contentInsets = NSDirectionalEdgeInsets(
                   top: 6,
-                  leading: 6,
+                  leading: 0,
                   bottom: 6,
-                  trailing: 6
+                  trailing: 0
               )
-          let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(120))
+          let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
           let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, repeatingSubitem: item, count: 1)
           group.interItemSpacing = .fixed(5)
           let section = NSCollectionLayoutSection(group: group)
-          section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 20, trailing: 16)
+          section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 8, bottom: 20, trailing: 12)
   //        section.orthogonalScrollingBehavior = .groupPaging
-          section.interGroupSpacing = 12
+          section.interGroupSpacing = 0
           return section
     }
     
