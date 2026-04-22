@@ -726,8 +726,8 @@ extension HomeCollectionViewController{
         }
     }
 }
-extension HomeCollectionViewController: UIPopoverPresentationControllerDelegate {
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none  // keeps it as a popover on iPhone too
-    }
-}
+//extension HomeCollectionViewController: UIPopoverPresentationControllerDelegate {
+//    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+//        return .none  // keeps it as a popover on iPhone too
+//    }
+//}

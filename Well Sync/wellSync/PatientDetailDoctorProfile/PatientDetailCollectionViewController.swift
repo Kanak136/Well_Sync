@@ -55,10 +55,24 @@ class PatientDetailCollectionViewController: UICollectionViewController{
             doneButton.isEnabled = false
         }
     }
+    
     private var hasTriggeredIntent = false
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//        guard let intent = actionIntent,
+//              !hasTriggeredIntent else { return }
+//
+//        hasTriggeredIntent = true
+//        actionIntent = nil
+//
+//        triggerCalendar(for: intent)
+//    }
+    
+    // ✅ Fires only after the screen is fully on screen
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
         guard let intent = actionIntent,
               !hasTriggeredIntent else { return }
@@ -68,6 +82,7 @@ class PatientDetailCollectionViewController: UICollectionViewController{
 
         triggerCalendar(for: intent)
     }
+    
     func loadPatientAppointments() {
         guard let patientID = patient?.patientID else { return }
         Task {
@@ -87,6 +102,7 @@ class PatientDetailCollectionViewController: UICollectionViewController{
     func registerCells(){
         PatientProfileCollectionView.register(UINib(nibName: "ProfileCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ProfileCollectionViewCell")
     }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0{
             return 1
@@ -106,9 +122,11 @@ class PatientDetailCollectionViewController: UICollectionViewController{
         cell.configure(index: indexPath.row)
         return cell
     }
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "Summarised" {
@@ -411,93 +429,6 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
             popover.delegate = self
         }
         
-        //        popoverVC.onScheduleCancelled = { [weak self] in
-        //                guard let self = self, var patient = self.patient else { return }
-        //                Task {
-        //                    do {
-        //                        let appointments = try await AccessSupabase.shared.fetchAppointments(patientID: patient.patientID)
-        //                        if let apptToDelete = appointments.first(where: { $0.status == .scheduled }), let id = apptToDelete.appointmentId {
-        //                            try await AccessSupabase.shared.deleteAppointment(id: id)
-        //                        }
-        //                        try await AccessSupabase.shared.clearNextSessionDate(patientID: patient.patientID)
-        //                        await MainActor.run {
-        //                            self.patient?.nextSessionDate = nil
-        //                            self.PatientProfileCollectionView.reloadData()
-        //                        }
-        //                    } catch {
-        //                        print("Error deleting: \(error)")
-        //                    }
-        //                }
-        //            }
-        //
-        //
-        //        popoverVC.onScheduleConfirmed = { [weak self] selectedFullDate in
-        //            guard let self = self,
-        //            var patient = self.patient else{return}
-        //            Task{
-        //                do{
-        //                      let newAppointment = Appointment(
-        //                            appointmentId: UUID(),
-        //                            patientId: patient.patientID,
-        //                            doctorId: patient.docID,
-        //                            scheduledAt: selectedFullDate,
-        //                            status: .scheduled
-        //                        )
-        //                    let created = try await AccessSupabase.shared.createAppointment(newAppointment)
-        //                        print("Created new appointment")
-        //                    patient.nextSessionDate = selectedFullDate
-        //                    print(patient.previousSessionDate)
-        //                    try await AccessSupabase.shared.updatePatient(patient)
-        //                    await MainActor.run {
-        //                        self.patient = patient
-        //                        self.PatientProfileCollectionView.reloadData()
-        //                    }
-        //                }catch{
-        //                    print("Scheduling Error: \(error)")
-        //                }
-        //            }
-        //        }
-        //        popoverVC.onScheduleChange = { [weak self] newDate in
-        //            guard let self = self, var patient = self.patient else { return }
-        //
-        //            Task {
-        //                do {
-        //                        if let selected = self.selectedAppointment {
-        //
-        //                            let updatedAppt = Appointment(
-        //                                appointmentId: selected.appointmentId,
-        //                                patientId: selected.patientId,
-        //                                doctorId: selected.doctorId,
-        //                                scheduledAt: newDate,
-        //                                status: .scheduled
-        //                            )
-        //
-        //                            try await AccessSupabase.shared.updateAppointment(updatedAppt)
-        //
-        //                            self.selectedAppointment = AppointmentWithPatient(
-        //                                appointmentId: selected.appointmentId,
-        //                                patientId: selected.patientId,
-        //                                doctorId: selected.doctorId,
-        //                                scheduledAt: newDate,
-        //                                status: .scheduled,
-        //                                patient: patient
-        //                            )
-        //                        patient.nextSessionDate = newDate
-        //                        try await AccessSupabase.shared.updatePatient(patient)
-        //                        await MainActor.run {
-        //                            self.patient = patient
-        //                            self.PatientProfileCollectionView.reloadData()
-        //                            print("Session successfully changed to \(newDate)")
-        //                        }
-        //                    }
-        //                } catch {
-        //                    print("Error changing session: \(error)")
-        //                }
-        //            }
-        //        }
-        //        present(popoverVC, animated: true)
-        // ✅ CANCEL: Fetch the scheduled appointment, delete it, clear patient's next session date
-        
         popoverVC.onScheduleCancelled = { [weak self] in
             guard let self = self, let patient = self.patient else { return }
             
@@ -531,89 +462,57 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                 }
             }
         }
-
-
-        // ✅ SCHEDULE (New): Create appointment + update patient
         popoverVC.onScheduleConfirmed = { [weak self] selectedFullDate in
             guard let self = self, var patient = self.patient else { return }
-            
+
             Task {
                 do {
-                    // Step 1: Create the new appointment in Supabase
-                    let newAppointment = Appointment(
-                        appointmentId: UUID(),
-                        patientId: patient.patientID,
-                        doctorId: patient.docID,
-                        scheduledAt: selectedFullDate,
-                        status: .scheduled
-                    )
-                    let created = try await AccessSupabase.shared.createAppointment(newAppointment)
-                    print("✅ New appointment created: \(created.scheduledAt)")
-                    
-                    // Step 2: Update the patient's next session date
+                    let calendar = Calendar.current
+
+                    // ✅ Safety check: never create a duplicate for the same day
+                    let existingSameDay = self.patientAppointments.first {
+                        calendar.isDate($0.scheduledAt, inSameDayAs: selectedFullDate)
+                    }
+
+                    if let existing = existingSameDay, let existingID = existing.appointmentId {
+                        // ✅ Already has one today (possibly missed) → UPDATE instead of INSERT
+                        let updatedAppt = Appointment(
+                            appointmentId: existingID,
+                            patientId: existing.patientId,
+                            doctorId: existing.doctorId,
+                            scheduledAt: selectedFullDate,
+                            status: .scheduled
+                        )
+                        try await AccessSupabase.shared.updateAppointment(updatedAppt)
+                        print("✅ Existing appointment updated (confirm path, no duplicate)")
+                    } else {
+                        // ✅ No existing appointment → create new
+                        let newAppointment = Appointment(
+                            appointmentId: UUID(),
+                            patientId: patient.patientID,
+                            doctorId: patient.docID,
+                            scheduledAt: selectedFullDate,
+                            status: .scheduled
+                        )
+                        let created = try await AccessSupabase.shared.createAppointment(newAppointment)
+                        print("✅ New appointment created: \(created.scheduledAt)")
+                    }
+
                     patient.nextSessionDate = selectedFullDate
                     try await AccessSupabase.shared.updatePatient(patient)
                     print("✅ Patient next session date updated")
-                    
-                    // Step 3: Update UI
+
                     await MainActor.run {
                         self.patient = patient
                         self.PatientProfileCollectionView.reloadData()
                     }
-                    
+
                 } catch {
                     print("❌ Scheduling Error: \(error)")
                 }
             }
         }
-
-
-        // ✅ RESCHEDULE: Delete OLD appointment → Create NEW appointment → Update patient
-//        popoverVC.onScheduleChange = { [weak self] newDate in
-//            guard let self = self, var patient = self.patient else { return }
-//            
-//            Task {
-//                do {
-//                    // Step 1: Fetch all appointments for this patient
-//                    let appointments = try await AccessSupabase.shared
-//                        .fetchAppointments(patientID: patient.patientID)
-//                    
-//                    // Step 2: Find the currently scheduled (upcoming) appointment
-//                    if let oldAppt = appointments.first(where: { $0.status == .scheduled }),
-//                       let oldID = oldAppt.appointmentId {
-//                        
-//                        // Step 3: Delete the old appointment
-//                        try await AccessSupabase.shared.deleteAppointment(id: oldID)
-//                        print("✅ Old appointment deleted: \(oldAppt.scheduledAt)")
-//                    }
-//                    
-//                    // Step 4: Create a brand new appointment with the new date
-//                    let newAppointment = Appointment(
-//                        appointmentId: UUID(),
-//                        patientId: patient.patientID,
-//                        doctorId: patient.docID,
-//                        scheduledAt: newDate,
-//                        status: .scheduled
-//                    )
-//                    let created = try await AccessSupabase.shared.createAppointment(newAppointment)
-//                    print("✅ New appointment created: \(created.scheduledAt)")
-//                    
-//                    // Step 5: Update the patient's next session date
-//                    patient.nextSessionDate = newDate
-//                    try await AccessSupabase.shared.updatePatient(patient)
-//                    print("✅ Patient next session date updated to: \(newDate)")
-//                    
-//                    // Step 6: Update UI
-//                    await MainActor.run {
-//                        self.patient = patient
-//                        self.PatientProfileCollectionView.reloadData()
-//                    }
-//                    
-//                } catch {
-//                    print("❌ Error rescheduling: \(error)")
-//                }
-//            }
-//        }
+        
         popoverVC.onScheduleChange = { [weak self] newDate in
             guard let self = self, var patient = self.patient else { return }
 
@@ -621,18 +520,17 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                 do {
                     let calendar = Calendar.current
 
-                    // ✅ Use selectedAppointment directly — avoids the .missed status trap
-                    if let selected = self.selectedAppointment{
-                       let oldID = selected.appointmentId
+                    if let selected = self.selectedAppointment {
+                        let oldID = selected.appointmentId
 
                         if calendar.isDate(selected.scheduledAt, inSameDayAs: newDate) {
-                            // ✅ Same day (just changing time) → UPDATE in place
+                            // ✅ Same day — just changing time → UPDATE in place, no new row
                             let updatedAppt = Appointment(
                                 appointmentId: oldID,
                                 patientId: selected.patientId,
                                 doctorId: selected.doctorId,
                                 scheduledAt: newDate,
-                                status: .scheduled   // restore to scheduled if it was missed
+                                status: .scheduled
                             )
                             try await AccessSupabase.shared.updateAppointment(updatedAppt)
                             print("✅ Same-day reschedule: time updated")
@@ -672,19 +570,56 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                         }
 
                     } else {
-                        // ✅ No selectedAppointment (shouldn't normally happen) → create fresh
-                        let newAppointment = Appointment(
-                            appointmentId: UUID(),
-                            patientId: patient.patientID,
-                            doctorId: patient.docID,
-                            scheduledAt: newDate,
-                            status: .scheduled
-                        )
-                        let created = try await AccessSupabase.shared.createAppointment(newAppointment)
-                        print("✅ Fresh appointment created")
+                        // ✅ No selectedAppointment — check patientAppointments for a same-day conflict first
+                        let existingSameDay = self.patientAppointments.first {
+                            calendar.isDate($0.scheduledAt, inSameDayAs: newDate)
+                        }
+
+                        if let existing = existingSameDay, let existingID = existing.appointmentId {
+                            // ✅ Same-day appointment exists → UPDATE time only, do NOT insert a new row
+                            let updatedAppt = Appointment(
+                                appointmentId: existingID,
+                                patientId: existing.patientId,
+                                doctorId: existing.doctorId,
+                                scheduledAt: newDate,
+                                status: .scheduled
+                            )
+                            try await AccessSupabase.shared.updateAppointment(updatedAppt)
+                            print("✅ Existing same-day appointment time updated (no new row created)")
+
+                            self.selectedAppointment = AppointmentWithPatient(
+                                appointmentId: existingID,
+                                patientId: existing.patientId,
+                                doctorId: existing.doctorId,
+                                scheduledAt: newDate,
+                                status: .scheduled,
+                                patient: patient
+                            )
+
+                        } else {
+                            // ✅ Truly no appointment on this day → create fresh
+                            let newAppointment = Appointment(
+                                appointmentId: UUID(),
+                                patientId: patient.patientID,
+                                doctorId: patient.docID,
+                                scheduledAt: newDate,
+                                status: .scheduled
+                            )
+                            let created = try await AccessSupabase.shared.createAppointment(newAppointment)
+                            print("✅ Fresh appointment created: \(created.scheduledAt)")
+
+                            self.selectedAppointment = AppointmentWithPatient(
+                                appointmentId: created.appointmentId!,
+                                patientId: created.patientId,
+                                doctorId: created.doctorId,
+                                scheduledAt: created.scheduledAt,
+                                status: .scheduled,
+                                patient: patient
+                            )
+                        }
                     }
 
-                    // Always sync the patient's next session date
+                    // ✅ Always sync the patient's next session date
                     patient.nextSessionDate = newDate
                     try await AccessSupabase.shared.updatePatient(patient)
 
@@ -711,15 +646,10 @@ extension PatientDetailCollectionViewController: UIPopoverPresentationController
     func triggerCalendar(for intent: PatientNavigationIntent) {
 
         let indexPath = IndexPath(item: 0, section: 0)
-
-        // ✅ ADD THIS LINE
-        PatientProfileCollectionView.layoutIfNeeded()
-
         guard let cell = PatientProfileCollectionView.cellForItem(at: indexPath) as? ProfileCollectionViewCell else {
             print("❌ Profile cell not found")
             return
         }
-
         guard let sourceView = cell.calendarButton else { return }
         if intent == .nextSession {
             self.selectedAppointment = nil
