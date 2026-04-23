@@ -439,9 +439,12 @@ extension PatientDetailCollectionViewController: ProfileCellDelegate {
                         .fetchAppointments(patientID: patient.patientID)
                     
                     // Step 2: Find the one that is currently "scheduled" (upcoming)
-                    if let apptToDelete = appointments.first(where: { $0.status == .scheduled }),
-                       let id = apptToDelete.appointmentId {
-                        
+//                    if let apptToDelete = appointments.first(where: { $0.status == .scheduled }),
+//                       let id = apptToDelete.appointmentId {
+                    if let apptToDelete = appointments.first(where: {
+                        $0.status == .scheduled &&
+                        !Calendar.current.isDateInToday($0.scheduledAt)
+                    }), let id = apptToDelete.appointmentId {
                         // Step 3: Delete it from Supabase
                         try await AccessSupabase.shared.deleteAppointment(id: id)
                         print("✅ Appointment deleted")
