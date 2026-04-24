@@ -142,6 +142,7 @@ class ActivityTableViewController: UITableViewController {
                 logCount: summary.totalLogs
             )
         }
+        styleTableCell(cell)
 
         return cell
     }
