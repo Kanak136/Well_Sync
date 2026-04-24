@@ -33,10 +33,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="zIq-we-gBk">
-                                                    <rect key="frame" x="175" y="4" width="170" height="42"/>
+                                                    <rect key="frame" x="145" y="4" width="200" height="42"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="42" id="Tim-RX-isO"/>
-                                                        <constraint firstAttribute="width" constant="170" id="bJS-yB-Yck"/>
+                                                        <constraint firstAttribute="width" constant="200" id="bJS-yB-Yck"/>
                                                     </constraints>
                                                 </datePicker>
                                             </subviews>
@@ -69,10 +69,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="wBZ-zN-TiV">
-                                                    <rect key="frame" x="175" y="4" width="170" height="42"/>
+                                                    <rect key="frame" x="145" y="4" width="200" height="42"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="42" id="NbM-Ex-4oY"/>
-                                                        <constraint firstAttribute="width" constant="170" id="Sxo-6r-5jN"/>
+                                                        <constraint firstAttribute="width" constant="200" id="Sxo-6r-5jN"/>
                                                     </constraints>
                                                 </datePicker>
                                             </subviews>
