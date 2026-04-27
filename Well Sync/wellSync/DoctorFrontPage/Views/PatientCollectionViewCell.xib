@@ -142,7 +142,7 @@
                 <outlet property="sessionLabel" destination="kgu-u3-N59" id="u3P-Op-wMS"/>
                 <outlet property="time" destination="tmg-ep-5nf" id="AxF-mR-jyU"/>
             </connections>
-            <point key="canvasLocation" x="-1244" y="-734"/>
+            <point key="canvasLocation" x="-1244.2748091603053" y="-734.15492957746483"/>
         </collectionViewCell>
     </objects>
     <resources>

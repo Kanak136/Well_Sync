@@ -21,8 +21,8 @@ class HomeCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.backgroundColor = .clear
-        applyGradientBackground()
+//        collectionView.backgroundColor = .clear
+//        applyGradientBackground()
         spinner.center = view.center
         view.addSubview(spinner)
         viewModel = AccessSupabase.shared
@@ -46,21 +46,21 @@ class HomeCollectionViewController: UICollectionViewController {
     }
 
     
-    private func applyGradientBackground() {
-        let gradient = CAGradientLayer()
-
-        gradient.colors = [
-            UIColor(red: 0.91, green: 0.98, blue: 0.95, alpha: 1.0).cgColor,
-               UIColor(red: 0.97, green: 1.00, blue: 0.999, alpha: 1.0).cgColor
-        ]
-
-        gradient.startPoint = CGPoint(x: 0.5, y: 0.0) // TOP
-        gradient.endPoint   = CGPoint(x: 0.5, y: 1.0) // BOTTOM
-
-        gradient.frame = view.bounds
-
-        view.layer.insertSublayer(gradient, at: 0)
-    }
+//    private func applyGradientBackground() {
+//        let gradient = CAGradientLayer()
+//
+//        gradient.colors = [
+//            UIColor(red: 0.91, green: 0.98, blue: 0.95, alpha: 1.0).cgColor,
+//               UIColor(red: 0.97, green: 1.00, blue: 0.999, alpha: 1.0).cgColor
+//        ]
+//
+//        gradient.startPoint = CGPoint(x: 0.5, y: 0.0) // TOP
+//        gradient.endPoint   = CGPoint(x: 0.5, y: 1.0) // BOTTOM
+//
+//        gradient.frame = view.bounds
+//
+//        view.layer.insertSublayer(gradient, at: 0)
+//    }
     
     func loadAppointments() {
         guard let id = self.doctor?.docID else { return }
