@@ -56,12 +56,12 @@ class PatientCollectionViewCell: UICollectionViewCell {
     private func configureButtons(status: Appointment.status) {
         leftButton.configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .medium)
+            outgoing.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .light)
             return outgoing
         }
         rightButton.configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .medium)
+            outgoing.font = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .light)
             return outgoing
         }
 
@@ -71,34 +71,46 @@ class PatientCollectionViewCell: UICollectionViewCell {
         case .completed:
             leftButton.setTitle("Next Session", for: .normal)
             leftAction = .nextSession
-            leftButton.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.15)
+            leftButton.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.05)
             leftButton.setTitleColor(.systemTeal, for: .normal)
+            leftButton.layer.borderWidth = 0.50
+            leftButton.layer.borderColor = UIColor.systemTeal.cgColor
             rightButton.setTitle("Session Note", for: .normal)
             rightAction = .addNote
-            rightButton.backgroundColor = UIColor.systemMint.withAlphaComponent(0.15)
+            rightButton.backgroundColor = UIColor.systemMint.withAlphaComponent(0.05)
             rightButton.setTitleColor(.systemMint, for: .normal)
+            rightButton.layer.borderWidth = 0.50
+            rightButton.layer.borderColor = UIColor.systemMint.cgColor
 
         case .scheduled:
             leftButton.setTitle("Reschedule", for: .normal)
             leftAction = .reschedule
-            leftButton.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.15)
+            leftButton.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.05)
             leftButton.setTitleColor(.systemTeal, for: .normal)
+            leftButton.layer.borderWidth = 0.50
+            leftButton.layer.borderColor = UIColor.systemTeal.cgColor
             rightButton.setTitle("Mark Done", for: .normal)
             rightAction = .markDone
-            rightButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.15)
+            rightButton.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.05)
             rightButton.setTitleColor(.systemGreen, for: .normal)
             rightButton.isEnabled = true
+            rightButton.layer.borderWidth = 0.50
+            rightButton.layer.borderColor = UIColor.systemGreen.cgColor
 
         case .missed:
             leftButton.setTitle("Reschedule", for: .normal)
             leftAction = .reschedule
-            leftButton.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.15)
+            leftButton.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.05)
             leftButton.setTitleColor(.systemTeal, for: .normal)
+            leftButton.layer.borderWidth = 0.50
+            leftButton.layer.borderColor = UIColor.systemTeal.cgColor
             rightButton.setTitle("Notify", for: .normal)
             rightAction = .notify
-            rightButton.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.15)
+            rightButton.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.05)
             rightButton.setTitleColor(.systemBlue, for: .normal)
             rightButton.isEnabled = true
+            rightButton.layer.borderWidth = 0.50
+            rightButton.layer.borderColor = UIColor.systemBlue.cgColor
         }
     }
     
@@ -148,14 +160,17 @@ class PatientCollectionViewCell: UICollectionViewCell {
         conditionLabel.text = with.condition
         if sessionCount > 1{
             sessionLabel.text = "\(sessionCount) Sessions"}
-        else{
+        else if sessionCount == 1{
             sessionLabel.text = "\(sessionCount) Session"}
+        else{
+            sessionLabel.text = "No Sessions"
+        }
         
         // Time
         if let sessionDate = with.nextSessionDate {
             let timeFormatter = DateFormatter()
             timeFormatter.locale = Locale(identifier: "en_US_POSIX")
-            timeFormatter.dateFormat = "HH:mm"
+            timeFormatter.dateFormat = "HH:mm a"
             time.text = timeFormatter.string(from: sessionDate)
         }
         
