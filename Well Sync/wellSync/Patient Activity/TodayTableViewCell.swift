@@ -35,6 +35,15 @@ class TodayTableViewCell: UITableViewCell {
 //        cardView.layer.shadowOffset  = CGSize(width: 0, height: 0)
 //        cardView.layer.shadowRadius  = 8
         cardView.layer.masksToBounds = false
+        iconImageView.contentMode = .scaleAspectFit
+    }
+    
+    private func icon(for systemName: String) -> UIImage? {
+        // `lungs.fill` has more internal padding than icons like `paintpalette`,
+        // so we give it a slightly larger symbol size for visual parity.
+        let pointSize: CGFloat = systemName == "lungs.fill" ? 36 : 30
+        let config = UIImage.SymbolConfiguration(pointSize: pointSize, weight: .medium)
+        return UIImage(systemName: systemName, withConfiguration: config)
     }
     
     func setupPhotoMenu() {
@@ -58,7 +67,7 @@ class TodayTableViewCell: UITableViewCell {
         titleLabel.text          = activityName
         dateLabel.text           = "Total: \(logCount)"
         subtitleLabel.isHidden   = true
-        iconImageView.image      = UIImage(systemName: iconName)
+        iconImageView.image      = icon(for: iconName)
 //        checkmarkView.isHidden   = true
         subtitleBottomConstraint.constant = 8
         addPhotoButton.isHidden  = true
@@ -68,8 +77,7 @@ class TodayTableViewCell: UITableViewCell {
         dateLabel.text         = item.frequencyText
         subtitleLabel.text     = item.assignment.doctorNote ?? "No additional notes."
         subtitleLabel.isHidden = false
-        let symbolConfig       = UIImage.SymbolConfiguration(pointSize: 10, weight: .medium)
-        iconImageView.image    = UIImage(systemName: item.activity.iconName, withConfiguration: symbolConfig)
+        iconImageView.image    = icon(for: item.activity.iconName)
 
         let done                 = item.isCompletedToday
         cardView.backgroundColor = done ? UIColor.systemGray5 : UIColor.tertiarySystemBackground
@@ -84,8 +92,7 @@ class TodayTableViewCell: UITableViewCell {
         dateLabel.text         = item.frequencyText
         subtitleLabel.text     = item.assignment.doctorNote ?? "No additional notes."
         subtitleLabel.isHidden = false
-        let symbolConfig       = UIImage.SymbolConfiguration(pointSize: 10, weight: .medium)
-        iconImageView.image    = UIImage(systemName: item.activity.iconName, withConfiguration: symbolConfig)
+        iconImageView.image    = icon(for: item.activity.iconName)
 
         let done                 = item.isCompletedToday
         cardView.backgroundColor = done ? UIColor.systemGray5 : UIColor.tertiarySystemBackground
@@ -109,5 +116,4 @@ class TodayTableViewCell: UITableViewCell {
     }
     
 }
-
 

@@ -145,8 +145,12 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             self?.present(alert, animated: true)
         }
         actionHandler.onTimerTapped = { [weak self] item in
-            // Dashboard doesn't have a timer segue yet — add identifier if needed
-            self?.performSegue(withIdentifier: "Timer", sender: item)
+            guard let self else { return }
+            if self.isBreathingActivity(item) {
+                self.presentBreathingController(for: item)
+            } else {
+                self.performSegue(withIdentifier: "Timer", sender: item)
+            }
         }
         
         
@@ -405,6 +409,40 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
            let vc = segue.destination as? PatientProfileTableViewController {
                vc.patient = patient
            }
+    }
+    
+    private func isBreathingActivity(_ item: TodayActivityItem) -> Bool {
+        let name = item.activity.name.lowercased()
+        let note = (item.assignment.doctorNote ?? "").lowercased()
+        let icon = item.activity.iconName.lowercased()
+        
+        return name.contains("breath")
+        || note.contains("breath")
+        || name.contains("mindful")
+        || note.contains("mindful")
+        || name.contains("meditat")
+        || note.contains("meditat")
+        || icon.contains("lungs")
+    }
+    
+    private func presentBreathingController(for item: TodayActivityItem) {
+        let storyboard = UIStoryboard(name: "breathcircle", bundle: nil)
+        guard let vc = storyboard.instantiateInitialViewController() as? breatheCircleViewController else {
+            performSegue(withIdentifier: "Timer", sender: item)
+            return
+        }
+        vc.activityItem = item
+        vc.patient = patient
+        vc.onSave = { [weak self] in self?.load() }
+        
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .automatic
+        if let sheet = nav.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.prefersGrabberVisible = false
+            sheet.preferredCornerRadius = 32
+        }
+        present(nav, animated: true)
     }
 
     func resetMoodViews() {

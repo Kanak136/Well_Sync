@@ -35,6 +35,7 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         f.dateFormat = "yyyy-MM-dd"
         return f
     }()
+    private var onboardingSequence: FeatureOnboardingSequence?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +46,18 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         collectionView.register(UINib(nibName: "insightsCollectionViewCell",         bundle: nil), forCellWithReuseIdentifier: "insights_cell")
         
         collectionView.collectionViewLayout = generateLayout()
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_mood_analysis"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
         load()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
     
     // MARK: - Data Loading
@@ -67,6 +79,7 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
                 await MainActor.run {
                     self.moodLogs = logs
                     self.collectionView.reloadData()
+                    self.startOnboardingIfPossible()
                 }
                 
             } catch {
@@ -259,6 +272,36 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
     func style(_ cell: UICollectionViewCell) {
         cell.layer.cornerRadius  = 16
         cell.layer.masksToBounds = true
+    }
+
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Switch weekly or monthly",
+                message: "Use this toggle to change the analysis range.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Pick dates from calendar",
+                message: "Select a week or month to load relevant mood logs.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Read mood distribution",
+                message: "See how frequently each mood appears in the selected period.",
+                placement: .above,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 2)) }
+            )
+        ]
+    }
+
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
+        }
     }
     
     // MARK: - Layout

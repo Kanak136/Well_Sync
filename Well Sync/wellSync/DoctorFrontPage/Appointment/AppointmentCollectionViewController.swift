@@ -1,9 +1,9 @@
-////
-////  MoodAnalysisCollectionViewController.swift
-////  wellSync
-////
-////  Created by Pranjal on 04/02/26.
-////
+//
+//  AppointmentCollectionViewController.swift
+//  wellSync
+//
+//  Created by Pranjal on 04/02/26.
+//
 
 import UIKit
 
@@ -21,6 +21,8 @@ class AppointmentCollectionViewController: UICollectionViewController {
     var selectedPatient: Patient?
     var selectedAppointment: AppointmentWithPatient?
     var sessionCountByPatient: [UUID: Int] = [:]
+    private var onboardingSequence: FeatureOnboardingSequence?
+    private var hasLoadedAppointmentsOnce = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,9 +46,24 @@ class AppointmentCollectionViewController: UICollectionViewController {
             UINib(nibName: "PatientCell", bundle: nil),
             forCellWithReuseIdentifier: "PatientCell"
         )
+        collectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: "AppointmentEmptyStateCell"
+        )
 
         collectionView.collectionViewLayout = generateLayout()
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_appointments"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
         loadAppointments()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
 
     // MARK: - DATA LOAD
@@ -88,11 +105,18 @@ class AppointmentCollectionViewController: UICollectionViewController {
                 await MainActor.run {
                     self.appointments = data
                     self.sessionCountByPatient = counts   // 🔥 important
+                    self.hasLoadedAppointmentsOnce = true
                     self.collectionView.reloadSections(IndexSet(integer: 2))
+                    self.updateEmptyState()
+                    self.startOnboardingIfPossible()
                 }
 
             } catch {
                 print("Error:", error)
+                await MainActor.run {
+                    self.hasLoadedAppointmentsOnce = true
+                    self.collectionView.reloadSections(IndexSet(integer: 2))
+                }
             }
         }
     }
@@ -114,7 +138,11 @@ class AppointmentCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        return section == 2 ? filteredAppointments().count : 1
+        if section == 2 {
+            guard hasLoadedAppointmentsOnce else { return 0 }
+            return max(filteredAppointments().count, 1)
+        }
+        return 1
     }
 
     override func collectionView(_ collectionView: UICollectionView,
@@ -147,12 +175,34 @@ class AppointmentCollectionViewController: UICollectionViewController {
                 guard let self else { return }
                 self.selectedDate = date
                 self.collectionView.reloadSections(IndexSet(integer: 2))
+                self.updateEmptyState()
+                self.startOnboardingIfPossible()
             }
 
             cell.configure(segment: selectedSegmentIndex)
             return cell
 
         case 2:
+            if filteredAppointments().isEmpty {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "AppointmentEmptyStateCell",
+                    for: indexPath
+                )
+                cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                let empty = EmptyStateCardView(
+                    title: "No patient available",
+                    subtitle: "There are no appointments for the selected day.",
+                    iconSystemName: "calendar.badge.exclamationmark"
+                )
+                cell.contentView.addSubview(empty)
+                NSLayoutConstraint.activate([
+                    empty.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                    empty.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+                    empty.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                    empty.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+                ])
+                return cell
+            }
             let calendar = Calendar.current
                 let isPastDate = calendar.compare(selectedDate, to: Date(), toGranularity: .day) == .orderedAscending
 
@@ -242,6 +292,7 @@ class AppointmentCollectionViewController: UICollectionViewController {
                                  didSelectItemAt indexPath: IndexPath) {
 
         guard indexPath.section == 2 else { return }
+        guard !filteredAppointments().isEmpty else { return }
 
         let calendar = Calendar.current
         let isPastDate = calendar.compare(selectedDate, to: Date(), toGranularity: .day) == .orderedAscending
@@ -387,7 +438,7 @@ class AppointmentCollectionViewController: UICollectionViewController {
                 let group = NSCollectionLayoutGroup.vertical(
                     layoutSize: .init(
                         widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(140)
+                        heightDimension: .estimated(170)
                     ),
                     subitems: [item]
                 )
@@ -434,6 +485,45 @@ class AppointmentCollectionViewController: UICollectionViewController {
 
         if let cell = collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) as? CalendarCellAppointment {
             cell.configure(segment: selectedSegmentIndex)
+        }
+    }
+    
+    private func updateEmptyState() {
+        guard isViewLoaded else { return }
+        collectionView.backgroundView = nil
+        collectionView.reloadSections(IndexSet(integer: 2))
+    }
+    
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Switch timeline",
+                message: "Use weekly or monthly mode to navigate appointments.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Select a date",
+                message: "Pick a day to see scheduled patients.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Review patient list",
+                message: "Appointments for the selected date appear here.",
+                placement: .above,
+                targetProvider: { [weak self] in
+                    guard let self, !self.filteredAppointments().isEmpty else { return nil }
+                    return self.collectionView.cellForItem(at: IndexPath(item: 0, section: 2))
+                }
+            )
+        ]
+    }
+    
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
         }
     }
 }

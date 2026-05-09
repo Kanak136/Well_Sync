@@ -1,3 +1,10 @@
+//
+//  HomeCollectionViewController.swift
+//  wellSync
+//
+//  Created by Pranjal on 04/02/26.
+//
+
 import UIKit
 
 class HomeCollectionViewController: UICollectionViewController {
@@ -14,10 +21,13 @@ class HomeCollectionViewController: UICollectionViewController {
         }
     }
     @IBOutlet weak var ellipsisButtonTapped: UIBarButtonItem!
+    @IBOutlet weak var addPatientButtonTapped: UIBarButtonItem!
     var selectedFilter: FilterType = .all
     var selectedPatient: Patient?
     
     let spinner = UIActivityIndicatorView(style: .large)
+    private var onboardingSequence: FeatureOnboardingSequence?
+    private var hasLoadedAppointmentsOnce = false
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,12 +39,23 @@ class HomeCollectionViewController: UICollectionViewController {
         setupCollectionView()
         self.collectionView.collectionViewLayout = createLayout()
         setupMenu()
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_home"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadPatients()
         loadAppointments()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -76,12 +97,17 @@ class HomeCollectionViewController: UICollectionViewController {
                     self.appointments = data
                     self.sessionCountByPatient = counts
                     self.categorizeAppointments()
+                    self.hasLoadedAppointmentsOnce = true
                     self.collectionView.reloadData()
+                    self.updateEmptyState()
+                    self.startOnboardingIfPossible()
                     self.spinner.stopAnimating()
                 }
             } catch {
                 print(error)
                 await MainActor.run {
+                    self.hasLoadedAppointmentsOnce = true
+                    self.collectionView.reloadSections(IndexSet(integer: 2))
                     self.spinner.stopAnimating()
                 }
             }
@@ -152,15 +178,20 @@ class HomeCollectionViewController: UICollectionViewController {
             forCellWithReuseIdentifier: "TopCell"
         )
 
-//        collectionView.register(
-//            UINib(nibName: "SectionHeaderView", bundle: nil),
-//            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-//            withReuseIdentifier: "header"
-//        )
+        collectionView.register(
+            UINib(nibName: "SectionHeaderView", bundle: nil),
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "header"
+        )
         
         collectionView.register(
             UINib(nibName: "FilterCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "FilterCell"
+        )
+
+        collectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: "HomeEmptyStateCell"
         )
     }
     func setupMenu() {
@@ -253,7 +284,8 @@ class HomeCollectionViewController: UICollectionViewController {
         } else if section == 1{
             return 1
         } else {
-            return filteredAppointments().count
+            guard hasLoadedAppointmentsOnce else { return 0 }
+            return max(filteredAppointments().count, 1)
         }
     }
 
@@ -300,6 +332,27 @@ extension HomeCollectionViewController {
 
                 return cell
             }
+        if filteredAppointments().isEmpty {
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "HomeEmptyStateCell",
+                for: indexPath
+            )
+            cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+            let empty = EmptyStateCardView(
+                title: "No appointment today",
+                subtitle: "No sessions are scheduled for today yet.",
+                iconSystemName: "person.2.slash"
+            )
+            cell.contentView.addSubview(empty)
+            NSLayoutConstraint.activate([
+                empty.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                empty.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+                empty.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                empty.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+            ])
+            return cell
+        }
+
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "PatientCell",
             for: indexPath
@@ -344,6 +397,25 @@ extension HomeCollectionViewController {
     }
 }
 extension HomeCollectionViewController {
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader,
+              indexPath.section == 2 else {
+            return UICollectionReusableView()
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: "header",
+            for: indexPath
+        ) as! SectionHeaderView
+        header.configure(withTitle: "Patients")
+        return header
+    }
+
 
     func applyShadow(cell: UICollectionViewCell) {
         cell.contentView.layer.masksToBounds = true
@@ -416,7 +488,7 @@ extension HomeCollectionViewController {
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(170)
+            heightDimension: .estimated(170)
         )
 
         let group = NSCollectionLayoutGroup.vertical(
@@ -428,6 +500,17 @@ extension HomeCollectionViewController {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 8
+        
+        let headerSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(40)
+        )
+        let header = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .topLeading
+        )
+        section.boundarySupplementaryItems = [header]
 
         return section
     }
@@ -455,6 +538,7 @@ extension HomeCollectionViewController {
             return
         }
         if indexPath.section == 2 {
+            guard !filteredAppointments().isEmpty else { return }
             let item = filteredAppointments()[indexPath.row]
             selectedPatient = item.patient
             selectedAppointment = item
@@ -518,6 +602,59 @@ extension HomeCollectionViewController {
     }
 }
 extension HomeCollectionViewController{
+    private func updateEmptyState() {
+        guard isViewLoaded else { return }
+        collectionView.backgroundView = nil
+        collectionView.reloadSections(IndexSet(integer: 2))
+    }
+    
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Active patients",
+                message: "Quick view of your current patient load.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Today’s sessions",
+                message: "Shows the total sessions scheduled for today.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Patients for today",
+                message: "Patients scheduled today appear in this area.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    guard let self else { return nil }
+                    if let header = self.collectionView.supplementaryView(
+                        forElementKind: UICollectionView.elementKindSectionHeader,
+                        at: IndexPath(item: 0, section: 2)
+                    ) {
+                        return header
+                    }
+                    return self.collectionView.cellForItem(at: IndexPath(item: 0, section: 2))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Add patient",
+                message: "Use this control to add a new patient profile.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    self?.addPatientButtonTapped.value(forKey: "view") as? UIView
+                }
+            )
+        ]
+    }
+    
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
+        }
+    }
+    
     func notifyPatient(_ patient: Patient) {
         print("Notify \(patient.name)")
     }
