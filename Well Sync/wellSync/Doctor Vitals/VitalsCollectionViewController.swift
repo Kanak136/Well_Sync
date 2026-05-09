@@ -1,3 +1,10 @@
+//
+//  DoctorActivityStatusCollectionViewController.swift
+//  wellSync
+//
+//  Created by Vidit Agarwal on 06/02/26.
+//
+
 import UIKit
 
 class VitalsCollectionViewController: UICollectionViewController, VitalsBarRangeNavigating {
@@ -33,6 +40,7 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsBarRange
     private var barRanges: [DisplayRange] = [.weekly, .weekly]
     private var barOffsets: [Int] = [0, 0]
     var patient: Patient?
+    private var onboardingSequence: FeatureOnboardingSequence?
     
     private func barRangeText(for index: Int) -> String {
         let calendar = Calendar.current
@@ -60,7 +68,19 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsBarRange
 
         self.collectionView!.register(UINib(nibName: "VitalsBarCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "vitalBarCell")
         collectionView.collectionViewLayout = generateLayout()
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_health_stats"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
+        updateEmptyState()
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -205,6 +225,51 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsBarRange
     func reloadAllCharts() {
         displayedVitals = allVitals
         collectionView.reloadData()
+        updateEmptyState()
+        startOnboardingIfPossible()
+    }
+
+    private func updateEmptyState() {
+        guard isViewLoaded else { return }
+        if patient == nil {
+            collectionView.backgroundView = EmptyStateCardView(
+                title: "No patient selected",
+                subtitle: "Select a patient to view health statistics.",
+                iconSystemName: "waveform.path.ecg"
+            )
+        } else {
+            collectionView.backgroundView = nil
+        }
+    }
+    
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Choose date range",
+                message: "Switch between weekly and monthly stats.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Sleep trend",
+                message: "This chart tracks sleep history over the selected period.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 1)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Steps trend",
+                message: "This chart shows movement activity and step counts.",
+                placement: .above,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 1, section: 1)) }
+            )
+        ]
+    }
+    
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
+        }
     }
     
 }
@@ -214,4 +279,3 @@ private extension Array {
         indices.contains(index) ? self[index] : nil
     }
 }
-

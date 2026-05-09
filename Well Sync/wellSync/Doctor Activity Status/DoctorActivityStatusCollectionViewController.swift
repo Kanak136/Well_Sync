@@ -144,6 +144,8 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
     var currentWeekProgress: CGFloat = 0
     var previousWeekProgress: CGFloat = 0
     var delta: CGFloat = 0
+    private var onboardingSequence: FeatureOnboardingSequence?
+    private var hasLoadedActivityOnce = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,8 +153,15 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         self.collectionView!.register(UINib(nibName: "UploadCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "uploadCell")
         self.collectionView!.register(UINib(nibName: "GraphCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "graphCell")
         self.collectionView.register(UINib(nibName: "HeaderCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: "header", withReuseIdentifier: "headerCell")
+        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ActivityEmptyStateCell")
         
         self.collectionView!.collectionViewLayout = generateLayout()
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_activity_status"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
     }
 
     func loadActivity(){
@@ -183,7 +192,10 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
             )
                         
             delta = currentWeekProgress - previousWeekProgress
+            hasLoadedActivityOnce = true
             collectionView.reloadSections(IndexSet([0,1,2]))
+            updateEmptyState()
+            startOnboardingIfPossible()
         }
     }
 
@@ -193,13 +205,16 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard hasLoadedActivityOnce else {
+            return section == 0 ? 1 : 0
+        }
         if section == 0{
             return 1
         }
         else if section == 1{
-            return activities.count
+            return max(activities.count, 1)
         }
-        return previousActivity.count
+        return max(previousActivity.count, 1)
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -225,6 +240,26 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         }
         
         if indexPath.section == 1 {
+            if activities.isEmpty {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "ActivityEmptyStateCell",
+                    for: indexPath
+                )
+                cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                let empty = EmptyStateCardView(
+                    title: "No current activity present",
+                    subtitle: "Assigned activities and progress logs will show up here.",
+                    iconSystemName: "figure.walk"
+                )
+                cell.contentView.addSubview(empty)
+                NSLayoutConstraint.activate([
+                    empty.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                    empty.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+                    empty.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                    empty.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+                ])
+                return cell
+            }
             let item = activities[indexPath.row]
 
             if item.isUploadType {
@@ -275,6 +310,26 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
             }
         }
         else {
+            if previousActivity.isEmpty {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "ActivityEmptyStateCell",
+                    for: indexPath
+                )
+                cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                let empty = EmptyStateCardView(
+                    title: "No previous activity present",
+                    subtitle: "Completed or historical activity logs will appear here.",
+                    iconSystemName: "clock.arrow.circlepath"
+                )
+                cell.contentView.addSubview(empty)
+                NSLayoutConstraint.activate([
+                    empty.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                    empty.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+                    empty.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                    empty.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+                ])
+                return cell
+            }
             let item = previousActivity[indexPath.row]
 
             if item.isUploadType {
@@ -368,7 +423,7 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
 
             let groupSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(120)
+                heightDimension: .estimated(170)
             )
 
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -380,6 +435,8 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
             return section
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 1 && activities.isEmpty { return }
+        if indexPath.section == 2 && previousActivity.isEmpty { return }
         if indexPath.section == 1 && activities[indexPath.row].isUploadType == true{
             performSegue(withIdentifier: "Journal", sender: indexPath)
         }else if indexPath.section == 2 && previousActivity[indexPath.row].isUploadType == true{
@@ -422,6 +479,11 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
 //            }
 //            collectionView.reloadData()
 //        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
@@ -500,5 +562,46 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
         )
         attrString.append(subStr)
         return attrString
+    }
+    
+    private func updateEmptyState() {
+        guard isViewLoaded else { return }
+        collectionView.backgroundView = nil
+    }
+    
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Weekly progress",
+                message: "See completion percentage and week-over-week change.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Current activities",
+                message: "Today’s activity tasks are listed here.",
+                placement: .above,
+                targetProvider: { [weak self] in
+                    guard let self, !self.activities.isEmpty else { return nil }
+                    return self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Previous activities",
+                message: "Past activity logs are grouped below.",
+                placement: .above,
+                targetProvider: { [weak self] in
+                    guard let self, !self.previousActivity.isEmpty else { return nil }
+                    return self.collectionView.cellForItem(at: IndexPath(item: 0, section: 2))
+                }
+            )
+        ]
+    }
+    
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
+        }
     }
 }

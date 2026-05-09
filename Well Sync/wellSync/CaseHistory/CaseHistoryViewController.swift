@@ -20,6 +20,8 @@ class CaseHistoryViewController: UIViewController {
     var generatedReportURl: URL?
     var patient: Patient!
     var sessions: [SessionNote] = []
+    private var onboardingSequence: FeatureOnboardingSequence?
+    private var hasLoadedHistoryOnce = false
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCells()
@@ -27,8 +29,19 @@ class CaseHistoryViewController: UIViewController {
         
         let layout = generateLayout()
         CaseHistoryCollectionView.setCollectionViewLayout(layout, animated: true)
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_patient_history"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
         loadData()
         CaseHistoryCollectionView.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
 
 //    func loadData() {
@@ -104,7 +117,10 @@ class CaseHistoryViewController: UIViewController {
                     .sorted { $0.date > $1.date }
 
                 await MainActor.run {
+                    self.hasLoadedHistoryOnce = true
                     self.CaseHistoryCollectionView.reloadData()
+                    self.updateEmptyState()
+                    self.startOnboardingIfPossible()
                 }
 
             } catch {
@@ -154,15 +170,17 @@ class CaseHistoryViewController: UIViewController {
             CaseHistoryCollectionView.register(UINib(nibName: "TimelineCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TimelineCell")
             CaseHistoryCollectionView.register(UINib(nibName: "HeaderView", bundle: nil), forSupplementaryViewOfKind: "header", withReuseIdentifier: "Heading")
             CaseHistoryCollectionView.register(UINib(nibName: "ReportAddHeadingView", bundle: nil), forSupplementaryViewOfKind: "header", withReuseIdentifier: "MedicalHeading")
+            CaseHistoryCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CaseHistoryEmptyStateCell")
         }
     }
 
 extension CaseHistoryViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard hasLoadedHistoryOnce else { return 0 }
         if section == 0{
             return reports.count
         }else if section == 1{
-            return timeline.count
+            return max(timeline.count, 1)
         }
         return 0
     }
@@ -176,6 +194,23 @@ extension CaseHistoryViewController: UICollectionViewDataSource{
             reportCell.configureCell(report: report)
             return cell
         }else if indexPath.section == 1{
+            if timeline.isEmpty {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CaseHistoryEmptyStateCell", for: indexPath)
+                cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+                let empty = EmptyStateCardView(
+                    title: "No patient history available",
+                    subtitle: "Timeline entries will appear after sessions and appointments.",
+                    iconSystemName: "clock.arrow.circlepath"
+                )
+                cell.contentView.addSubview(empty)
+                NSLayoutConstraint.activate([
+                    empty.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                    empty.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+                    empty.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                    empty.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+                ])
+                return cell
+            }
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TimelineCell", for: indexPath)
             guard let timelineCell = cell as? TimelineCollectionViewCell else {
                 return cell
@@ -286,6 +321,46 @@ extension CaseHistoryViewController: UICollectionViewDataSource{
         return 2
     }
    
+}
+
+private extension CaseHistoryViewController {
+    func updateEmptyState() {
+        guard isViewLoaded else { return }
+        CaseHistoryCollectionView.backgroundView = nil
+    }
+    
+    func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        CaseHistoryCollectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Upload medical reports",
+                message: "Use + to add reports from camera, gallery, or files.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    guard let self else { return nil }
+                    return (self.CaseHistoryCollectionView.supplementaryView(
+                        forElementKind: "header",
+                        at: IndexPath(item: 0, section: 0)
+                    ) as? ReportAddHeadingView)?.reportAttachment
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Review timeline",
+                message: "Session summaries and missed appointments are listed here.",
+                placement: .above,
+                targetProvider: { [weak self] in
+                    guard let self, !self.timeline.isEmpty else { return nil }
+                    return self.CaseHistoryCollectionView.cellForItem(at: IndexPath(item: 0, section: 1))
+                }
+            )
+        ]
+    }
+    
+    func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
+        }
+    }
 }
 
 extension CaseHistoryViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentPickerDelegate{

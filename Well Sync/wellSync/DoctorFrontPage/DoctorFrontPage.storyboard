@@ -395,6 +395,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="addPatientButtonTapped" destination="zeb-yx-KgB" id="xWm-1p-fQK"/>
                         <outlet property="ellipsisButtonTapped" destination="X7o-e5-G7o" id="klm-0h-xXh"/>
                         <segue destination="Ktp-cf-v9k" kind="show" identifier="PatientDetail" id="zb7-bm-X89"/>
                         <segue destination="HKh-aw-Ce3" kind="show" identifier="allPatientSegue" id="F1q-mN-Ma9"/>

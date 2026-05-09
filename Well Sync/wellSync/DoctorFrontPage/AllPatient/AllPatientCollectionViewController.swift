@@ -25,6 +25,8 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
     var currentSort: PatientSortOption = .name
     var isAscending: Bool = true // ✅ ADDED THIS
+    private var onboardingSequence: FeatureOnboardingSequence?
+    private var hasLoadedPatientsOnce = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +43,18 @@ class AllPatientCollectionViewController: UICollectionViewController {
         Task {
             await loadPatients()
         }
+        
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_all_patients"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startOnboardingIfPossible()
     }
 
     // MARK: - Sort Menu
@@ -97,6 +111,8 @@ class AllPatientCollectionViewController: UICollectionViewController {
         // Refresh the menu checkmark
         sortBarButton.menu = buildSortMenu()
         collectionView.reloadSections(IndexSet(integer: 1))
+        updateEmptyState()
+        startOnboardingIfPossible()
     }
     
     func loadPatients() async {
@@ -121,9 +137,12 @@ class AllPatientCollectionViewController: UICollectionViewController {
             print("Failed to fetch patients: \(error)")
             patients = []
             filteredPatients = []
+            hasLoadedPatientsOnce = true
         }
 
         collectionView.reloadSections(IndexSet(integer: 1))
+        hasLoadedPatientsOnce = true
+        updateEmptyState()
     }
 
     func setupCollectionView() {
@@ -137,6 +156,11 @@ class AllPatientCollectionViewController: UICollectionViewController {
             UINib(nibName: "TopSecCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "TopCell"
         )
+        
+        collectionView.register(
+            UICollectionViewCell.self,
+            forCellWithReuseIdentifier: "AllPatientsEmptyStateCell"
+        )
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -147,8 +171,8 @@ class AllPatientCollectionViewController: UICollectionViewController {
                                  numberOfItemsInSection section: Int) -> Int {
 
         if section == 0 { return 1 }
-
-        return filteredPatients.count
+        guard hasLoadedPatientsOnce else { return 0 }
+        return max(filteredPatients.count, 1)
     }
 
 
@@ -165,6 +189,27 @@ class AllPatientCollectionViewController: UICollectionViewController {
             cell.onSearchTextChanged = { [weak self] text in
                 self?.filterPatients(searchText: text)
             }
+            return cell
+        }
+        
+        if filteredPatients.isEmpty {
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "AllPatientsEmptyStateCell",
+                for: indexPath
+            )
+            cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+            let empty = EmptyStateCardView(
+                title: "No patient available",
+                subtitle: "Patients will appear here after they are added.",
+                iconSystemName: "person.crop.circle.badge.exclam"
+            )
+            cell.contentView.addSubview(empty)
+            NSLayoutConstraint.activate([
+                empty.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                empty.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+                empty.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                empty.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+            ])
             return cell
         }
 
@@ -185,6 +230,7 @@ class AllPatientCollectionViewController: UICollectionViewController {
                                     didSelectItemAt indexPath: IndexPath) {
 
         if indexPath.section == 1 {
+            guard !filteredPatients.isEmpty else { return }
             let selectedPatient = filteredPatients[indexPath.row]
             let storyboard = UIStoryboard(name: "PatientDetail", bundle: nil)
 
@@ -269,7 +315,7 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .absolute(120)
+            heightDimension: (hasLoadedPatientsOnce && filteredPatients.isEmpty) ? .estimated(170) : .absolute(120)
         )
 
         let group = NSCollectionLayoutGroup.vertical(
@@ -289,5 +335,43 @@ class AllPatientCollectionViewController: UICollectionViewController {
 
         return section
     }
+    
+    private func updateEmptyState() {
+        guard isViewLoaded else { return }
+        collectionView.backgroundView = nil
+        collectionView.reloadSections(IndexSet(integer: 1))
+    }
+    
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        return [
+            FeatureSpotlightStep(
+                title: "Search patients",
+                message: "Use this search bar to quickly find a patient.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) }
+            ),
+            FeatureSpotlightStep(
+                title: "Sort smarter",
+                message: "Use the top-right control to sort by name or condition.",
+                placement: .below,
+                targetProvider: { [weak self] in self?.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }
+            ),
+            FeatureSpotlightStep(
+                title: "Open profile details",
+                message: "Tap any patient card to open their complete profile.",
+                placement: .above,
+                targetProvider: { [weak self] in
+                    guard let self, !self.filteredPatients.isEmpty else { return nil }
+                    return self.collectionView.cellForItem(at: IndexPath(item: 0, section: 1))
+                }
+            )
+        ]
+    }
+    
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
+        }
+    }
 }
-

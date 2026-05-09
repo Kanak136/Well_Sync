@@ -123,6 +123,7 @@
             <connections>
                 <outlet property="AgeNumberLabel" destination="dVY-3n-ccy" id="8me-jJ-TV4"/>
                 <outlet property="calendarButton" destination="EBg-kT-ya7" id="2yD-wV-QFo"/>
+                <outlet property="callButton" destination="qR9-pf-YqS" id="k2E-3q-1bI"/>
                 <outlet property="disorderLabel" destination="ZfQ-fW-1hb" id="FHa-cB-AsX"/>
                 <outlet property="genderLabel" destination="Msn-Ch-Pej" id="cCs-ct-gan"/>
                 <outlet property="nameLabel" destination="teu-6c-lnP" id="qOs-PV-k2v"/>

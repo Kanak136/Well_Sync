@@ -19,6 +19,7 @@ class PatientDetailCollectionViewController: UICollectionViewController{
     var moodLogs: [MoodLog] = []
     var patientAppointments: [Appointment] = []
     var actionIntent: PatientNavigationIntent?
+    private var onboardingSequence: FeatureOnboardingSequence?
     func loadMoodLogs() {
         guard let patientID = patient?.patientID else { return }
 
@@ -47,6 +48,13 @@ class PatientDetailCollectionViewController: UICollectionViewController{
         loadSessionNotes()
         loadPatientAppointments()
         loadMoodLogs()
+        
+        onboardingSequence = FeatureOnboardingSequence(
+            viewController: self,
+            storageKey: "doctor_patient_detail"
+        ) { [weak self] in
+            self?.makeOnboardingSteps() ?? []
+        }
 
         if let appointment = selectedAppointment {
             let isToday = Calendar.current.isDateInToday(appointment.scheduledAt)
@@ -66,6 +74,7 @@ class PatientDetailCollectionViewController: UICollectionViewController{
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        startOnboardingIfPossible()
 
         guard let intent = actionIntent,
               !hasTriggeredIntent else { return }
@@ -85,6 +94,7 @@ class PatientDetailCollectionViewController: UICollectionViewController{
                 await MainActor.run {
                     self.patientAppointments = appts
                     self.PatientProfileCollectionView.reloadData()
+                    self.startOnboardingIfPossible()
                 }
             } catch {
                 print("❌ Error loading appointments: \(error)")
@@ -276,10 +286,98 @@ extension PatientDetailCollectionViewController{
                 let fetchedNotes = try await AccessSupabase.shared.fetchSessionNotes(patientID: patientID)
                 await MainActor.run{
                     self.sessionNotes = fetchedNotes
+                    self.startOnboardingIfPossible()
                 }
             }catch{
                 print("Session Notes can't be fetched")
             }
+        }
+    }
+    
+    private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
+        collectionView.layoutIfNeeded()
+        let profileCellProvider: () -> ProfileCollectionViewCell? = { [weak self] in
+            self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ProfileCollectionViewCell
+        }
+        return [
+            FeatureSpotlightStep(
+                title: "Patient profile overview",
+                message: "Review patient identity and clinical basics here.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 0))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Call patient",
+                message: "Tap to contact the patient directly.",
+                placement: .below,
+                targetProvider: {
+                    profileCellProvider()?.callButton
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Schedule appointment",
+                message: "Set or update the next appointment quickly.",
+                placement: .below,
+                targetProvider: {
+                    profileCellProvider()?.calendarButton
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Session notes",
+                message: "Open notes to review past sessions and add new entries.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    self?.collectionView.cellForItem(at: IndexPath(item: 0, section: 1))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Mood analysis",
+                message: "Track mood distribution and trends over time.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    self?.collectionView.cellForItem(at: IndexPath(item: 1, section: 1))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Activity status",
+                message: "Monitor current and previous activity completion.",
+                placement: .below,
+                targetProvider: { [weak self] in
+                    self?.collectionView.cellForItem(at: IndexPath(item: 2, section: 1))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Health stats",
+                message: "Review sleep and steps trends for clinical tracking.",
+                placement: .above,
+                prepare: { [weak self] in
+                    self?.collectionView.scrollToItem(at: IndexPath(item: 3, section: 1), at: .centeredVertically, animated: false)
+                    self?.collectionView.layoutIfNeeded()
+                },
+                targetProvider: { [weak self] in
+                    self?.collectionView.cellForItem(at: IndexPath(item: 3, section: 1))
+                }
+            ),
+            FeatureSpotlightStep(
+                title: "Patient history",
+                message: "Open reports and treatment timeline records.",
+                placement: .above,
+                prepare: { [weak self] in
+                    self?.collectionView.scrollToItem(at: IndexPath(item: 4, section: 1), at: .centeredVertically, animated: false)
+                    self?.collectionView.layoutIfNeeded()
+                },
+                targetProvider: { [weak self] in
+                    self?.collectionView.cellForItem(at: IndexPath(item: 4, section: 1))
+                }
+            )
+        ]
+    }
+    
+    private func startOnboardingIfPossible() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.onboardingSequence?.startIfNeeded()
         }
     }
 }

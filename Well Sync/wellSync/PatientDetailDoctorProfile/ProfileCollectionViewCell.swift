@@ -1,9 +1,9 @@
-////
-////  ProfileCollectionViewCell.swift
-////  wellSync
-////
-////  Created by GEU on 02/02/26.
-////
+//
+//  ProfileCollectionViewCell.swift
+//  wellSync
+//
+//  Created by GEU on 02/02/26.
+//
 //
 //import UIKit
 //protocol ProfileCellDelegate: AnyObject {
@@ -151,6 +151,7 @@ class ProfileCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var AgeNumberLabel: UILabel!
     @IBOutlet weak var disorderLabel: UILabel!
+    @IBOutlet weak var callButton: UIButton!
     @IBOutlet weak var calendarButton: UIButton!
     @IBOutlet weak var genderLabel: UILabel!
     
