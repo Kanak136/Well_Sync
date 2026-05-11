@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="FBS-80-taa">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="784"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cEG-C8-l8o">
                                     <size key="itemSize" width="128" height="128"/>
@@ -43,7 +43,7 @@
                         <constraints>
                             <constraint firstItem="FBS-80-taa" firstAttribute="leading" secondItem="1g9-82-R6B" secondAttribute="leading" id="1Nx-CT-Plu"/>
                             <constraint firstItem="FBS-80-taa" firstAttribute="top" secondItem="Oja-n0-aIR" secondAttribute="top" id="ElR-ky-aJr" userLabel="Case History Collection View.top = View.top"/>
-                            <constraint firstItem="1g9-82-R6B" firstAttribute="bottom" secondItem="FBS-80-taa" secondAttribute="bottom" id="kZl-12-laT"/>
+                            <constraint firstAttribute="bottom" secondItem="FBS-80-taa" secondAttribute="bottom" id="Y9Y-Lk-CmA"/>
                             <constraint firstItem="1g9-82-R6B" firstAttribute="trailing" secondItem="FBS-80-taa" secondAttribute="trailing" id="kdS-HU-lWR"/>
                         </constraints>
                     </view>
@@ -60,7 +60,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oj8-7z-XrH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2424" y="620"/>
+            <point key="canvasLocation" x="2423.6641221374043" y="619.71830985915494"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qJk-DX-bLE">

@@ -26,6 +26,7 @@ class CaseHistoryViewController: UIViewController {
         super.viewDidLoad()
         registerCells()
         CaseHistoryCollectionView.dataSource = self
+        CaseHistoryCollectionView.backgroundColor = .clear
         
         let layout = generateLayout()
         CaseHistoryCollectionView.setCollectionViewLayout(layout, animated: true)
@@ -326,7 +327,7 @@ extension CaseHistoryViewController: UICollectionViewDataSource{
 private extension CaseHistoryViewController {
     func updateEmptyState() {
         guard isViewLoaded else { return }
-        CaseHistoryCollectionView.backgroundView = nil
+        // backgroundView preserved for gradient
     }
     
     func makeOnboardingSteps() -> [FeatureSpotlightStep] {

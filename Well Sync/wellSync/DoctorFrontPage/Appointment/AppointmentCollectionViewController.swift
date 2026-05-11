@@ -490,7 +490,7 @@ class AppointmentCollectionViewController: UICollectionViewController {
     
     private func updateEmptyState() {
         guard isViewLoaded else { return }
-        collectionView.backgroundView = nil
+        // collectionView.backgroundView = nil
         collectionView.reloadSections(IndexSet(integer: 2))
     }
     

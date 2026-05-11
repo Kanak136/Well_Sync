@@ -185,7 +185,7 @@ class SessionNoteCollectionViewController: UICollectionViewController {
 
     private func updateEmptyState() {
         guard isViewLoaded else { return }
-        collectionView.backgroundView = nil
+        // collectionView.backgroundView = nil
     }
 
     private func makeOnboardingSteps() -> [FeatureSpotlightStep] {

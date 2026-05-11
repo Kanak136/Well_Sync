@@ -238,7 +238,7 @@ class VitalsCollectionViewController: UICollectionViewController, VitalsBarRange
                 iconSystemName: "waveform.path.ecg"
             )
         } else {
-            collectionView.backgroundView = nil
+            // collectionView.backgroundView = nil
         }
     }
     
