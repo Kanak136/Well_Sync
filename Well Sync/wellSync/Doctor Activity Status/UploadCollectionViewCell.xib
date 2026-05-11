@@ -20,7 +20,7 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="a8p-go-icf">
                         <rect key="frame" x="20" y="17.333333333333329" width="35" height="33"/>
-                        <color key="tintColor" systemColor="systemOrangeColor"/>
+                        <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="28" id="LnJ-sQ-PzM"/>
                             <constraint firstAttribute="width" constant="35" id="dkl-jw-eNs"/>
@@ -70,7 +70,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="103" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="roI-Vj-iXl">
                                 <rect key="frame" x="46" y="0.0" width="40" height="40"/>
                                 <color key="backgroundColor" red="0.74909337883796456" green="0.75192334387903037" blue="0.76041323900222779" alpha="0.58590949820788529" colorSpace="custom" customColorSpace="displayP3"/>
-                                <color key="tintColor" systemColor="systemOrangeColor"/>
+                                <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <imageReference key="image" image="Image 3" symbolScale="large" variableValue="1"/>
                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="small" weight="thin">
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -90,7 +90,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Art" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zkr-oH-VP6">
                         <rect key="frame" x="57" y="20" width="174" height="24"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                        <color key="textColor" systemColor="systemOrangeColor"/>
+                        <color key="textColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -128,9 +128,7 @@
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.55294117649999996" blue="0.15686274510000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

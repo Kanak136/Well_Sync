@@ -183,7 +183,7 @@ class insightCollectionViewCellGr: UICollectionViewCell {
         } else {
 //            trendIcon  = ""
             trendText  = "Same as last week"
-            trendColor = .systemOrange
+            trendColor = UIColor(red: 0.443, green: 0.788, blue: 0.808, alpha: 1.0)
         }
 
         let boxes = statStack.arrangedSubviews

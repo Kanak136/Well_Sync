@@ -42,7 +42,7 @@ class ActivityStatusRingView: UIView {
         trackLayer.fillColor = UIColor.clear.cgColor
 
         progressLayer.path = path.cgPath
-        progressLayer.strokeColor = UIColor.systemOrange.cgColor
+        progressLayer.strokeColor = UIColor(red: 0.443, green: 0.788, blue: 0.808, alpha: 1.0).cgColor
         progressLayer.lineWidth = 12
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.lineCap = .round
@@ -516,7 +516,7 @@ class DoctorActivityStatusCollectionViewController: UICollectionViewController {
                 journalVC.selectedActivity   = item.activity
                 journalVC.patient            = self.patient
             }
-            journalVC.tint = .systemOrange
+            journalVC.tint = UIColor(red: 0.443, green: 0.788, blue: 0.808, alpha: 1.0)
         }
 
         // MARK: Graph (timer-type) ← NEW BLOCK

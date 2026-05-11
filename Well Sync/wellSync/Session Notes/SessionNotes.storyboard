@@ -33,7 +33,7 @@
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Session 0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P1R-9b-ds3">
                                             <rect key="frame" x="16" y="16" width="92" height="20"/>
-                                            <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="92" id="NVI-uP-5OV"/>
                                                 <constraint firstAttribute="height" constant="20" id="aL7-ZA-kPJ"/>
@@ -135,16 +135,16 @@
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fcO-4s-X7a">
                                             <rect key="frame" x="178.66666666666666" y="115.66666666666669" width="36" height="36"/>
-                                            <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="36" id="6Tb-Gy-vww"/>
                                                 <constraint firstAttribute="height" constant="36" id="tAl-gn-sM1"/>
                                             </constraints>
-                                            <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="filled">
                                                 <imageReference key="image" image="play.fill" catalog="system" symbolScale="default"/>
-                                                <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="baseBackgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             </buttonConfiguration>
                                             <connections>
                                                 <action selector="play:" destination="AaF-vq-aS2" eventType="touchUpInside" id="TTj-ka-Ku0"/>
@@ -152,16 +152,16 @@
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8XQ-BJ-16e">
                                             <rect key="frame" x="272.66666666666669" y="115.66666666666669" width="36" height="36"/>
-                                            <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="36" id="Pj0-y9-aIV"/>
                                                 <constraint firstAttribute="width" constant="36" id="zsL-4z-gj7"/>
                                             </constraints>
-                                            <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="filled">
                                                 <imageReference key="image" image="goforward.10" catalog="system" symbolScale="default"/>
-                                                <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="baseBackgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             </buttonConfiguration>
                                             <connections>
                                                 <action selector="skipRecording:" destination="AaF-vq-aS2" eventType="touchUpInside" id="PSY-Jr-Ie6"/>
@@ -169,16 +169,16 @@
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QtU-w8-qlU">
                                             <rect key="frame" x="84.666666666666671" y="115.66666666666669" width="36" height="36"/>
-                                            <color key="backgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="36" id="oee-rU-CnS"/>
                                                 <constraint firstAttribute="width" constant="36" id="yfi-WP-aIp"/>
                                             </constraints>
-                                            <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="Button"/>
                                             <buttonConfiguration key="configuration" style="filled">
                                                 <imageReference key="image" image="gobackward.10" catalog="system" symbolScale="default"/>
-                                                <color key="baseBackgroundColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="baseBackgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             </buttonConfiguration>
                                             <connections>
                                                 <action selector="backRecording:" destination="AaF-vq-aS2" eventType="touchUpInside" id="cLX-1C-ANu"/>
@@ -186,11 +186,11 @@
                                         </button>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="blp-fo-l14">
                                             <rect key="frame" x="86.666666666666686" y="91.666666666666671" width="220" height="4"/>
-                                            <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="220" id="xI6-6t-jMS"/>
                                             </constraints>
-                                            <color key="progressTintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="progressTintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.81541593310000005" colorSpace="custom" customColorSpace="sRGB"/>
                                         </progressView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01:00" textAlignment="center" lineBreakMode="clip" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83l-gf-CkV">
                                             <rect key="frame" x="15.999999999999996" y="83" width="62.666666666666657" height="21.333333333333329"/>

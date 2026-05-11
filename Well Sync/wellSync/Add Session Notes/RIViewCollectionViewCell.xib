@@ -19,7 +19,7 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zqB-oR-3ln">
                         <rect key="frame" x="16" y="16.333333333333336" width="70" height="68.666666666666686"/>
-                        <color key="tintColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="70" id="YTk-74-oVh"/>
                             <constraint firstAttribute="height" constant="70" id="tdU-o1-BrJ"/>

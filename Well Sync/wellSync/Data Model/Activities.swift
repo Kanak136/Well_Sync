@@ -34,7 +34,7 @@ struct Activity: Codable {
 }
 
 struct AssignedActivity: Codable {
-    let assignedID: UUID
+    var assignedID: UUID
     let activityID: UUID
     let patientID: UUID
     let doctorID: UUID

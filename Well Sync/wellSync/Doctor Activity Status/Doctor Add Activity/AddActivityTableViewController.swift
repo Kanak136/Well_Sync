@@ -26,6 +26,9 @@ class AddActivityTableViewController: UITableViewController {
     var isCustomSelected = false
     var onSave: (() -> Void)?
 
+    /// Activities loaded from the database for this doctor
+    private var doctorActivities: [Activity] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,9 +37,12 @@ class AddActivityTableViewController: UITableViewController {
         imageSwitch.isOn = false
         recordingSwitch.isOn = false
         timerSwitch.isOn = true
-        setupActivityMenu()
         startDatePicker.date = Date()
         endDatePicker.date   = Date()
+
+        // Load activities from DB, then build menu
+        loadActivitiesAndBuildMenu()
+        setupFrequencyMenu()
     }
     @IBAction func imageSwitchChanged(_ sender: UISwitch) {
         if sender.isOn {
@@ -56,9 +62,44 @@ class AddActivityTableViewController: UITableViewController {
             recordingSwitch.isOn = false
         }
     }
-    func setupActivityMenu() {
 
-        let activityList = [
+    // MARK: - Load activities from DB for this doctor
+
+    private func loadActivitiesAndBuildMenu() {
+        guard let doctorID = patient?.docID else {
+            // Fallback to hardcoded list if no doctor
+            setupActivityMenuWithNames(defaultActivityNames)
+            return
+        }
+
+        Task {
+            do {
+                doctorActivities = try await AccessSupabase.shared.fetchActivities(for: doctorID)
+                let names = doctorActivities.map { $0.name }
+
+                // Merge defaults that aren't already in DB
+                var allNames = names
+                for defaultName in defaultActivityNames {
+                    if !allNames.contains(where: { $0.caseInsensitiveCompare(defaultName) == .orderedSame }) {
+                        allNames.append(defaultName)
+                    }
+                }
+
+                DispatchQueue.main.async {
+                    self.setupActivityMenuWithNames(allNames)
+                }
+            } catch {
+                print("Failed to load doctor activities: \(error)")
+                DispatchQueue.main.async {
+                    self.setupActivityMenuWithNames(self.defaultActivityNames)
+                }
+            }
+        }
+    }
+
+    /// Default activity names (fallback / seed list)
+    private var defaultActivityNames: [String] {
+        [
             "Morning Walk",
             "Breathing Exercise",
             "Journaling",
@@ -68,30 +109,32 @@ class AddActivityTableViewController: UITableViewController {
             "Exercise",
             "Reading"
         ]
-        let frequencyList = ["Once a day", "Twice a day", "Three times a day", "Alternate days"]
+    }
 
-        let activityActions = activityList.map { option in
+    private func setupActivityMenuWithNames(_ names: [String]) {
+        let activityActions = names.map { option in
             UIAction(title: option) { [weak self] _ in
                 guard let self = self else { return }
-                
                 self.activityListButton.setTitle(option, for: .normal)
                 self.toggleCustomRows(show: false)
             }
         }
+
         let custom = UIAction(title: "Custom") { [weak self] _ in
             guard let self = self else { return }
-
             self.activityListButton.setTitle("Custom", for: .normal)
             self.toggleCustomRows(show: true)
         }
-        let customGroup = UIMenu(options: .displayInline, children: [
-            custom
-        ])
-        
+
+        let customGroup = UIMenu(options: .displayInline, children: [custom])
         let mainGroup = UIMenu(options: .displayInline, children: activityActions)
-            
+
         activityListButton.menu = UIMenu(children: [mainGroup, customGroup])
         activityListButton.showsMenuAsPrimaryAction = true
+    }
+
+    private func setupFrequencyMenu() {
+        let frequencyList = ["Once a day", "Twice a day", "Three times a day", "Alternate days"]
 
         let frequencyActions = frequencyList.map { option in
             UIAction(title: option) { [weak self] _ in
@@ -101,7 +144,6 @@ class AddActivityTableViewController: UITableViewController {
 
         frequencyButton.menu = UIMenu(children: frequencyActions)
         frequencyButton.showsMenuAsPrimaryAction = true
-
     }
 
     func toggleCustomRows(show: Bool) {
@@ -177,6 +219,7 @@ class AddActivityTableViewController: UITableViewController {
         Task {
             do {
                 var savedActivity: Activity
+                let doctorID = patient!.docID
                 
                 if isCustomSelected {
                     let customName = customNameTextField.text?.trimmingCharacters(in: .whitespaces) ?? ""
@@ -186,12 +229,13 @@ class AddActivityTableViewController: UITableViewController {
                         return
                     }
                     
-                    if let existing = try await AccessSupabase.shared.fetchActivity(byName: customName) {
+                    // Look up by name + doctorID so it's scoped to this doctor
+                    if let existing = try await AccessSupabase.shared.fetchActivity(byName: customName, doctorID: doctorID) {
                         savedActivity = existing
                     } else {
                         let newActivity = Activity(
                             activityID: UUID(),
-                            doctorID: patient!.docID,
+                            doctorID: doctorID,
                             name: customName,
                             iconName: "sparkles"
                         )
@@ -203,13 +247,34 @@ class AddActivityTableViewController: UITableViewController {
                         showAlert("Please select an activity.")
                         return
                     }
-                    if let existing = try await AccessSupabase.shared.fetchActivity(
-                        byName: selectedName
-                    ) {
+
+                    // First try doctor-scoped lookup
+                    if let existing = try await AccessSupabase.shared.fetchActivity(byName: selectedName, doctorID: doctorID) {
                         savedActivity = existing
-                    } else {
-                        showAlert("Activity not found in catalog.")
-                        return
+                    }
+                    // Fallback: global lookup (for seed/predefined activities)
+                    else if let existing = try await AccessSupabase.shared.fetchActivity(byName: selectedName) {
+                        savedActivity = existing
+                    }
+                    else {
+                        // Activity not in DB yet — create it for this doctor
+                        let iconMap: [String: String] = [
+                            "Morning Walk": "figure.walk",
+                            "Breathing Exercise": "wind",
+                            "Journaling": "book",
+                            "Art": "paintpalette",
+                            "Yoga": "figure.yoga",
+                            "Meditation": "brain.head.profile",
+                            "Exercise": "dumbbell",
+                            "Reading": "book.closed"
+                        ]
+                        let newActivity = Activity(
+                            activityID: UUID(),
+                            doctorID: doctorID,
+                            name: selectedName,
+                            iconName: iconMap[selectedName] ?? "sparkles"
+                        )
+                        savedActivity = try await AccessSupabase.shared.saveActivity(newActivity)
                     }
                 }
                 
@@ -235,22 +300,49 @@ class AddActivityTableViewController: UITableViewController {
                     return
                 }
                 
-                let newAssignment = AssignedActivity(
-                    assignedID: UUID(),
-                    activityID: savedActivity.activityID,
+                // ── KEY FIX: check for existing active assignment ──
+                if let existingAssignment = try await AccessSupabase.shared.fetchActiveAssignment(
                     patientID: patientID,
-                    doctorID: patient!.docID,
-                    frequency: frequency,
-                    startDate: start,
-                    endDate: end,
-                    doctorNote: doctorNote.text ?? "",
-                    status: .active,
-                    hasImage: imageSwitch.isOn,
-                    hasRecording: recordingSwitch.isOn,
-                    hasTimer: timerSwitch.isOn
-                )
-                
-                try await AccessSupabase.shared.assignActivity(newAssignment)
+                    activityID: savedActivity.activityID
+                ) {
+                    // UPDATE the existing row — keep same assigned_id and activity_id
+                    var updated = AssignedActivity(
+                        assignedID: existingAssignment.assignedID,
+                        activityID: savedActivity.activityID,
+                        patientID: patientID,
+                        doctorID: doctorID,
+                        frequency: frequency,
+                        startDate: start,
+                        endDate: end,
+                        doctorNote: doctorNote.text ?? "",
+                        status: .active,
+                        hasImage: imageSwitch.isOn,
+                        hasRecording: recordingSwitch.isOn,
+                        hasTimer: timerSwitch.isOn
+                    )
+                    
+                    try await AccessSupabase.shared.updateAssignedActivity(updated)
+                    print("✅ Updated existing assignment: \(existingAssignment.assignedID)")
+                } else {
+                    // No active assignment exists — INSERT new
+                    let newAssignment = AssignedActivity(
+                        assignedID: UUID(),
+                        activityID: savedActivity.activityID,
+                        patientID: patientID,
+                        doctorID: doctorID,
+                        frequency: frequency,
+                        startDate: start,
+                        endDate: end,
+                        doctorNote: doctorNote.text ?? "",
+                        status: .active,
+                        hasImage: imageSwitch.isOn,
+                        hasRecording: recordingSwitch.isOn,
+                        hasTimer: timerSwitch.isOn
+                    )
+                    
+                    try await AccessSupabase.shared.assignActivity(newAssignment)
+                    print("✅ Created new assignment")
+                }
 
                 DispatchQueue.main.async {
                     self.onSave?()

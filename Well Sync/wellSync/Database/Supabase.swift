@@ -113,6 +113,50 @@ final class AccessSupabase {
             .value
         return saved
     }
+    
+    /// Update an existing assigned-activity row (same assigned_id, new dates / frequency / flags)
+    func updateAssignedActivity(_ assignment: AssignedActivity) async throws -> AssignedActivity {
+        let updated: AssignedActivity = try await supabase
+            .from("assigned_activities")
+            .update(assignment)
+            .eq("assigned_id", value: assignment.assignedID.uuidString)
+            .select()
+            .single()
+            .execute()
+            .value
+        return updated
+    }
+    
+    /// Check whether an **active** assignment already exists for a patient + activity pair
+    func fetchActiveAssignment(patientID: UUID, activityID: UUID) async throws -> AssignedActivity? {
+        let response = try await supabase
+            .from("assigned_activities")
+            .select()
+            .eq("patient_id", value: patientID.uuidString)
+            .eq("activity_id", value: activityID.uuidString)
+            .eq("status", value: "active")
+            .limit(1)
+            .execute()
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        
+        let results = try decoder.decode([AssignedActivity].self, from: response.data)
+        return results.first
+    }
+    
+    /// Fetch an activity by name scoped to a specific doctor
+    func fetchActivity(byName name: String, doctorID: UUID) async throws -> Activity? {
+        let results: [Activity] = try await supabase
+            .from("activities")
+            .select()
+            .eq("doctor_id", value: doctorID.uuidString)
+            .ilike("name", value: name)
+            .limit(1)
+            .execute()
+            .value
+        return results.first
+    }
     func saveActivityLog(_ log: ActivityLog) async throws -> ActivityLog {
         let saved: ActivityLog = try await supabase
             .from("activity_logs")

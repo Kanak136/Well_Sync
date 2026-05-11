@@ -89,7 +89,7 @@ class GraphCollectionViewCell: UICollectionViewCell {
         for i in 0..<7 {
             if dailyValues[i] > 0 {
                 entries.append(BarChartDataEntry(x: Double(i), y: dailyValues[i]))
-                colors.append(.systemOrange)           // ✅ real data → orange
+                colors.append(UIColor(red: 0.443, green: 0.788, blue: 0.808, alpha: 1.0))           // ✅ real data → teal
             } else {
                 entries.append(BarChartDataEntry(x: Double(i), y: placeholder))
                 colors.append(.systemGray5)            // ✅ no data → light gray nub
