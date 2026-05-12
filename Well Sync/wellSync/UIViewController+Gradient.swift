@@ -73,6 +73,10 @@ extension UIViewController {
         if self is UINavigationController || self is UITabBarController ||
             self is UISplitViewController || self is UIAlertController ||
             self is UIPageViewController { return false }
+        
+        // Exclude specific view controllers that need a pure black background
+        if className.contains("JournalImageViewController") { return false }
+        
         return true
     }
     

@@ -14,8 +14,6 @@ class DetailCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        style(self)
-        // Initialization code
         contentView.layer.masksToBounds = true
         
         

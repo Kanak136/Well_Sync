@@ -75,6 +75,10 @@ class ActivityTableViewController: UITableViewController {
         startOnboardingIfPossible()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+    }
+    
     private func loadData() {
         guard let patientID = patient?.patientID else { return }
         
@@ -250,6 +254,7 @@ class ActivityTableViewController: UITableViewController {
             }
 
             journalVC.patient = patient
+            journalVC.isPatientSide = true
         }
 
         if segue.identifier == "timerSegue",

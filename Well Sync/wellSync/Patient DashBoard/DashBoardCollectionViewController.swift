@@ -81,7 +81,7 @@ class ActivityRingView: UIView {
 
 class DashboardCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    let items  = ["Streak", "Activity Ring", "Mood Count", "Next Session", "Mood Log", "Logs", "Journaling", "Art"]
+//    let items  = ["Streak", "Activity Ring", "Mood Count", "Next Session", "Mood Log", "Logs", "Journaling", "Art"]
     let images = [UIImage(systemName: "book"), UIImage(systemName: "paintpalette")]
     @IBOutlet var moodCount: UILabel!
 
@@ -95,13 +95,16 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
     private var onboardingSequence: FeatureOnboardingSequence?
     var patient: Patient? {
         didSet {
-            guard patient != nil else { return }
+            guard let p = patient else { return }
             load()
             AccessHealthKit.healthKit.syncSleepToSupabase(
-                patientID: patient!.patientID,
+                patientID: p.patientID,
                 nightsBack: 30
             )
-            AccessHealthKit.healthKit.syncStepsToSupabase(patientID: patient!.patientID, daysBack: 30)
+            AccessHealthKit.healthKit.syncStepsToSupabase(patientID: p.patientID, daysBack: 30)
+            
+            // ✅ Set the patient on the actionHandler so it can save logs
+            actionHandler.patient = p
         }
     }
     
@@ -152,8 +155,6 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
                 self.performSegue(withIdentifier: "Timer", sender: item)
             }
         }
-        
-        
     }
 
     private func startOnboardingIfPossible() {
@@ -306,6 +307,7 @@ class DashboardCollectionViewController: UICollectionViewController, UICollectio
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "BasicCell", for: indexPath
             ) as! BasicCollectionViewCell
+            
 
             let item = toDoItems[indexPath.row]
 

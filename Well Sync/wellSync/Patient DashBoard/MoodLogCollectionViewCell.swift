@@ -105,9 +105,23 @@ class MoodLogCollectionViewCell: UICollectionViewCell {
             card.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 8),
             card.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -8),
             card.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -6),
-            card.heightAnchor.constraint(equalToConstant: 34)
+            card.heightAnchor.constraint(equalToConstant: 36)
         ])
         sectionCard = card
+        
+        // ── Title Label ──
+        let titleLabel = UILabel()
+        titleLabel.text = "Today's Logs"
+        titleLabel.font = UIFont.systemFont(ofSize: 11, weight: .semibold)
+        titleLabel.textColor = .secondaryLabel
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(titleLabel)
+        
+        // ── Vertical Separator ──
+        let separator = UIView()
+        separator.backgroundColor = UIColor.systemGray4
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(separator)
 
         // ── Bar container (sits inside the gray card) ──
         let container = UIView()
@@ -118,7 +132,15 @@ class MoodLogCollectionViewCell: UICollectionViewCell {
         card.addSubview(container)
 
         NSLayoutConstraint.activate([
-            container.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 10),
+            titleLabel.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 12),
+            titleLabel.centerYAnchor.constraint(equalTo: card.centerYAnchor),
+            
+            separator.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 10),
+            separator.centerYAnchor.constraint(equalTo: card.centerYAnchor),
+            separator.widthAnchor.constraint(equalToConstant: 1),
+            separator.heightAnchor.constraint(equalToConstant: 16),
+            
+            container.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: 10),
             container.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -10),
             container.centerYAnchor.constraint(equalTo: card.centerYAnchor),
             container.heightAnchor.constraint(equalToConstant: 12)

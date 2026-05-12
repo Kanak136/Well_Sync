@@ -43,7 +43,7 @@
                                             <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="textColor" systemColor="systemGrayColor"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="continue"/>
                                         </textView>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>

@@ -17,6 +17,7 @@ class JournalTableViewController: UITableViewController {
     var selectedAssignment: AssignedActivity?
     var selectedActivity: Activity?
     var patient: Patient?
+    var isPatientSide: Bool = false
     
     // MARK: - Lifecycle
     
@@ -206,6 +207,7 @@ class JournalTableViewController: UITableViewController {
            let imageVC = segue.destination as? JournalImageViewController,
            let entry = sender as? JournalEntry {
             imageVC.journalEntry = entry   
+            imageVC.isPatientSide = self.isPatientSide
         }
     }
 

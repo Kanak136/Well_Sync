@@ -40,6 +40,9 @@ class BasicCollectionViewCell: UICollectionViewCell {
     func setupTimerButton() {
         uploadButton.menu = nil
         uploadButton.showsMenuAsPrimaryAction = false
+        
+        // Remove old targets to avoid multiple calls during reuse
+        uploadButton.removeTarget(nil, action: nil, for: .allEvents)
         uploadButton.addTarget(self, action: #selector(timerTapped), for: .touchUpInside)
     }
 

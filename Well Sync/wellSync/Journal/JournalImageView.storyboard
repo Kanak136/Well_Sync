@@ -49,14 +49,14 @@
                         <constraints>
                             <constraint firstItem="ar5-f8-V9G" firstAttribute="top" secondItem="Umf-4e-RP2" secondAttribute="bottom" constant="-12" id="5yP-Zr-voC"/>
                             <constraint firstItem="RLG-oJ-8yL" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="G2W-bd-lzh"/>
-                            <constraint firstItem="Btt-AA-Fcw" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leadingMargin" id="Oqs-7D-Soz"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Btt-AA-Fcw" secondAttribute="bottom" id="SW5-M0-QAF"/>
+                            <constraint firstItem="Btt-AA-Fcw" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="Oqs-7D-Soz"/>
+                            <constraint firstItem="Btt-AA-Fcw" firstAttribute="bottom" secondItem="5EZ-qb-Rvc" secondAttribute="bottom" id="SW5-M0-QAF"/>
                             <constraint firstItem="ar5-f8-V9G" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="Vuh-o1-XBJ"/>
                             <constraint firstItem="Umf-4e-RP2" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="hxL-3U-miK"/>
                             <constraint firstItem="RLG-oJ-8yL" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="iRC-rr-CuP"/>
-                            <constraint firstItem="Btt-AA-Fcw" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="topMargin" id="rpK-R2-Eco"/>
+                            <constraint firstItem="Btt-AA-Fcw" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="rpK-R2-Eco"/>
                             <constraint firstAttribute="bottom" secondItem="ar5-f8-V9G" secondAttribute="bottom" constant="40" id="sOE-pv-dB4"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Btt-AA-Fcw" secondAttribute="trailing" id="un3-JZ-vWb"/>
+                            <constraint firstItem="Btt-AA-Fcw" firstAttribute="trailing" secondItem="5EZ-qb-Rvc" secondAttribute="trailing" id="un3-JZ-vWb"/>
                         </constraints>
                     </view>
                     <toolbarItems/>

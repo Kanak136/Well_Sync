@@ -20,6 +20,7 @@ class JournalImageViewController: UIViewController, UIScrollViewDelegate {
 
     // MARK: - Properties
     var journalEntry: JournalEntry?
+    var isPatientSide: Bool = false
 
     /// One inner zoom-scroll-view per image page
     private var pageScrollViews: [UIScrollView] = []
@@ -36,6 +37,7 @@ class JournalImageViewController: UIViewController, UIScrollViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
         setupOuterScrollView()
         setupNavigationBar()
         setupSummaryButton()
@@ -57,6 +59,7 @@ class JournalImageViewController: UIViewController, UIScrollViewDelegate {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.backgroundColor = .black
         scrollView.bounces = false
+        scrollView.contentInsetAdjustmentBehavior = .never // Prevent system from pushing content down
     }
 
     private func setupNavigationBar() {
@@ -73,6 +76,12 @@ class JournalImageViewController: UIViewController, UIScrollViewDelegate {
         summaryButton.isHidden = true
         summaryButton.tintColor = .white
         summaryButton.setTitleColor(.white, for: .normal)
+        
+        // Hide completely if on patient side
+        if isPatientSide {
+            summaryButton.alpha = 0
+            summaryButton.isUserInteractionEnabled = false
+        }
     }
 
     private func setupPageControl() {
@@ -105,6 +114,7 @@ class JournalImageViewController: UIViewController, UIScrollViewDelegate {
                 inner.backgroundColor = .black
                 inner.delegate = self
                 inner.tag = i           // use tag to identify page
+                inner.contentInsetAdjustmentBehavior = .never
 
                 // --- image view inside inner scroll view ---
                 let iv = UIImageView()
@@ -209,9 +219,9 @@ class JournalImageViewController: UIViewController, UIScrollViewDelegate {
 
         loadedPageCount += 1
         if loadedPageCount == paths.count {
-            // All pages done — hide spinner, show button
+            // All pages done — hide spinner, show button (if not patient side)
             loadingIndicator.stopAnimating()
-            summaryButton.isHidden = false
+            summaryButton.isHidden = isPatientSide
         }
     }
 

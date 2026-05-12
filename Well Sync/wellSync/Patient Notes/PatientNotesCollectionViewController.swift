@@ -11,7 +11,7 @@ import Foundation
 
 private let reuseIdentifier = "Cell"
 
-class PatientNotesCollectionViewController: UICollectionViewController {
+class PatientNotesCollectionViewController: UICollectionViewController, UITextViewDelegate {
     
     var onAdd: (() -> Void)?
     var notes: [PatientNote]?
@@ -32,6 +32,13 @@ class PatientNotesCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        
+        collectionView.keyboardDismissMode = .onDrag
+        
         collectionView.register(
             UINib(nibName: "PatientNotesCollectionReusableView", bundle: nil),
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -42,7 +49,6 @@ class PatientNotesCollectionViewController: UICollectionViewController {
         }
         self.collectionView.collectionViewLayout = createLayout()
         
-        // ✅ INIT ONBOARDING
         onboardingSequence = FeatureOnboardingSequence(
             viewController: self,
             storageKey: "patient_notes"
@@ -50,6 +56,10 @@ class PatientNotesCollectionViewController: UICollectionViewController {
             self?.makeOnboardingSteps() ?? []
         }
         collectionView.alwaysBounceVertical = true
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -109,6 +119,10 @@ class PatientNotesCollectionViewController: UICollectionViewController {
                 withReuseIdentifier: "currentNotes",
                 for: indexPath
             )
+            
+            if let textView = cell.viewWithTag(1) as? UITextView {
+                textView.delegate = self
+            }
             
             if let button = cell.viewWithTag(2) as? UIButton {
                 button.addTarget(self, action: #selector(addNoteTapped), for: .touchUpInside)
@@ -272,8 +286,20 @@ class PatientNotesCollectionViewController: UICollectionViewController {
             }
             
             textView.isEditable = true
+            textView.inputView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
             textView.becomeFirstResponder()
+        
+            let tap = UITapGestureRecognizer(target: self, action: #selector(self.showKeyboardOnTap(_:)))
+            tap.cancelsTouchesInView = false
+            textView.addGestureRecognizer(tap)
         }
+    }
+    
+    @objc func showKeyboardOnTap(_ sender: UITapGestureRecognizer) {
+        guard let textView = sender.view as? UITextView else { return }
+        textView.inputView = nil
+        textView.reloadInputViews()
+        textView.removeGestureRecognizer(sender)
     }
 
     func section1Layout() -> NSCollectionLayoutSection {
