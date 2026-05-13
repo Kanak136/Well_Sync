@@ -61,32 +61,32 @@
                     </label>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="6qg-wm-N2m">
                         <rect key="frame" x="24" y="89" width="494" height="12"/>
-                        <color key="backgroundColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="0.10335057218309859" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="tintColor" red="0.30101084610168921" green="0.58716334342956544" blue="0.3091253185843027" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.21568627450980393" green="0.58039215686274510" blue="0.61960784313725490" alpha="0.15000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.21568627450980393" green="0.58039215686274510" blue="0.61960784313725490" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="12" id="wNy-CC-97p"/>
                         </constraints>
                     </progressView>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="abf-Xd-6pd">
                         <rect key="frame" x="24" y="147" width="494" height="12"/>
-                        <color key="backgroundColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="tintColor" systemColor="systemGreenColor"/>
+                        <color key="backgroundColor" red="0.31372549019607843" green="0.68627450980392157" blue="0.71372549019607845" alpha="0.15000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.31372549019607843" green="0.68627450980392157" blue="0.71372549019607845" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="12" id="Miv-nb-gT8"/>
                         </constraints>
                     </progressView>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="dPB-Bu-nJ5">
                         <rect key="frame" x="24" y="205" width="494" height="12"/>
-                        <color key="backgroundColor" red="1" green="0.80000000000000004" blue="0.0" alpha="0.099829445422535218" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="tintColor" systemColor="systemYellowColor"/>
+                        <color key="backgroundColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="0.15000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.44313725490196076" green="0.78823529411764703" blue="0.80784313725490198" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="12" id="y4i-dg-iGh"/>
                         </constraints>
                     </progressView>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.20000000298023224" translatesAutoresizingMaskIntoConstraints="NO" id="OWY-qA-dtG">
                         <rect key="frame" x="24" y="263" width="494" height="12"/>
-                        <color key="backgroundColor" red="1" green="0.58431372550000005" blue="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="tintColor" systemColor="systemOrangeColor"/>
+                        <color key="backgroundColor" red="0.58823529411764708" green="0.84313725490196079" blue="0.86274509803921573" alpha="0.15000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.58823529411764708" green="0.84313725490196079" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="12" id="T20-0k-nNn"/>
                         </constraints>
@@ -123,8 +123,8 @@
                     </label>
                     <progressView opaque="NO" contentMode="scaleAspectFit" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="0i6-qS-2RB">
                         <rect key="frame" x="24" y="319.33333333333331" width="494" height="12"/>
-                        <color key="backgroundColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="tintColor" systemColor="systemRedColor"/>
+                        <color key="backgroundColor" red="0.68627450980392157" green="0.88627450980392153" blue="0.90196078431372551" alpha="0.15000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.68627450980392157" green="0.88627450980392153" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="12" id="h8S-RB-9zT"/>
                         </constraints>
@@ -196,18 +196,6 @@
     <resources>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.55294117649999996" blue="0.15686274510000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.21960784310000001" blue="0.23529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

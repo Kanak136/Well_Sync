@@ -240,6 +240,7 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         default:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "segment", for: indexPath)
+            style(cell)
             return cell
         }
     }
@@ -267,12 +268,7 @@ class MoodAnalysisCollectionViewController: UICollectionViewController {
         }
     }
     
-    // MARK: - Styling
-    
-    func style(_ cell: UICollectionViewCell) {
-        cell.layer.cornerRadius  = 16
-        cell.layer.masksToBounds = true
-    }
+    // MARK: - Onboarding
 
     private func makeOnboardingSteps() -> [FeatureSpotlightStep] {
         collectionView.layoutIfNeeded()

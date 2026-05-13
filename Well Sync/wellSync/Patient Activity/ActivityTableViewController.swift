@@ -176,7 +176,7 @@ class ActivityTableViewController: UITableViewController {
             subtitleLabel.text = "\(pending) pending · \(completed) completed"
         } else {
             titleLabel.text = "\(sectionTitles[1])"
-            subtitleLabel.text = "\(logSummaries.count) activities logged"
+//            subtitleLabel.text = "\(logSummaries.count) activities logged"
         }
 
         [titleLabel, subtitleLabel].forEach {

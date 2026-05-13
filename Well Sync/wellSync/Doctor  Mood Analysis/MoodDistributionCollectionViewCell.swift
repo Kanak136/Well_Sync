@@ -24,10 +24,32 @@ class MoodDistributionCollectionViewCell: UICollectionViewCell {
     
     var isWeekly: Bool = true
     var moodLogs: [MoodLog] = []
+
+    // Teal shades matching the patient-side MoodLogCollectionViewCell
+    private let moodTealShades: [UIColor] = [
+        UIColor(red: 175/255, green: 226/255, blue: 230/255, alpha: 1),  // 1 – Very Sad  — palest
+        UIColor(red: 150/255, green: 215/255, blue: 220/255, alpha: 1),  // 2 – Sad
+        UIColor(red: 113/255, green: 201/255, blue: 206/255, alpha: 1),  // 3 – Neutral   — primary #71C9CE
+        UIColor(red: 80/255,  green: 175/255, blue: 182/255, alpha: 1),  // 4 – Happy
+        UIColor(red: 55/255,  green: 148/255, blue: 158/255, alpha: 1),  // 5 – Very Happy — deepest
+    ]
+
     override func awakeFromNib() {
         super.awakeFromNib()
         style(self)
-        // Initialization code
+
+        // Apply teal mood colors to progress bars (matching patient mood log)
+        let bars: [(UIProgressView, Int)] = [
+            (veryHappy, 4),  // Very Happy = index 4 (deepest teal)
+            (happy, 3),      // Happy      = index 3
+            (neutral, 2),    // Neutral    = index 2
+            (bad, 1),        // Bad/Sad    = index 1
+            (veryBad, 0)     // Very Bad   = index 0 (palest teal)
+        ]
+        for (bar, idx) in bars {
+            bar.progressTintColor = moodTealShades[idx]
+            bar.trackTintColor = moodTealShades[idx].withAlphaComponent(0.15)
+        }
     }
     func configure(moodLogs: [MoodLog]) {
         self.moodLogs = moodLogs
